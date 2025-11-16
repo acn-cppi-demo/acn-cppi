@@ -55,20 +55,6 @@
               }
             }
           }
-        },
-        {
-          "title": "Badge",
-          "id": "badge",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/badge/v1/badge",
-                "template": {
-                  "model": "badge"
-                }
-              }
-            }
-          }
         }
       ]
     },

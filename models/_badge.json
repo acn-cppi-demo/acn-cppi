@@ -6,7 +6,7 @@
       "plugins": {
         "xwalk": {
           "page": {
-            "resourceType": "core/franklin/components/badge/v1/badge",
+            "resourceType": "core/franklin/components/text/v1/text",
             "template": {
               "model": "badge"
             }
@@ -22,12 +22,14 @@
         {
           "component": "text",
           "name": "badgeText",
-          "label": "Badge Text"
+          "label": "Badge Text",
+          "valueType": "string"
         },
         {
           "component": "select",
           "name": "badgeType",
           "label": "Badge Type",
+          "valueType": "string",
           "options": [
             {
               "name": "Primary",
