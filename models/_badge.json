@@ -21,13 +21,13 @@
       "fields": [
         {
           "component": "text",
-          "name": "badgeText",
+          "name": "text",
           "label": "Badge Text",
           "valueType": "string"
         },
         {
           "component": "select",
-          "name": "badgeType",
+          "name": "type",
           "label": "Badge Type",
           "valueType": "string",
           "options": [

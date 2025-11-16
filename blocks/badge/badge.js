@@ -11,4 +11,3 @@ export default function decorate(block) {
   span.textContent = badgeText;
   block.appendChild(span);
 }
-
