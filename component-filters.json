@@ -39,5 +39,15 @@
       "button",
       "title"
     ]
+  },
+  {
+    "id": "teaser",
+    "components": [
+      "badge",
+      "image",
+      "text",
+      "title",
+      "button"
+    ]
   }
 ]

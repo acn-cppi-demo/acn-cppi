@@ -1,0 +1,47 @@
+{
+  "definitions": [
+    {
+      "title": "Badge",
+      "id": "badge",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/badge/v1/badge",
+            "template": {
+              "model": "badge"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "badge",
+      "fields": [
+        {
+          "component": "text",
+          "name": "badgeLabel",
+          "label": "Badge Label",
+          "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "badgeType",
+          "label": "Badge Type",
+          "options": [
+            {
+              "name": "Primary",
+              "value": "primary"
+            },
+            {
+              "name": "Secondary",
+              "value": "secondary"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
