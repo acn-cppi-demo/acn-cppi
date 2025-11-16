@@ -41,5 +41,14 @@
       "title",
       "insights"
     ]
+  },
+  {
+    "id": "insights",
+    "components": [
+      "badge",
+      "text",
+      "title",
+      "button"
+    ]
   }
 ]

@@ -10,6 +10,27 @@
   gap: 1rem;
 }
 
+.insights-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.insights-badge.primary {
+  background-color: #06c;
+  color: white;
+}
+
+.insights-badge.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
 .insights-heading {
   font-size: 1.5rem;
   font-weight: bold;
