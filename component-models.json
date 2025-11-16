@@ -216,6 +216,33 @@
     ]
   },
   {
+    "id": "badge",
+    "fields": [
+      {
+        "component": "text",
+        "name": "badgeText",
+        "label": "Badge Text",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "badgeType",
+        "label": "Badge Type",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "teaser",
     "fields": [
       {
