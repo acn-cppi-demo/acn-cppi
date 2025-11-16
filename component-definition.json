@@ -83,6 +83,20 @@
       "id": "blocks",
       "components": [
         {
+          "title": "Badge",
+          "id": "badge",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/text/v1/text",
+                "template": {
+                  "model": "badge"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Cards",
           "id": "cards",
           "plugins": {

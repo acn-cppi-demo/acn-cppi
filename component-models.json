@@ -142,6 +142,33 @@
     ]
   },
   {
+    "id": "badge",
+    "fields": [
+      {
+        "component": "text",
+        "name": "text",
+        "label": "Badge Text",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "type",
+        "label": "Badge Type",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Secondary",
+            "value": "secondary"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
