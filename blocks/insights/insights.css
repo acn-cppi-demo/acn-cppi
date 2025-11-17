@@ -6,11 +6,10 @@
     color: #fff;
 
     & > [data-aue-prop="badge"] {
-        border: 1px solid Blue;
+        border: 1px solid blue;
         width: max-content;
         padding: 8px 16px;
         border-radius: 30px;
-        background: #0273CF33;
         background: #0273CF33;
 
     }
