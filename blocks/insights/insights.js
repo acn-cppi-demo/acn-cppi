@@ -1,5 +1,6 @@
 export default function decorate(block) {
-  console.log(block,'insights');
+  // eslint-disable-next-line no-console
+  console.log(block, 'insights');
   // Add insights-specific styling class
   block.classList.add('insights-container');
   // Process content
