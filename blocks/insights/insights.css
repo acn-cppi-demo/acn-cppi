@@ -1,6 +1,7 @@
 .insights-container {
     background-color: #1E2127;
     color: #fff;
+    padding-block: 80px;
 }
 
 .insights-wrapper .insights-badge {
@@ -9,4 +10,40 @@
     padding: 8px 16px;
     border-radius: 30px;
     background: #0273CF33;
+}
+
+.insights-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.insights-main {
+    max-width: 760px;
+}
+
+.insights-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.insights-card-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #0273CF;
+    border-radius: 8px;
+}
+
+.insights-card-icon svg {
+    margin: auto;
+    display: block;
+    height: 100%;
+}
+
+.insights-card {
+    padding: 40px;
+    box-shadow: 4px 4px 20px 0 #0000000D;
+    border: 1px solid #FFF;
+    border-radius: 8px;
 }
