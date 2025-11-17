@@ -1,7 +1,6 @@
 export default function decorate(block) {
   // Add insights-specific styling class
   block.classList.add('insights-container');
-
   // Process content
   const rows = [...block.children];
   rows.forEach((row) => {
@@ -19,4 +18,3 @@ export default function decorate(block) {
     });
   });
 }
-
