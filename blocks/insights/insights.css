@@ -1,3 +1,21 @@
+.insights-wrapper {
+    padding: 0;
+    max-width: unset;
+    margin: 0;
+    background-color: #1E2127;
+    color: #fff;
+
+    & > [data-aue-prop="badge"] {
+        border: 1px solid Blue;
+        width: max-content;
+        padding: 8px 16px;
+        border-radius: 30px;
+        background: #0273CF33;
+        background: #0273CF33;
+
+    }
+}
+
 .insights {
   padding: 2rem;
   background-color: #f5f5f5;
@@ -96,3 +114,6 @@
   }
 }
 
+
+
+.
