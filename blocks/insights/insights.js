@@ -60,11 +60,22 @@ export default function decorate(block) {
   // eslint-disable-next-line no-console
   console.log('Insights Data Object:', insightsData);
 
-  // Parse keyInsightsPoints to extract list items
+  // Parse keyInsightsPoints to extract heading and list items
   let insightsList = [];
+  let extractedHeading = null;
   if (insightsData.keyInsightsPoints) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = insightsData.keyInsightsPoints;
+
+    // Extract heading tags (h1-h6) from keyInsightsPoints
+    const heading = tempDiv.querySelector('h1, h2, h3, h4, h5, h6');
+    if (heading) {
+      extractedHeading = heading.textContent.trim();
+      // Remove the heading from the DOM so it doesn't appear in the list
+      heading.remove();
+    }
+
+    // Extract list items (excluding headings)
     const listItems = tempDiv.querySelectorAll('li, p');
     insightsList = Array.from(listItems)
       .map((item) => item.textContent.trim())
@@ -105,7 +116,7 @@ export default function decorate(block) {
           </div>
           <span class="insights-card-label">Featured Research</span>
         </div>
-        ${insightsData.keyInsightsPointsHeader ? `<h3 class="insights-card-title">${getPlainText(insightsData.keyInsightsPointsHeader)}</h3>` : '<h3 class="insights-card-title">Key Insights</h3>'}
+        ${extractedHeading || insightsData.keyInsightsPointsHeader ? `<h3 class="insights-card-title">${extractedHeading || getPlainText(insightsData.keyInsightsPointsHeader)}</h3>` : '<h3 class="insights-card-title">Key Insights</h3>'}
         ${insightsList.length > 0 ? `
           <ul class="insights-list">
             ${insightsList.map((item) => `<li>${item}</li>`).join('')}
