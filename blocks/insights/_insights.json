@@ -41,11 +41,5 @@
     }
   ],
   "filters": [
-    {
-      "id": "insights",
-      "components": [
-        "insights"
-      ]
-    }
   ]
 }
