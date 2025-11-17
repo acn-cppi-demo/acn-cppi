@@ -216,6 +216,28 @@
     ]
   },
   {
+    "id": "insights",
+    "fields": [
+      {
+        "component": "text",
+        "name": "badge",
+        "label": "Badge label"
+      },
+      {
+        "component": "richtext",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "teaser",
     "fields": [
       {
