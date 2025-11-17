@@ -37,6 +37,18 @@
           "name": "description",
           "label": "Description",
           "valueType": "string"
+        },
+        {
+          "component": "title",
+          "name": "keyInsightsPointsHeader",
+          "label": "Key Insights Points Header",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "name": "keyInsightsPoints",
+          "label": "Key Insights Points",
+          "valueType": "string"
         }
       ]
     }
