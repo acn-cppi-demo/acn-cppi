@@ -9,6 +9,14 @@ export default function decorate(block) {
     buttons: [],
   };
 
+  // Temporary storage for button data
+  const buttonData = {
+    button1Label: null,
+    button1Link: null,
+    button2Label: null,
+    button2Link: null,
+  };
+
   // Find all elements with data-aue-prop attributes
   const propElements = block.querySelectorAll('[data-aue-prop]');
   propElements.forEach((element) => {
@@ -35,6 +43,14 @@ export default function decorate(block) {
       insightsData.title = value;
     } else if (propName === 'description') {
       insightsData.description = value;
+    } else if (propName === 'button1Label') {
+      buttonData.button1Label = value;
+    } else if (propName === 'button1Link') {
+      buttonData.button1Link = element.getAttribute('href') || element.textContent.trim() || value;
+    } else if (propName === 'button2Label') {
+      buttonData.button2Label = value;
+    } else if (propName === 'button2Link') {
+      buttonData.button2Link = element.getAttribute('href') || element.textContent.trim() || value;
     } else if (propName === 'keyInsightsPointsHeader') {
       insightsData.keyInsightsPointsHeader = value;
     } else if (propName === 'keyInsightsPoints') {
@@ -42,8 +58,24 @@ export default function decorate(block) {
     }
   });
 
-  // Extract buttons (links)
-  const buttons = block.querySelectorAll('a[data-aue-prop], a[href]');
+  // Add button1 and button2 to buttons array
+  if (buttonData.button1Label && buttonData.button1Link) {
+    insightsData.buttons.push({
+      text: buttonData.button1Label,
+      href: buttonData.button1Link,
+      title: '',
+    });
+  }
+  if (buttonData.button2Label && buttonData.button2Link) {
+    insightsData.buttons.push({
+      text: buttonData.button2Label,
+      href: buttonData.button2Link,
+      title: '',
+    });
+  }
+
+  // Extract other buttons (links) from DOM
+  const buttons = block.querySelectorAll('a[data-aue-prop]:not([data-aue-prop="button1Link"]):not([data-aue-prop="button2Link"]), a[href]:not([data-aue-prop])');
   buttons.forEach((button) => {
     insightsData.buttons.push({
       text: button.textContent.trim(),
@@ -103,7 +135,7 @@ export default function decorate(block) {
         <div class="insights-buttons">
           ${insightsData.buttons.map((button, index) => {
     const buttonClass = index === 0 ? 'insights-button-primary' : 'insights-button-secondary';
-    return `<a href="${button.href || '#'}" class="${buttonClass}" title="${button.title}">${button.text}</a>`;
+    return `<a href="${button.href || '#'}" class="${buttonClass}">${button.text}</a>`;
   }).join('')}
         </div>
       </div>
