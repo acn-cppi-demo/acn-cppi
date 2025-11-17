@@ -1,7 +1,4 @@
 export default function decorate(block) {
-  // Add insights-specific styling class
-  block.classList.add('insights-container');
-
   // Extract all data from the block into a JSON object
   const insightsData = {
     badge: null,
