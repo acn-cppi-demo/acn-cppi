@@ -1,12 +1,12 @@
 .block.insights {
     background-color: #1E2127;
     color: #fff;
+}
 
-    & > .insights-badge {
-        border: 1px solid blue;
-        width: max-content;
-        padding: 8px 16px;
-        border-radius: 30px;
-        background: #0273CF33;
-    }
+.insights-wrapper .insights-badge {
+    border: 1px solid blue;
+    width: max-content;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: #0273CF33;
 }
