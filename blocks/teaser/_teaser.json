@@ -53,6 +53,18 @@
                     "name": "textContent_ctaText",
                     "label": "CTA label",
                     "valueType": "string"
+                },
+                {
+                    "component": "aem-content",
+                    "name": "textContent_cta2",
+                    "label": "CTA 2",
+                    "valueType": "string"
+                },
+                {
+                    "component": "text",
+                    "name": "textContent_ctaText2",
+                    "label": "CTA label 2",
+                    "valueType": "string"
                 }
             ]
         }
