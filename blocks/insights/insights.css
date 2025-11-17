@@ -2,7 +2,7 @@
     background-color: #1E2127;
     color: #fff;
 
-    & > div:first-child {
+    & > .insights-badge {
         border: 1px solid blue;
         width: max-content;
         padding: 8px 16px;
