@@ -1,7 +1,4 @@
 .insights-wrapper {
-    padding: 0;
-    max-width: unset;
-    margin: 0;
     background-color: #1E2127;
     color: #fff;
 
@@ -11,6 +8,5 @@
         padding: 8px 16px;
         border-radius: 30px;
         background: #0273CF33;
-
     }
 }
