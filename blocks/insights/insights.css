@@ -47,6 +47,7 @@
     box-shadow: 4px 4px 20px 0 #0000000D;
     border: 1px solid #FFF;
     border-radius: 8px;
+    max-width: 400px;
 }
 
 .block.insights {
