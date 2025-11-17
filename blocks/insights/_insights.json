@@ -23,7 +23,8 @@
         {
           "component": "text",
           "name": "badge",
-          "label": "Badge label"
+          "label": "Badge label",
+          "valueType": "string"
         },
         {
           "component": "richtext",
