@@ -105,23 +105,30 @@ export default function decorate(block) {
   const titleId = `cpp-hero-title-${Date.now()}`;
   const descriptionId = `cpp-hero-description-${Date.now()}`;
 
-  // Build button HTML
+  // Build button HTML: render <a> for valid hrefs and <button disabled> for missing links
   let buttonsHtml = '';
   if (cppHeroData.buttons.length > 0) {
     buttonsHtml = `
-        <div class="cpp-hero-buttons">
+        <nav class="cpp-hero-buttons" aria-label="Hero actions">
           ${cppHeroData.buttons.map((button, index) => {
     const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';
-    const href = button.href && button.href !== '#' ? button.href : '#';
-    return `<a href="${href}" class="button ${buttonClass}">${button.text}</a>`;
+    const hasHref = button.href && button.href !== '#';
+    if (hasHref) {
+      return `<a href="${button.href}" class="button ${buttonClass}">${button.text}</a>`;
+    }
+    // render a disabled button when there's no valid href
+    // this shows a non-clickable control to keyboard users
+    return `<button type="button" class="button ${buttonClass}" disabled aria-disabled="true">${button.text}</button>`;
   }).join('')}
-        </div>
+        </nav>
       `;
   }
 
-  // Build HTML structure
+  // Build HTML structure; include aria-describedby if a description exists
+  const descAttr = cppHeroData.description ? ` aria-describedby="${descriptionId}"` : '';
+
   const html = `
-    <div class="cpp-hero-wrapper" role="region" aria-labelledby="${titleId}">
+    <div class="cpp-hero-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
       <div class="cpp-hero-main">
         ${cppHeroData.badge ? `<div class="cpp-hero-badge">${cppHeroData.badge}</div>` : ''}
         ${cppHeroData.title ? `<h2 class="cpp-hero-title" id="${titleId}">${titleText}</h2>` : ''}

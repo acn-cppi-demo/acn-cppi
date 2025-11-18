@@ -1,16 +1,17 @@
 .cpp-hero-container {
     background: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%);
     color: #fff;
-    padding-block: 80px;
+    padding-block: 62px;
     width: 100%;
 }
 
 .cpp-hero-wrapper .cpp-hero-badge {
-    border: 1px solid #0273CF;
+    border: 1px solid #E3E4E5;
     width: max-content;
     padding: 8px 16px;
     border-radius: 30px;
-    background: #0273CF33;
+    background: rgb(2 115 207 / 15%);
+    color: #fff;
 }
 
 .cpp-hero-title {
@@ -45,6 +46,13 @@
     min-width: auto;
     padding: 12px 24px;
     flex: 0 1 auto;
+}
+
+/* Visible focus indicator for keyboard users */
+.cpp-hero-buttons .button:focus,
+.cpp-hero-buttons .button:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
 }
 
 .block.cpp-hero {
