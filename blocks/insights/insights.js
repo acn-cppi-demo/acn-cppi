@@ -134,8 +134,8 @@ export default function decorate(block) {
         ${insightsData.description ? `<div class="insights-description">${descriptionText}</div>` : ''}
         <div class="insights-buttons">
           ${insightsData.buttons.map((button, index) => {
-    const buttonClass = index === 0 ? 'insights-button-primary' : 'insights-button-secondary';
-    return `<a href="${button.href || '#'}" class="${buttonClass}">${button.text}</a>`;
+    const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';
+    return `<a href="${button.href || '#'}" class="${buttonClass} button">${button.text}</a>`;
   }).join('')}
         </div>
       </div>
