@@ -1,0 +1,220 @@
+.cpp-hero-chart-container {
+    background: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%);
+    color: #fff;
+    padding-block: 62px;
+    width: 100%;
+}
+
+.cpp-hero-chart-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Section */
+.cpp-hero-chart-header {
+    margin-bottom: 48px;
+}
+
+.cpp-hero-chart-main {
+    max-width: 760px;
+}
+
+.cpp-hero-chart-title {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.cpp-hero-chart-description {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.cpp-hero-chart-main .button {
+    display: inline-block;
+    padding: 12px 24px;
+    margin-top: 8px;
+    white-space: nowrap;
+}
+
+.cpp-hero-chart-main .button:focus,
+.cpp-hero-chart-main .button:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+}
+
+/* Controls Section (Graph Info + Period Tabs) */
+.cpp-hero-chart-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 24px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 20%);
+}
+
+/* Graph Info (Left side) */
+.cpp-hero-chart-graph-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.cpp-hero-chart-graph-info img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
+.graph-text {
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+/* Period Tabs (Right side) */
+.cpp-hero-chart-periods {
+    display: flex;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.period-tab {
+    background: transparent;
+    border: 1px solid rgb(255 255 255 / 40%);
+    color: rgb(255 255 255 / 80%);
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.period-tab:hover {
+    background: rgb(255 255 255 / 10%);
+    border-color: #fff;
+    color: #fff;
+}
+
+.period-tab.active {
+    background: #fff;
+    color: #0273CF;
+    border-color: #fff;
+}
+
+.period-tab:focus,
+.period-tab:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+}
+
+/* Value Section */
+.cpp-hero-chart-value-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.cpp-hero-chart-value {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.cpp-hero-chart-badge {
+    background: rgb(255 255 255 / 15%);
+    border: 1px solid rgb(255 255 255 / 30%);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Chart Container */
+.cpp-hero-chart {
+    width: 100%;
+    min-height: 400px;
+    background: rgb(255 255 255 / 5%);
+    border-radius: 8px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.cpp-hero-chart-error {
+    padding: 24px;
+    background: rgb(255 255 255 / 10%);
+    border-radius: 8px;
+    font-size: 14px;
+    color: rgb(255 255 255 / 90%);
+}
+
+/* Mobile Responsive */
+@media (width <= 768px) {
+    .cpp-hero-chart-container {
+        padding-block: 32px;
+    }
+
+    .cpp-hero-chart-title {
+        font-size: 32px;
+    }
+
+    .cpp-hero-chart-description {
+        font-size: 16px;
+    }
+
+    .cpp-hero-chart-controls {
+        flex-direction: column;
+        gap: 24px;
+        align-items: stretch;
+        padding: 16px 0;
+    }
+
+    .cpp-hero-chart-graph-info {
+        justify-content: flex-start;
+    }
+
+    .cpp-hero-chart-periods {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .cpp-hero-chart-value {
+        font-size: 32px;
+    }
+
+    .cpp-hero-chart {
+        min-height: 300px;
+        padding: 16px;
+    }
+}
+
+@media (width <= 480px) {
+    .cpp-hero-chart-title {
+        font-size: 24px;
+    }
+
+    .cpp-hero-chart-value-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .period-tab {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .graph-text {
+        font-size: 12px;
+    }
+}
