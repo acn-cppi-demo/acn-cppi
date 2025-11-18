@@ -42,7 +42,9 @@
 
 .cpp-hero-buttons .button {
     white-space: normal;
-    min-width: 150px;
+    min-width: auto;
+    padding: 12px 24px;
+    flex: 0 1 auto;
 }
 
 .block.cpp-hero {

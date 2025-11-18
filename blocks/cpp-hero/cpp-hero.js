@@ -53,18 +53,32 @@ export default function decorate(block) {
   });
 
   // Add button1 and button2 to buttons array
-  if (buttonData.button1Label && buttonData.button1Link) {
+  if (buttonData.button1Label) {
     cppHeroData.buttons.push({
       text: buttonData.button1Label,
-      href: buttonData.button1Link,
+      href: buttonData.button1Link || '#',
       title: '',
     });
   }
-  if (buttonData.button2Label && buttonData.button2Link) {
+  if (buttonData.button2Label) {
     cppHeroData.buttons.push({
       text: buttonData.button2Label,
-      href: buttonData.button2Link,
+      href: buttonData.button2Link || '#',
       title: '',
+    });
+  }
+
+  // Extract any other links from the block as fallback buttons
+  if (cppHeroData.buttons.length === 0) {
+    const allLinks = block.querySelectorAll('a[href]');
+    allLinks.forEach((link) => {
+      if (link.textContent.trim()) {
+        cppHeroData.buttons.push({
+          text: link.textContent.trim(),
+          href: link.getAttribute('href'),
+          title: '',
+        });
+      }
     });
   }
 
@@ -99,8 +113,7 @@ export default function decorate(block) {
           ${cppHeroData.buttons.map((button, index) => {
     const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';
     const href = button.href && button.href !== '#' ? button.href : '#';
-    const isDisabled = href === '#';
-    return `<a href="${href}" class="button ${buttonClass}" ${isDisabled ? 'aria-disabled="true" tabindex="-1"' : ''}>${button.text}</a>`;
+    return `<a href="${href}" class="button ${buttonClass}">${button.text}</a>`;
   }).join('')}
         </div>
       `;
@@ -110,9 +123,9 @@ export default function decorate(block) {
   const html = `
     <div class="cpp-hero-wrapper" role="region" aria-labelledby="${titleId}">
       <div class="cpp-hero-main">
-        ${cppHeroData.badge ? `<div class="cpp-hero-badge" role="text" aria-label="Badge: ${cppHeroData.badge}">${cppHeroData.badge}</div>` : ''}
+        ${cppHeroData.badge ? `<div class="cpp-hero-badge">${cppHeroData.badge}</div>` : ''}
         ${cppHeroData.title ? `<h2 class="cpp-hero-title" id="${titleId}">${titleText}</h2>` : ''}
-        ${cppHeroData.description ? `<div class="cpp-hero-description" id="${descriptionId}" role="text">${descriptionText}</div>` : ''}
+        ${cppHeroData.description ? `<div class="cpp-hero-description" id="${descriptionId}">${descriptionText}</div>` : ''}
         ${buttonsHtml}
       </div>
     </div>
