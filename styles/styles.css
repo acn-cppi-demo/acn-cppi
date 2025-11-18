@@ -267,3 +267,19 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+
+
+.insights-badge , .badge-secondary, .badge-primary {
+    border: 1px solid #0273CF;
+    width: max-content;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: #0273CF33;
+}
+
+.badge-primary {
+    background: #fff;
+    color: #0273CF;
+    border: 1px solid #E3E4E5;
+}
