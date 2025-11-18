@@ -40,6 +40,10 @@
   object-fit: cover;
 }
 
+.cards-link {
+    margin-top: 16px;
+}
+
 @media (width <= 768px) {
     .cards-container {
         padding-block: 24px;
