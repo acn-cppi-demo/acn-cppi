@@ -211,9 +211,9 @@ button:disabled:hover {
 a.button.secondary,
 button.secondary,
 .button-secondary {
-    background: #fff;
-    color: #0273CF;
-    border: 1px solid #0273CF;
+    background: #fff !important;
+    color: #0273CF !important;
+    border: 1px solid #0273CF !important;
 }
 
 a.button.secondary:hover,
