@@ -1,5 +1,5 @@
 .cpp-hero-container {
-    background-color: #1E2127;
+    background: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%);
     color: #fff;
     padding-block: 80px;
     width: 100%;
@@ -13,12 +13,12 @@
     background: #0273CF33;
 }
 
-.cpp-hero-title, .cpp-hero-list li {
+.cpp-hero-title {
     margin-top: 16px;
     margin-bottom: 0;
 }
 
-.cpp-hero-description, .cpp-hero-buttons, .cpp-hero-card-title {
+.cpp-hero-description, .cpp-hero-buttons {
     margin-top: 24px;
 }
 
@@ -32,33 +32,6 @@
     max-width: 760px;
 }
 
-.cpp-hero-card-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.cpp-hero-card-icon {
-    width: 40px;
-    height: 40px;
-    background-color: #0273CF;
-    border-radius: 8px;
-}
-
-.cpp-hero-card-icon svg {
-    margin: auto;
-    display: block;
-    height: 100%;
-}
-
-.cpp-hero-card {
-    padding: 40px;
-    box-shadow: 4px 4px 20px 0 #0000000D;
-    border: 1px solid #FFF;
-    border-radius: 8px;
-    max-width: 400px;
-}
-
 /* Button styling for cpp-hero block */
 .cpp-hero-buttons {
     display: flex;
@@ -68,6 +41,7 @@
 .block.cpp-hero {
     width: 100%;
 }
+
 
 /* Mobile Responsive */
 @media (width <= 768px) {
@@ -83,11 +57,5 @@
 
     .cpp-hero-main {
         max-width: 100%;
-        order: 1;
-    }
-
-    .cpp-hero-card {
-        order: 2;
-        padding: 24px;
     }
 }
