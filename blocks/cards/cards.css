@@ -27,7 +27,7 @@
 }
 
 .cards .cards-card-body {
-  margin: 16px;
+  margin: 24px 40px 40px;
 }
 
 .cards .cards-card-image {
@@ -38,4 +38,10 @@
   width: 100%;
   aspect-ratio: 2;
   object-fit: cover;
+}
+
+@media (width <= 768px) {
+    .cards-container {
+        padding-block: 24px;
+    }
 }
