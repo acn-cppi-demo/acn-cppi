@@ -153,7 +153,7 @@
       {
         "component": "select",
         "name": "class",
-        "label": "Style",
+        "label": "class",
         "options": [
           {
             "name": "primary",
