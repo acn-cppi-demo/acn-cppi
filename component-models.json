@@ -142,6 +142,32 @@
     ]
   },
   {
+    "id": "badge",
+    "fields": [
+      {
+        "component": "text",
+        "name": "badge",
+        "label": "Badge label",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "class",
+        "label": "class",
+        "options": [
+          {
+            "name": "primary",
+            "value": "badge-primary"
+          },
+          {
+            "name": "secondary",
+            "value": "badge-secondary"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -156,6 +182,18 @@
         "name": "text",
         "value": "",
         "label": "Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "linkLabel",
+        "label": "Link Label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
         "valueType": "string"
       }
     ]

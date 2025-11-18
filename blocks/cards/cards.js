@@ -19,6 +19,72 @@ export default function decorate(block) {
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
   });
+
+  // Combine linkLabel and link into a single link with icon
+  ul.querySelectorAll('li').forEach((li) => {
+    const linkLabelElement = li.querySelector('[data-aue-prop="linkLabel"]');
+    const linkElement = li.querySelector('a[href]');
+    const linkLabelBody = linkLabelElement?.closest('.cards-card-body');
+    const linkBody = linkElement?.closest('.cards-card-body');
+
+    if (linkLabelElement && linkElement) {
+      const linkLabelText = linkLabelElement.textContent.trim();
+      const linkHref = linkElement.getAttribute('href');
+      const linkTitle = linkElement.getAttribute('title') || linkHref;
+
+      // Create combined link HTML using template literal
+      const linkHtml = `
+        <p>
+          <a href="${linkHref}" 
+             title="${linkTitle}" 
+             class="cards-link link-primary">
+            ${linkLabelText}
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"/>
+            </svg>
+          </a>
+        </p>
+      `;
+
+      // Replace linkLabel body with new combined link
+      if (linkLabelBody) {
+        linkLabelBody.innerHTML = linkHtml;
+        // Remove the separate link body if it exists
+        if (linkBody && linkBody !== linkLabelBody) {
+          linkBody.remove();
+        }
+      } else if (linkBody) {
+        // If no linkLabel body, just update the link body
+        linkBody.innerHTML = linkHtml;
+      }
+    }
+
+    // Combine all cards-card-body divs into a single one
+    const bodyDivs = Array.from(li.querySelectorAll('.cards-card-body'));
+    if (bodyDivs.length > 1) {
+      // Create a new single body div
+      const singleBody = document.createElement('div');
+      singleBody.className = 'cards-card-body';
+
+      // Append all content from existing body divs
+      bodyDivs.forEach((bodyDiv) => {
+        while (bodyDiv.firstChild) {
+          singleBody.appendChild(bodyDiv.firstChild);
+        }
+      });
+
+      // Replace the first body div with the combined one
+      bodyDivs[0].replaceWith(singleBody);
+
+      // Remove the remaining body divs
+      bodyDivs.slice(1).forEach((bodyDiv) => {
+        if (bodyDiv.parentNode) {
+          bodyDiv.remove();
+        }
+      });
+    }
+  });
+
   block.textContent = '';
   block.append(ul);
 }
