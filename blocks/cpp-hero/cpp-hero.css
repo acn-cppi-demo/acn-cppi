@@ -1,0 +1,78 @@
+.cpp-hero-container {
+    background: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%);
+    color: #fff;
+    padding-block: 62px;
+    width: 100%;
+}
+
+.cpp-hero-wrapper .cpp-hero-badge {
+    border: 1px solid #E3E4E5;
+    width: max-content;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: #fffF;
+    color: #0273CF;
+}
+
+.cpp-hero-title {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.cpp-hero-description, .cpp-hero-buttons {
+    margin-top: 24px;
+}
+
+.cpp-hero-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.cpp-hero-main {
+    max-width: 760px;
+}
+
+/* Button styling for cpp-hero block */
+.cpp-hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.cpp-hero-buttons .button {
+    white-space: normal;
+    min-width: auto;
+    padding: 12px 24px;
+    flex: 0 1 auto;
+}
+
+/* Visible focus indicator for keyboard users */
+.cpp-hero-buttons .button:focus,
+.cpp-hero-buttons .button:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+}
+
+.block.cpp-hero {
+    width: 100%;
+}
+
+
+/* Mobile Responsive */
+@media (width <= 768px) {
+    .cpp-hero-container {
+        padding-block: 24px;
+    }
+
+    .cpp-hero-wrapper {
+        flex-direction: column;
+        gap: 32px;
+        align-items: stretch;
+    }
+
+    .cpp-hero-main {
+        max-width: 100%;
+    }
+}
