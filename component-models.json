@@ -153,7 +153,7 @@
       {
         "component": "select",
         "name": "class",
-        "label": "Badge color",
+        "label": "Style",
         "options": [
           {
             "name": "primary",
