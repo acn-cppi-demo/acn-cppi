@@ -91,6 +91,21 @@ export default function decorate(block) {
   const titleId = `cpp-hero-title-${Date.now()}`;
   const descriptionId = `cpp-hero-description-${Date.now()}`;
 
+  // Build button HTML
+  let buttonsHtml = '';
+  if (cppHeroData.buttons.length > 0) {
+    buttonsHtml = `
+        <div class="cpp-hero-buttons">
+          ${cppHeroData.buttons.map((button, index) => {
+    const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';
+    const href = button.href && button.href !== '#' ? button.href : '#';
+    const isDisabled = href === '#';
+    return `<a href="${href}" class="button ${buttonClass}" ${isDisabled ? 'aria-disabled="true" tabindex="-1"' : ''}>${button.text}</a>`;
+  }).join('')}
+        </div>
+      `;
+  }
+
   // Build HTML structure
   const html = `
     <div class="cpp-hero-wrapper" role="region" aria-labelledby="${titleId}">
@@ -98,14 +113,7 @@ export default function decorate(block) {
         ${cppHeroData.badge ? `<div class="cpp-hero-badge" role="text" aria-label="Badge: ${cppHeroData.badge}">${cppHeroData.badge}</div>` : ''}
         ${cppHeroData.title ? `<h2 class="cpp-hero-title" id="${titleId}">${titleText}</h2>` : ''}
         ${cppHeroData.description ? `<div class="cpp-hero-description" id="${descriptionId}" role="text">${descriptionText}</div>` : ''}
-        <nav class="cpp-hero-buttons" aria-label="Action buttons">
-          ${cppHeroData.buttons.map((button, index) => {
-    const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';
-    const buttonLabel = button.text || (index === 0 ? 'Primary action' : 'Secondary action');
-    const ariaLabel = button.title || buttonLabel;
-    return `<a href="${button.href || '#'}" class="${buttonClass} button" aria-label="${ariaLabel}"${button.href === '#' ? ' aria-disabled="true" tabindex="-1"' : ''}>${button.text}</a>`;
-  }).join('')}
-        </nav>
+        ${buttonsHtml}
       </div>
     </div>
   `;
