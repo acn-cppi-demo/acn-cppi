@@ -259,12 +259,6 @@
       },
       {
         "component": "text",
-        "name": "graphText",
-        "label": "Graph Info Text",
-        "valueType": "string"
-      },
-      {
-        "component": "text",
         "name": "value",
         "label": "Value (e.g., $100.00B)",
         "valueType": "string"
