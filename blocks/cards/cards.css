@@ -9,7 +9,7 @@
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: 40px;
+  grid-gap: 16px 40px;
   margin-top: 40px;
 }
 
