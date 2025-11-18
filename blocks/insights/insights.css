@@ -1,0 +1,93 @@
+.insights-container {
+    background-color: #1E2127;
+    color: #fff;
+    padding-block: 80px;
+    width: 100%;
+}
+
+.insights-wrapper .insights-badge {
+    border: 1px solid #0273CF;
+    width: max-content;
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: #0273CF33;
+}
+
+.insights-title, .insights-list li {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.insights-description, .insights-buttons, .insights-card-title {
+    margin-top: 24px;
+}
+
+.insights-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.insights-main {
+    max-width: 760px;
+}
+
+.insights-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.insights-card-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #0273CF;
+    border-radius: 8px;
+}
+
+.insights-card-icon svg {
+    margin: auto;
+    display: block;
+    height: 100%;
+}
+
+.insights-card {
+    padding: 40px;
+    box-shadow: 4px 4px 20px 0 #0000000D;
+    border: 1px solid #FFF;
+    border-radius: 8px;
+    max-width: 400px;
+}
+
+/* Button styling for insights block */
+.insights-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.block.insights {
+    width: 100%;
+}
+
+/* Mobile Responsive */
+@media (width <= 768px) {
+    .insights-container {
+        padding-block: 24px;
+    }
+
+    .insights-wrapper {
+        flex-direction: column;
+        gap: 32px;
+        align-items: stretch;
+    }
+
+    .insights-main {
+        max-width: 100%;
+        order: 1;
+    }
+
+    .insights-card {
+        order: 2;
+        padding: 24px;
+    }
+}
