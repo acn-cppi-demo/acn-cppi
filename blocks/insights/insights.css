@@ -6,11 +6,20 @@
 }
 
 .insights-wrapper .insights-badge {
-    border: 1px solid blue;
+    border: 1px solid #0273CF;
     width: max-content;
     padding: 8px 16px;
     border-radius: 30px;
     background: #0273CF33;
+}
+
+.insights-title, .insights-list li {
+    margin-top: 16px;
+    margin-bottom: 0;
+}
+
+.insights-description, .insights-buttons, .insights-card-title {
+    margin-top: 24px;
 }
 
 .insights-wrapper {
@@ -54,7 +63,6 @@
 .insights-buttons {
     display: flex;
     gap: 16px;
-    margin-top: 24px;
 }
 
 .block.insights {
@@ -64,7 +72,7 @@
 /* Mobile Responsive */
 @media (width <= 768px) {
     .insights-container {
-        padding-block: 40px;
+        padding-block: 24px;
     }
 
     .insights-wrapper {
@@ -81,12 +89,5 @@
     .insights-card {
         order: 2;
         padding: 24px;
-    }
-
-    .insights-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin-top: 24px;
     }
 }
