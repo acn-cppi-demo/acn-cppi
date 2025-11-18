@@ -58,6 +58,31 @@ export default function decorate(block) {
         linkBody.innerHTML = linkHtml;
       }
     }
+
+    // Combine all cards-card-body divs into a single one
+    const bodyDivs = Array.from(li.querySelectorAll('.cards-card-body'));
+    if (bodyDivs.length > 1) {
+      // Create a new single body div
+      const singleBody = document.createElement('div');
+      singleBody.className = 'cards-card-body';
+
+      // Append all content from existing body divs
+      bodyDivs.forEach((bodyDiv) => {
+        while (bodyDiv.firstChild) {
+          singleBody.appendChild(bodyDiv.firstChild);
+        }
+      });
+
+      // Replace the first body div with the combined one
+      bodyDivs[0].replaceWith(singleBody);
+
+      // Remove the remaining body divs
+      bodyDivs.slice(1).forEach((bodyDiv) => {
+        if (bodyDiv.parentNode) {
+          bodyDiv.remove();
+        }
+      });
+    }
   });
 
   block.textContent = '';
