@@ -43,6 +43,7 @@
     {
       "id": "section",
       "components": [
+        "badge",
         "text",
         "image",
         "button",
