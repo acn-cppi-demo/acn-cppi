@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  console.log('Insights block:', block);
   // Extract all data from the block into a JSON object
   const insightsData = {
     badge: null,
@@ -9,80 +10,92 @@ export default function decorate(block) {
     buttons: [],
   };
 
-  // Temporary storage for button data
-  const buttonData = {
-    button1Label: null,
-    button1Link: null,
-    button2Label: null,
-    button2Link: null,
-  };
+  // Get all direct child divs
+  const children = Array.from(block.children);
+  let currentIndex = 0;
 
-  // Find all elements with data-aue-prop attributes
-  const propElements = block.querySelectorAll('[data-aue-prop]');
-  propElements.forEach((element) => {
-    const propName = element.getAttribute('data-aue-prop');
-    const propType = element.getAttribute('data-aue-type');
-    let value = null;
+  // Extract badge (first div with text)
+  if (children[currentIndex]) {
+    const badgeText = children[currentIndex].textContent.trim();
+    if (badgeText) {
+      insightsData.badge = badgeText;
+      currentIndex += 1;
+    }
+  }
 
-    // Extract value based on type
-    if (propType === 'richtext') {
-      // For richtext, get the innerHTML or textContent
-      value = element.innerHTML.trim() || element.textContent.trim();
-    } else if (propType === 'text') {
-      // For text, get textContent
-      value = element.textContent.trim();
+  // Extract title (next div with h2)
+  if (children[currentIndex]) {
+    const titleElement = children[currentIndex].querySelector('h2');
+    if (titleElement) {
+      insightsData.title = titleElement.outerHTML;
+      currentIndex += 1;
+    }
+  }
+
+  // Extract description (next div with paragraphs)
+  if (children[currentIndex]) {
+    const descDiv = children[currentIndex];
+    const paragraphs = descDiv.querySelectorAll('p');
+    if (paragraphs.length > 0) {
+      // Combine all paragraphs, handling escaped <br/>
+      const descHtml = Array.from(paragraphs)
+        .map((p) => {
+          let html = p.innerHTML.trim();
+          // Decode escaped HTML entities
+          html = html.replace(/&lt;br\/&gt;/g, '<br/>');
+          return `<p>${html}</p>`;
+        })
+        .join('');
+      insightsData.description = descHtml;
+      currentIndex += 1;
+    }
+  }
+
+  // Extract buttons and links (they come in pairs: label, then link)
+  const buttonPairs = [];
+  while (currentIndex < children.length) {
+    const labelDiv = children[currentIndex];
+    const linkDiv = children[currentIndex + 1];
+
+    // Check if this is the key insights section (has h2 and ul)
+    if (labelDiv && labelDiv.querySelector('h2, ul')) {
+      break;
+    }
+
+    if (labelDiv && linkDiv) {
+      const labelText = labelDiv.textContent.trim();
+      const linkText = linkDiv.textContent.trim();
+
+      if (labelText && linkText) {
+        buttonPairs.push({
+          text: labelText,
+          href: linkText.startsWith('http') ? linkText : `https://${linkText}`,
+        });
+        currentIndex += 2;
+      } else {
+        currentIndex += 1;
+      }
     } else {
-      // Fallback to textContent
-      value = element.textContent.trim();
+      currentIndex += 1;
     }
-
-    // Map to insightsData object
-    if (propName === 'badge') {
-      insightsData.badge = value;
-    } else if (propName === 'title') {
-      insightsData.title = value;
-    } else if (propName === 'description') {
-      insightsData.description = value;
-    } else if (propName === 'button1Label') {
-      buttonData.button1Label = value;
-    } else if (propName === 'button1Link') {
-      buttonData.button1Link = element.getAttribute('href') || element.textContent.trim() || value;
-    } else if (propName === 'button2Label') {
-      buttonData.button2Label = value;
-    } else if (propName === 'button2Link') {
-      buttonData.button2Link = element.getAttribute('href') || element.textContent.trim() || value;
-    } else if (propName === 'keyInsightsPointsHeader') {
-      insightsData.keyInsightsPointsHeader = value;
-    } else if (propName === 'keyInsightsPoints') {
-      insightsData.keyInsightsPoints = value;
-    }
-  });
-
-  // Add button1 and button2 to buttons array
-  if (buttonData.button1Label && buttonData.button1Link) {
-    insightsData.buttons.push({
-      text: buttonData.button1Label,
-      href: buttonData.button1Link,
-      title: '',
-    });
-  }
-  if (buttonData.button2Label && buttonData.button2Link) {
-    insightsData.buttons.push({
-      text: buttonData.button2Label,
-      href: buttonData.button2Link,
-      title: '',
-    });
   }
 
-  // Extract other buttons (links) from DOM
-  const buttons = block.querySelectorAll('a[data-aue-prop]:not([data-aue-prop="button1Link"]):not([data-aue-prop="button2Link"]), a[href]:not([data-aue-prop])');
-  buttons.forEach((button) => {
-    insightsData.buttons.push({
-      text: button.textContent.trim(),
-      href: button.getAttribute('href') || button.getAttribute('data-aue-prop'),
-      title: button.getAttribute('title') || '',
-    });
-  });
+  insightsData.buttons = buttonPairs;
+
+  // Extract key insights (remaining div with h2 and ul)
+  if (children[currentIndex]) {
+    const insightsDiv = children[currentIndex];
+    const heading = insightsDiv.querySelector('h2');
+    const list = insightsDiv.querySelector('ul');
+
+    if (heading) {
+      insightsData.keyInsightsPointsHeader = heading.textContent.trim();
+    }
+
+    if (list) {
+      insightsData.keyInsightsPoints = list.outerHTML;
+    }
+  }
 
   // Store the JSON object in a variable
   const insightsJson = JSON.stringify(insightsData, null, 2);
@@ -92,38 +105,23 @@ export default function decorate(block) {
   // eslint-disable-next-line no-console
   console.log('Insights Data Object:', insightsData);
 
-  // Parse keyInsightsPoints to extract heading and list items
+  // Parse keyInsightsPoints to extract list items
   let insightsList = [];
-  let extractedHeading = null;
+  const extractedHeading = insightsData.keyInsightsPointsHeader || 'Key Insights';
+
   if (insightsData.keyInsightsPoints) {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = insightsData.keyInsightsPoints;
 
-    // Extract heading tags (h1-h6) from keyInsightsPoints
-    const heading = tempDiv.querySelector('h1, h2, h3, h4, h5, h6');
-    if (heading) {
-      extractedHeading = heading.textContent.trim();
-      // Remove the heading from the DOM so it doesn't appear in the list
-      heading.remove();
-    }
-
-    // Extract list items (excluding headings)
-    const listItems = tempDiv.querySelectorAll('li, p');
+    // Extract list items
+    const listItems = tempDiv.querySelectorAll('li');
     insightsList = Array.from(listItems)
       .map((item) => item.textContent.trim())
       .filter((text) => text);
   }
 
-  // Parse title and description to extract plain text (remove HTML tags for display)
-  const getPlainText = (htmlString) => {
-    if (!htmlString) return '';
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
-    return tempDiv.textContent.trim();
-  };
-
-  const titleText = getPlainText(insightsData.title);
-  const descriptionText = getPlainText(insightsData.description);
+  // Description already contains HTML, so use it directly
+  const descriptionHtml = insightsData.description || '';
 
   // Generate unique IDs for accessibility
   const titleId = `insights-title-${Date.now()}`;
@@ -135,8 +133,8 @@ export default function decorate(block) {
     <div class="insights-wrapper" role="region" aria-labelledby="${titleId}">
       <div class="insights-main">
         ${insightsData.badge ? `<div class="insights-badge" role="text" aria-label="Badge: ${insightsData.badge}">${insightsData.badge}</div>` : ''}
-        ${insightsData.title ? `<h2 class="insights-title" id="${titleId}">${titleText}</h2>` : ''}
-        ${insightsData.description ? `<div class="insights-description" id="${descriptionId}" role="text">${descriptionText}</div>` : ''}
+        ${insightsData.title ? `<div class="insights-title" id="${titleId}">${insightsData.title}</div>` : ''}
+        ${descriptionHtml ? `<div class="insights-description" id="${descriptionId}" role="text">${descriptionHtml}</div>` : ''}
         <nav class="insights-buttons" aria-label="Action buttons">
           ${insightsData.buttons.map((button, index) => {
     const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';
@@ -155,7 +153,7 @@ export default function decorate(block) {
           </div>
           <span class="insights-card-label" aria-label="Featured Research">Featured Research</span>
         </div>
-        ${extractedHeading || insightsData.keyInsightsPointsHeader ? `<h3 class="insights-card-title" id="${cardId}-title">${extractedHeading || getPlainText(insightsData.keyInsightsPointsHeader)}</h3>` : `<h3 class="insights-card-title" id="${cardId}-title">Key Insights</h3>`}
+        <h3 class="insights-card-title" id="${cardId}-title">${extractedHeading}</h3>
         ${insightsList.length > 0 ? `
           <ul class="insights-list" aria-label="Key insights list">
             ${insightsList.map((item) => `<li>${item}</li>`).join('')}
