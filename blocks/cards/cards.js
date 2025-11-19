@@ -20,45 +20,8 @@ export default function decorate(block) {
     img.closest('picture').replaceWith(optimizedPic);
   });
 
-  // Combine linkLabel and link into a single link with icon
+  // Process each card
   ul.querySelectorAll('li').forEach((li) => {
-    const linkLabelElement = li.querySelector('[data-aue-prop="linkLabel"]');
-    const linkElement = li.querySelector('a[href]');
-    const linkLabelBody = linkLabelElement?.closest('.cards-card-body');
-    const linkBody = linkElement?.closest('.cards-card-body');
-
-    if (linkLabelElement && linkElement) {
-      const linkLabelText = linkLabelElement.textContent.trim();
-      const linkHref = linkElement.getAttribute('href');
-      const linkTitle = linkElement.getAttribute('title') || linkHref;
-
-      // Create combined link HTML using template literal
-      const linkHtml = `
-        <p>
-          <a href="${linkHref}" 
-             title="${linkTitle}" 
-             class="cards-link link-primary">
-            ${linkLabelText}
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"/>
-            </svg>
-          </a>
-        </p>
-      `;
-
-      // Replace linkLabel body with new combined link
-      if (linkLabelBody) {
-        linkLabelBody.innerHTML = linkHtml;
-        // Remove the separate link body if it exists
-        if (linkBody && linkBody !== linkLabelBody) {
-          linkBody.remove();
-        }
-      } else if (linkBody) {
-        // If no linkLabel body, just update the link body
-        linkBody.innerHTML = linkHtml;
-      }
-    }
-
     // Combine all cards-card-body divs into a single one
     const bodyDivs = Array.from(li.querySelectorAll('.cards-card-body'));
     if (bodyDivs.length > 1) {
@@ -82,6 +45,50 @@ export default function decorate(block) {
           bodyDiv.remove();
         }
       });
+    }
+
+    // Handle link based on last two p tags
+    const cardBody = li.querySelector('.cards-card-body');
+    if (cardBody) {
+      const paragraphs = Array.from(cardBody.querySelectorAll('p'));
+
+      // Check if last paragraph contains an anchor tag
+      if (paragraphs.length >= 2) {
+        const lastP = paragraphs[paragraphs.length - 1];
+        const secondLastP = paragraphs[paragraphs.length - 2];
+        const anchor = lastP.querySelector('a[href]');
+
+        if (anchor) {
+          // Get link from last paragraph
+          const linkHref = anchor.getAttribute('href');
+          const linkTitle = anchor.getAttribute('title') || linkHref;
+
+          // Get link label text from second-to-last paragraph
+          const linkLabelText = secondLastP.textContent.trim();
+
+          if (linkLabelText && linkHref) {
+            // Create combined link HTML using template literal
+            const linkHtml = `
+              <p>
+                <a href="${linkHref}"
+                   title="${linkTitle}"
+                   class="cards-link link-primary">
+                  ${linkLabelText}
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"/>
+                  </svg>
+                </a>
+              </p>
+            `;
+
+            // Replace the second-to-last paragraph with combined link
+            secondLastP.outerHTML = linkHtml;
+
+            // Remove the last paragraph (the one with anchor tag)
+            lastP.remove();
+          }
+        }
+      }
     }
   });
 
