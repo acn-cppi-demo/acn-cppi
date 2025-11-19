@@ -176,10 +176,6 @@
         "label": "Style",
         "options": [
           {
-            "name": "default",
-            "value": ""
-          },
-          {
             "name": "icon",
             "value": "Icon"
           },
