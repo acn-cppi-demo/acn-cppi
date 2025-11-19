@@ -48,6 +48,84 @@ function handlePeriodChange(period, block, data) {
 }
 
 /**
+ * Get default dummy line chart configuration
+ * @returns {Object} Default Highcharts configuration
+ */
+function getDummyLineChartConfig() {
+  return {
+    chart: {
+      type: 'line',
+      height: 400,
+      backgroundColor: 'transparent',
+    },
+    title: {
+      text: null,
+    },
+    xAxis: {
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      lineColor: 'rgba(255, 255, 255, 0.2)',
+      tickColor: 'rgba(255, 255, 255, 0.2)',
+      labels: {
+        style: {
+          color: 'rgba(255, 255, 255, 0.8)',
+        },
+      },
+    },
+    yAxis: {
+      title: {
+        text: null,
+      },
+      gridLineColor: 'rgba(255, 255, 255, 0.1)',
+      labels: {
+        style: {
+          color: 'rgba(255, 255, 255, 0.8)',
+        },
+      },
+    },
+    plotOptions: {
+      line: {
+        dataLabels: {
+          enabled: false,
+        },
+        enableMouseTracking: true,
+      },
+      series: {
+        color: '#FFD54A',
+      },
+    },
+    series: [
+      {
+        name: 'Revenue',
+        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 354.4],
+        color: '#FFD54A',
+      },
+      {
+        name: 'Growth',
+        data: [15.2, 38.2, 61.1, 72.5, 85.3, 99.2, 78.4, 88.9, 125.7, 112.3, 168.2, 201.5],
+        color: 'rgba(255, 213, 74, 0.5)',
+      },
+    ],
+    credits: {
+      enabled: false,
+    },
+    legend: {
+      enabled: true,
+      align: 'bottom',
+      itemStyle: {
+        color: 'rgba(255, 255, 255, 0.9)',
+      },
+    },
+    tooltip: {
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+      style: {
+        color: '#fff',
+      },
+    },
+  };
+}
+
+/**
  * Initialize Highcharts
  * @param {string} chartId - The chart container ID
  * @param {Object} data - The chart data object
@@ -69,20 +147,19 @@ function initializeChart(chartId, data) {
   // Parse chart data (assumed to be JSON string)
   let chartOptions = {};
   try {
-    if (typeof data.chartData === 'string') {
+    if (typeof data.chartData === 'string' && data.chartData.trim()) {
       chartOptions = JSON.parse(data.chartData);
-    } else {
+    } else if (typeof data.chartData === 'object' && data.chartData) {
       chartOptions = data.chartData;
+    } else {
+      // Use dummy line chart if no data provided
+      chartOptions = getDummyLineChartConfig();
     }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to parse chart data:', error);
-
-    const container = document.getElementById(chartId);
-    if (container) {
-      container.innerHTML = '<div class="cpp-hero-chart-error">Invalid chart configuration.</div>';
-    }
-    return;
+    // Fall back to dummy chart
+    chartOptions = getDummyLineChartConfig();
   }
 
   // Merge with default Highcharts configuration
@@ -298,8 +375,6 @@ export default function decorate(block) {
     });
   });
 
-  // Initialize Highcharts if data is available
-  if (cppHeroChartData.chartData) {
-    initializeChart(chartId, cppHeroChartData);
-  }
+  // Initialize Highcharts with provided data or dummy line chart
+  initializeChart(chartId, cppHeroChartData);
 }
