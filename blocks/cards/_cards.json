@@ -78,6 +78,13 @@
           ]
         },
         {
+          "component": "richtext",
+          "name": "text",
+          "value": "",
+          "label": "Text",
+          "valueType": "string"
+        },
+        {
           "component": "text",
           "name": "linkLabel",
           "label": "Link Label",
