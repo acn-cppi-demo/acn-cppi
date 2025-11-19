@@ -171,17 +171,30 @@
     "id": "card",
     "fields": [
       {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Image",
-        "multi": false
+        "component": "select",
+        "name": "style",
+        "label": "Style",
+        "options": [
+          {
+            "name": "default",
+            "value": ""
+          },
+          {
+            "name": "icon",
+            "value": "Icon"
+          },
+          {
+            "name": "Image",
+            "value": "Image",
+            "default": true
+          }
+        ]
       },
       {
         "component": "reference",
         "valueType": "string",
-        "name": "iconPng",
-        "label": "Icon PNG",
+        "name": "image",
+        "label": "Image",
         "multi": false
       },
       {
