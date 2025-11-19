@@ -59,6 +59,25 @@
           "multi": false
         },
         {
+          "component": "select",
+          "name": "iconSVG",
+          "label": "Icon SVG",
+          "options": [
+            {
+              "name": "moving-arrow",
+              "value": "moving-arrow"
+            },
+            {
+              "name": "energy-proragm-icon",
+              "value": "energy-proragm-icon"
+            },
+            {
+              "name": "thunderstorm",
+              "value": "thunderstorm"
+            }
+          ]
+        },
+        {
           "component": "text",
           "name": "linkLabel",
           "label": "Link Label",

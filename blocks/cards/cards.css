@@ -25,7 +25,7 @@
   border-radius: 8px;
 }
 
-.cards .cards-card-body {
+.cards .cards-card-body, .cards .card-icon {
   margin: 24px 40px 40px;
 }
 
@@ -33,7 +33,7 @@
   line-height: 0;
 }
 
-.cards > ul > li img {
+.cards > ul > li:not(:has(.card-icon)) img {
   width: 100%;
   aspect-ratio: 2;
   object-fit: cover;

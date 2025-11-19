@@ -164,6 +164,12 @@ a.link-primary {
     gap: 12px;
 }
 
+.insights-card-icon svg, .card-icon svg {
+    margin: auto;
+    display: block;
+    height: 100%;
+}
+
 a.link-primary svg {
     flex-shrink: 0;
 }
@@ -238,6 +244,12 @@ main img {
   height: auto;
 }
 
+.card-icon img {
+    margin: auto;
+    display: block;
+    height: 100%;
+}
+
 .icon {
   display: inline-block;
   height: 24px;
@@ -247,6 +259,14 @@ main img {
 .icon img {
   height: 100%;
   width: 100%;
+}
+
+
+.insights-card-icon, .card-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #0273CF;
+    border-radius: 8px;
 }
 
 /* sections */
