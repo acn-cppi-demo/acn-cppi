@@ -4,8 +4,12 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 export default function decorate(block) {
   /* change to ul, li */
   const ul = document.createElement('ul');
-  [...block.children].forEach((row) => {
+  ul.setAttribute('role', 'list');
+  ul.setAttribute('aria-label', 'Cards');
+  [...block.children].forEach((row, index) => {
     const li = document.createElement('li');
+    li.setAttribute('role', 'article');
+    li.setAttribute('aria-label', `Card ${index + 1}`);
     moveInstrumentation(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
@@ -16,7 +20,13 @@ export default function decorate(block) {
   });
   ul.querySelectorAll('picture > img').forEach((img) => {
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
-    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    const optimizedImg = optimizedPic.querySelector('img');
+    moveInstrumentation(img, optimizedImg);
+    // Ensure alt text is preserved or set to empty for decorative images
+    if (!optimizedImg.getAttribute('alt') && !img.alt) {
+      optimizedImg.setAttribute('alt', '');
+      optimizedImg.setAttribute('aria-hidden', 'true');
+    }
     img.closest('picture').replaceWith(optimizedPic);
   });
 
@@ -49,6 +59,7 @@ export default function decorate(block) {
 
     // Handle icon: if first p is "Icon", create icon div
     const cardBody = li.querySelector('.cards-card-body');
+    let iconDiv = li.querySelector('.card-icon');
     if (cardBody) {
       const firstP = cardBody.querySelector('p:first-of-type');
       if (firstP && firstP.textContent.trim().toLowerCase() === 'icon') {
@@ -86,17 +97,31 @@ export default function decorate(block) {
           picture = firstP.querySelector('picture');
         }
 
-        // Create icon div
-        const iconDiv = document.createElement('div');
-        iconDiv.className = 'card-icon';
+        // Create icon div if it doesn't exist
+        if (!iconDiv) {
+          iconDiv = document.createElement('div');
+          iconDiv.className = 'card-icon';
+          iconDiv.setAttribute('aria-hidden', 'true');
+        }
 
         if (picture) {
           // Move the picture element to icon div (don't clone, move it)
+          const pictureImg = picture.querySelector('img');
+          if (pictureImg && !pictureImg.getAttribute('alt')) {
+            pictureImg.setAttribute('alt', '');
+            pictureImg.setAttribute('aria-hidden', 'true');
+          }
           iconDiv.appendChild(picture);
         }
 
-        // Insert icon div as the first element in li
-        li.insertBefore(iconDiv, li.firstChild);
+        // Insert icon div after image div if it exists, otherwise as first element
+        if (imageDiv) {
+          if (!iconDiv.parentNode) {
+            imageDiv.insertAdjacentElement('afterend', iconDiv);
+          }
+        } else if (!iconDiv.parentNode) {
+          li.insertBefore(iconDiv, li.firstChild);
+        }
 
         // Remove the image div if it's now empty
         if (imageDiv && imageDiv.children.length === 0) {
@@ -109,7 +134,6 @@ export default function decorate(block) {
     }
 
     // Handle icon SVG replacement if card-icon exists
-    const iconDiv = li.querySelector('.card-icon');
     if (iconDiv && cardBody) {
       const firstP = cardBody.querySelector('p:first-of-type');
       if (firstP) {
@@ -122,6 +146,13 @@ export default function decorate(block) {
 
         if (iconMap[iconName]) {
           iconDiv.innerHTML = iconMap[iconName];
+          // Ensure icon is marked as decorative
+          iconDiv.setAttribute('aria-hidden', 'true');
+          const svg = iconDiv.querySelector('svg');
+          if (svg) {
+            svg.setAttribute('aria-hidden', 'true');
+            svg.setAttribute('focusable', 'false');
+          }
           // Remove the icon name paragraph from body
           firstP.remove();
         }
@@ -158,14 +189,22 @@ export default function decorate(block) {
         const linkLabelText = secondLastP.textContent.trim();
 
         if (linkLabelText && linkHref) {
+          // Get card title for better aria-label context
+          const cardTitle = cardBody.querySelector('h1, h2, h3, h4, h5, h6');
+          const cardTitleText = cardTitle ? cardTitle.textContent.trim() : '';
+          const ariaLabel = cardTitleText
+            ? `${linkLabelText}, ${cardTitleText}`
+            : linkLabelText;
+
           // Create combined link HTML using template literal
           const linkHtml = `
             <p>
               <a href="${linkHref}"
                  title="${linkTitle}"
-                 class="cards-link link-primary">
+                 class="cards-link link-primary"
+                 aria-label="${ariaLabel}">
                 ${linkLabelText}
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                   <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"/>
                 </svg>
               </a>
@@ -179,6 +218,56 @@ export default function decorate(block) {
           lastP.remove();
         }
       }
+    }
+
+    // Ensure correct order: cards-card-image first, then card-icon, then cards-card-body
+    const imageDiv = li.querySelector('.cards-card-image');
+    if (!iconDiv) {
+      iconDiv = li.querySelector('.card-icon');
+    }
+    const bodyDiv = li.querySelector('.cards-card-body');
+
+    // Add accessibility attributes to image div
+    if (imageDiv) {
+      const img = imageDiv.querySelector('img');
+      if (img && !img.getAttribute('alt') && !img.getAttribute('aria-hidden')) {
+        // If no alt text, mark as decorative
+        img.setAttribute('alt', '');
+        img.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    // Ensure icon div has aria-hidden if it exists
+    if (iconDiv && !iconDiv.getAttribute('aria-hidden')) {
+      iconDiv.setAttribute('aria-hidden', 'true');
+    }
+
+    // Add proper structure to card body
+    if (bodyDiv) {
+      // Ensure heading hierarchy is maintained
+      const headings = bodyDiv.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      if (headings.length > 0) {
+        const firstHeading = headings[0];
+        // Set aria-labelledby to link card to its heading
+        const headingId = firstHeading.id || `card-heading-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        if (!firstHeading.id) {
+          firstHeading.id = headingId;
+        }
+        li.setAttribute('aria-labelledby', headingId);
+      }
+    }
+
+    // Collect elements in correct order
+    const orderedElements = [];
+    if (imageDiv) orderedElements.push(imageDiv);
+    if (iconDiv) orderedElements.push(iconDiv);
+    if (bodyDiv) orderedElements.push(bodyDiv);
+
+    // Reorder if needed
+    if (orderedElements.length > 1) {
+      orderedElements.forEach((el) => {
+        li.appendChild(el);
+      });
     }
   });
 
