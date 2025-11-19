@@ -17,7 +17,7 @@
 }
 
 .cpp-hero-chart-main {
-    max-width: 760px;
+    max-width: 596px;
 }
 
 .cpp-hero-chart-title {
@@ -30,7 +30,7 @@
 .cpp-hero-chart-description {
     margin-top: 24px;
     margin-bottom: 24px;
-    font-size: 18px;
+    font-size: 14px;
     line-height: 1.6;
 }
 
@@ -148,6 +148,18 @@
     border-radius: 8px;
     padding: 24px;
     box-sizing: border-box;
+}
+
+/* Panel wrapper that groups controls, value and chart */
+.cpp-hero-chart-panel {
+    border: 1px solid #FFFF;
+    border-radius: 8px;
+    max-width: 840px;
+    background: transparent;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-right: auto;
+    margin-bottom: 32px;
 }
 
 .cpp-hero-chart-error {

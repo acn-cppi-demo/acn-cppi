@@ -329,7 +329,6 @@ export default function decorate(block) {
 
   // Build main HTML structure
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
-
   const html = `
     <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
       <!-- Header Section -->
@@ -341,19 +340,22 @@ export default function decorate(block) {
         </div>
       </div>
 
-      <!-- Controls Section (Graph Info + Period Tabs) -->
-      <div class="cpp-hero-chart-controls">
-        ${graphInfoHtml}
-        <div class="cpp-hero-chart-periods" role="tablist" aria-label="Time period selector">
-          ${periodTabsHtml}
+      <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
+      <div class="cpp-hero-chart-panel">
+        <!-- Controls Section (Graph Info + Period Tabs) -->
+        <div class="cpp-hero-chart-controls">
+          ${graphInfoHtml}
+          <div class="cpp-hero-chart-periods" role="tablist" aria-label="Time period selector">
+            ${periodTabsHtml}
+          </div>
         </div>
+
+        <!-- Value with Badge Section -->
+        ${valueHtml}
+
+        <!-- Chart Container -->
+        <div class="cpp-hero-chart" id="${chartId}"></div>
       </div>
-
-      <!-- Value with Badge Section -->
-      ${valueHtml}
-
-      <!-- Chart Container -->
-      <div class="cpp-hero-chart" id="${chartId}"></div>
     </div>
   `;
 
