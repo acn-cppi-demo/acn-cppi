@@ -43,6 +43,12 @@
           "multi": false
         },
         {
+          "component": "text",
+          "name": "iconSvg",
+          "label": "Icon SVG",
+          "valueType": "string"
+        },
+        {
           "component": "richtext",
           "name": "text",
           "value": "",
