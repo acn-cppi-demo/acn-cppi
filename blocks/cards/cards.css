@@ -25,8 +25,25 @@
   border-radius: 8px;
 }
 
-.cards .cards-card-body, .cards .card-icon {
+.cards .cards-card-body {
   margin: 24px 40px 40px;
+}
+
+.cards-card-body h1,
+.cards-card-body h2,
+.cards-card-body h3,
+.cards-card-body h4,
+.cards-card-body h5,
+.cards-card-body h6 {
+  margin-bottom: 8px;
+}
+
+.cards .cards-card-body .cards-link {
+    margin-top: 18.5px
+}
+
+.cards .card-icon {
+    margin: 40px 40px 24px;
 }
 
 .cards .cards-card-image {
@@ -37,10 +54,6 @@
   width: 100%;
   aspect-ratio: 2;
   object-fit: cover;
-}
-
-.cards-link {
-    margin-top: 16px;
 }
 
 @media (width <= 768px) {
