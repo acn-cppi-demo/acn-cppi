@@ -178,17 +178,11 @@
         "multi": false
       },
       {
-        "component": "text",
-        "name": "iconSvg",
-        "label": "Icon SVG",
-        "valueType": "string"
-      },
-      {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Text",
-        "valueType": "string"
+        "component": "reference",
+        "valueType": "string",
+        "name": "iconPng",
+        "label": "Icon PNG",
+        "multi": false
       },
       {
         "component": "text",

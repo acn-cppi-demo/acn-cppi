@@ -1,5 +1,4 @@
 export default function decorate(block) {
-  console.log('Insights block:', block);
   // Extract all data from the block into a JSON object
   const insightsData = {
     badge: null,
@@ -96,14 +95,6 @@ export default function decorate(block) {
       insightsData.keyInsightsPoints = list.outerHTML;
     }
   }
-
-  // Store the JSON object in a variable
-  const insightsJson = JSON.stringify(insightsData, null, 2);
-
-  // eslint-disable-next-line no-console
-  console.log('Insights Data JSON:', insightsJson);
-  // eslint-disable-next-line no-console
-  console.log('Insights Data Object:', insightsData);
 
   // Parse keyInsightsPoints to extract list items
   let insightsList = [];
