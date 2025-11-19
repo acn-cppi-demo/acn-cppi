@@ -68,14 +68,6 @@ export default function decorate(block) {
 
   cppHeroData.buttons = buttonPairs;
 
-  // Store the JSON object in a variable
-  const cppHeroJson = JSON.stringify(cppHeroData, null, 2);
-
-  // eslint-disable-next-line no-console
-  console.log('CPP Hero Data JSON:', cppHeroJson);
-  // eslint-disable-next-line no-console
-  console.log('CPP Hero Data Object:', cppHeroData);
-
   // Generate unique IDs for accessibility
   const titleId = `cpp-hero-title-${Date.now()}`;
   const descriptionId = `cpp-hero-description-${Date.now()}`;

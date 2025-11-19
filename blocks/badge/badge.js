@@ -1,20 +1,23 @@
 export default function decorate(block) {
-  // Find the class element
-  const classElement = block.querySelector('[data-aue-prop="class"]');
+  // Get all direct child divs
+  const children = Array.from(block.children);
 
-  if (classElement) {
-    // Get the class value from the text content
-    const classValue = classElement.textContent.trim();
+  // First div contains the badge text, second div contains the class
+  if (children.length >= 2) {
+    const classDiv = children[1];
+    const classParagraph = classDiv.querySelector('p');
 
-    // Apply the class to the badge block
-    if (classValue) {
-      block.classList.add(classValue);
-    }
+    if (classParagraph) {
+      // Get the class value from the text content
+      const classValue = classParagraph.textContent.trim();
 
-    // Remove the class element and its parent div from DOM
-    const classParent = classElement.closest('div');
-    if (classParent) {
-      classParent.remove();
+      // Apply the class to the badge block
+      if (classValue) {
+        block.classList.add(classValue);
+      }
+
+      // Remove the class div from DOM
+      classDiv.remove();
     }
   }
 }
