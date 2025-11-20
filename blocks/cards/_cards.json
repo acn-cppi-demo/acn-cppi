@@ -86,6 +86,13 @@
         },
         {
           "component": "text",
+          "name": "subtext",
+          "value": "",
+          "label": "Sub text",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
           "name": "linkLabel",
           "label": "Link Label",
           "valueType": "string"
