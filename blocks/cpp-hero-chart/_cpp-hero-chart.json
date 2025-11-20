@@ -1,0 +1,88 @@
+{
+  "definitions": [
+    {
+      "title": "CPP-Hero-Chart",
+      "id": "cpp-hero-chart",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "CPP-Hero-Chart",
+              "model": "cpp-hero-chart"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cpp-hero-chart",
+      "fields": [
+        {
+          "component": "richtext",
+          "name": "title",
+          "label": "Title",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "name": "description",
+          "label": "Description",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "buttonLabel",
+          "label": "Button Label",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "buttonLink",
+          "label": "Button Link",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "name": "graphImage",
+          "label": "Graph Info Image",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "graphImageAlt",
+          "label": "Graph Image Alt Text",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "value",
+          "label": "Value (e.g., $100.00B)",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "badge",
+          "label": "Badge Text",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "selectedPeriod",
+          "label": "Default Selected Period (3M, 6M, 1Y, 2Y, 5Y)",
+          "valueType": "string"
+        },
+        {
+          "component": "richtext",
+          "name": "chartData",
+          "label": "Chart Data (JSON for Highcharts)",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
