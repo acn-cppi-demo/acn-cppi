@@ -70,11 +70,9 @@ function toggleAllNavSections(sections, expanded = false) {
  */
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
-  const button = nav.querySelector('.nav-hamburger button');
   document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
-  button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
   if (isDesktop.matches) {
@@ -117,8 +115,11 @@ export default async function decorate(block) {
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
-  while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
+  // Check if fragment loaded successfully
+  if (fragment && fragment.firstElementChild) {
+    while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
+  }
   const classes = ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
@@ -130,6 +131,34 @@ export default async function decorate(block) {
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';
+  }
+
+  // Handle tools section - clean up unwanted button classes and containers
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) {
+    // Remove button-container and button classes from tools section
+    const buttonContainers = navTools.querySelectorAll('.button-container');
+    buttonContainers.forEach((container) => {
+      // Move the link out of button-container and remove button class
+      const link = container.querySelector('a');
+      if (link) {
+        link.classList.remove('button');
+        // Replace the button-container with just the link
+        container.parentNode.replaceChild(link, container);
+      }
+    });
+
+    // Also remove button class from any remaining links in tools
+    const toolLinks = navTools.querySelectorAll('a.button');
+    toolLinks.forEach((link) => {
+      link.classList.remove('button');
+    });
+
+    // Hide any old menu toggle buttons
+    const menuToggle = navTools.querySelector('.nav-menu-toggle');
+    if (menuToggle) {
+      menuToggle.style.display = 'none';
+    }
   }
 
   const navSections = nav.querySelector('.nav-sections');
@@ -146,15 +175,11 @@ export default async function decorate(block) {
     });
   }
 
-  // hamburger for mobile
-  const hamburger = document.createElement('div');
-  hamburger.classList.add('nav-hamburger');
-  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-      <span class="nav-hamburger-icon"></span>
-    </button>`;
-  hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-  nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
+  // prevent mobile nav behavior on window resize
+  toggleMenu(nav, navSections, isDesktop.matches);
+  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
   // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
