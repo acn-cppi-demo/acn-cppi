@@ -12,6 +12,10 @@
   margin-top: 40px;
 }
 
+.cards-container:not(:has(h2)) ul {
+    margin-top: 0;
+}
+
 @media (width >= 600px) {
   .cards > ul {
     grid-template-columns: repeat(3, 1fr);
