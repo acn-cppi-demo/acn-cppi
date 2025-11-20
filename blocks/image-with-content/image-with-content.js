@@ -16,13 +16,21 @@ export default function decorate(block) {
   const children = Array.from(block.children);
   let currentIndex = 0;
 
-  // Optimize images first
+  // Optimize images first and ensure accessibility
   block.querySelectorAll('picture > img').forEach((img) => {
     const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [
       { width: '2000', media: '(min-width: 600px)' },
       { width: '750' },
     ]);
-    moveInstrumentation(img, optimizedPic.querySelector('img'));
+    const optimizedImg = optimizedPic.querySelector('img');
+    moveInstrumentation(img, optimizedImg);
+    // Ensure alt text is preserved or set to empty for decorative images
+    if (!optimizedImg.getAttribute('alt') && !img.alt) {
+      optimizedImg.setAttribute('alt', '');
+      optimizedImg.setAttribute('aria-hidden', 'true');
+    } else if (img.alt) {
+      optimizedImg.setAttribute('alt', img.alt);
+    }
     img.closest('picture').replaceWith(optimizedPic);
   });
 
@@ -99,24 +107,26 @@ export default function decorate(block) {
     </svg>
   `;
 
+  // Extract title text for aria-label (strip HTML tags)
+  const titleText = contentData.title ? contentData.title.replace(/<[^>]*>/g, '').trim() : '';
+
   // Build aria-label for link
-  const linkAriaLabel = contentData.title
-    ? `${contentData.linkLabel || 'Read more'}, ${contentData.title.replace(/<[^>]*>/g, '')}`
+  const linkAriaLabel = titleText
+    ? `${contentData.linkLabel || 'Read more'}, ${titleText}`
     : contentData.linkLabel || 'Read more';
 
-  // Build HTML structure
+  // Build HTML structure with accessibility
   const html = `
-    <div class="image-with-content-wrapper" role="region" aria-labelledby="${titleId}">
-      <div class="image-with-content-image">
+    <div class="image-with-content-wrapper" role="article" ${titleText ? `aria-labelledby="${titleId}"` : ''} ${contentData.description ? `aria-describedby="${descriptionId}"` : ''}>
+      <div class="image-with-content-image" ${contentData.image ? '' : 'aria-hidden="true"'}>
         ${contentData.image || ''}
       </div>
       <div class="image-with-content-content">
         <div class="image-with-content-content-inner">
-
           ${contentData.date ? `
-            <div class="image-with-content-date" role="text" aria-label="Date: ${contentData.date}">
+            <div class="image-with-content-date" role="text" aria-label="Published date: ${contentData.date}">
               ${calendarIcon}
-              <span>${contentData.date}</span>
+              <time datetime="${contentData.date}">${contentData.date}</time>
             </div>
           ` : ''}
           ${contentData.title ? `<div class="image-with-content-title" id="${titleId}">${contentData.title}</div>` : ''}
@@ -139,4 +149,17 @@ export default function decorate(block) {
 
   // Replace block content with new HTML
   block.innerHTML = html;
+
+  // Post-process for accessibility: ensure images have proper alt text
+  const imageContainer = block.querySelector('.image-with-content-image');
+  if (imageContainer) {
+    const img = imageContainer.querySelector('img');
+    if (img) {
+      // If image has no alt text, mark as decorative
+      if (!img.getAttribute('alt') || img.getAttribute('alt') === '') {
+        img.setAttribute('alt', '');
+        img.setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
 }
