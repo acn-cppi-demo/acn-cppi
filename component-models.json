@@ -171,11 +171,46 @@
     "id": "card",
     "fields": [
       {
+        "component": "select",
+        "name": "style",
+        "label": "Style",
+        "options": [
+          {
+            "name": "icon",
+            "value": "Icon"
+          },
+          {
+            "name": "Image",
+            "value": "Image",
+            "default": true
+          }
+        ]
+      },
+      {
         "component": "reference",
         "valueType": "string",
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "component": "select",
+        "name": "iconSVG",
+        "label": "Icon SVG",
+        "options": [
+          {
+            "name": "moving-arrow",
+            "value": "moving-arrow"
+          },
+          {
+            "name": "energy-proragm-icon",
+            "value": "energy-proragm-icon"
+          },
+          {
+            "name": "thunderstorm",
+            "value": "thunderstorm"
+          }
+        ]
       },
       {
         "component": "richtext",
@@ -362,6 +397,41 @@
         "name": "text",
         "value": "",
         "label": "Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "image-with-content",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "date",
+        "label": "Date",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "label": "Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "linkLabel",
+        "label": "Link Label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
         "valueType": "string"
       }
     ]

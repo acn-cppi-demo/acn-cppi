@@ -1,0 +1,114 @@
+.image-with-content-container {
+  padding: 80px 0;
+}
+
+/* Desktop-first: Image on left, content on right */
+ .image-with-content-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  margin-top: 40px;
+}
+
+.image-with-content .image-with-content-wrapper {
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #E3E4E5;
+    box-shadow: 4px 4px 20px 0 #0000000D;
+}
+
+.image-with-content-image {
+  flex: 0 0 50%;
+  max-width: 50%;
+  line-height: 0;
+  display: flex;
+  align-items: stretch;
+}
+
+.image-with-content-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-with-content-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.image-with-content-content-inner {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.image-with-content-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #6F7176;
+}
+
+.image-with-content-date svg {
+  flex-shrink: 0;
+}
+
+.image-with-content-title h1,
+.image-with-content-title h2,
+.image-with-content-title h3,
+.image-with-content-title h4,
+.image-with-content-title h5,
+.image-with-content-title h6 {
+  margin-bottom: 8px;
+}
+
+.image-with-content-description {
+  margin-bottom: 24px;
+}
+
+.image-with-content-link-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.image-with-content-link-primary svg {
+  flex-shrink: 0;
+}
+
+/* AAA Accessibility: Focus styles for keyboard navigation */
+.image-with-content-link-primary:focus-visible {
+  outline: 3px solid #0273CF;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Mobile: Image on top, content on bottom */
+@media (width <= 768px) {
+  .image-with-content-wrapper {
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .image-with-content-image {
+    flex: 1;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .image-with-content-image img {
+    height: auto;
+  }
+
+  .image-with-content-content {
+    width: 100%;
+  }
+
+  .image-with-content-content-inner {
+    padding: 24px;
+  }
+}
