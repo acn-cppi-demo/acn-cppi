@@ -90,6 +90,18 @@
             {
               "name": "bag",
               "value": "bag"
+            },
+            {
+              "name": "handshake",
+              "value": "handshake"
+            },
+            {
+              "name": "earth",
+              "value": "earth"
+            },
+            {
+              "name": "timewatch",
+              "value": "timewatch"
             }
           ]
         },
