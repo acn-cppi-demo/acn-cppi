@@ -5,11 +5,12 @@ export default function decorate(block) {
   /* change to ul, li */
   const ul = document.createElement('ul');
   ul.setAttribute('role', 'list');
-  ul.setAttribute('aria-label', 'Cards');
+  ul.setAttribute('aria-label', 'Card list');
+  const totalCards = block.children.length;
   [...block.children].forEach((row, index) => {
     const li = document.createElement('li');
     li.setAttribute('role', 'article');
-    li.setAttribute('aria-label', `Card ${index + 1}`);
+    li.setAttribute('aria-label', `Card ${index + 1} of ${totalCards}`);
     moveInstrumentation(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {
@@ -26,6 +27,9 @@ export default function decorate(block) {
     if (!optimizedImg.getAttribute('alt') && !img.alt) {
       optimizedImg.setAttribute('alt', '');
       optimizedImg.setAttribute('aria-hidden', 'true');
+    } else if (img.alt) {
+      // Preserve existing alt text
+      optimizedImg.setAttribute('alt', img.alt);
     }
     img.closest('picture').replaceWith(optimizedPic);
   });
@@ -257,6 +261,32 @@ export default function decorate(block) {
           firstHeading.id = headingId;
         }
         li.setAttribute('aria-labelledby', headingId);
+        // Update aria-label to be more descriptive with heading text
+        const headingText = firstHeading.textContent.trim();
+        li.setAttribute('aria-label', headingText);
+
+        // Find description paragraph and link it with aria-describedby
+        const paragraphs = bodyDiv.querySelectorAll('p');
+        const descriptionParagraphs = Array.from(paragraphs).filter((p) => {
+          const link = p.querySelector('a');
+          return !link && p.textContent.trim() && p.textContent.trim().length > 20;
+        });
+
+        if (descriptionParagraphs.length > 0) {
+          const firstDesc = descriptionParagraphs[0];
+          const descId = firstDesc.id || `card-desc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+          if (!firstDesc.id) {
+            firstDesc.id = descId;
+          }
+          li.setAttribute('aria-describedby', descId);
+        }
+      } else {
+        // If no heading, try to use first paragraph as label
+        const firstParagraph = bodyDiv.querySelector('p');
+        if (firstParagraph && firstParagraph.textContent.trim()) {
+          const paraText = firstParagraph.textContent.trim().substring(0, 50);
+          li.setAttribute('aria-label', paraText);
+        }
       }
     }
 
