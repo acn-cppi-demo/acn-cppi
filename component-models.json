@@ -209,6 +209,18 @@
           {
             "name": "thunderstorm",
             "value": "thunderstorm"
+          },
+          {
+            "name": "dollar-sign",
+            "value": "dollar-sign"
+          },
+          {
+            "name": "chart",
+            "value": "chart"
+          },
+          {
+            "name": "user",
+            "value": "user"
           }
         ]
       },
