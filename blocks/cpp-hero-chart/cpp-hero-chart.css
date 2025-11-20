@@ -7,8 +7,6 @@
 
 .cpp-hero-chart-wrapper {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
 }
 
 /* Header Section */
@@ -23,7 +21,7 @@
 .cpp-hero-chart-title {
     margin-top: 0;
     margin-bottom: 0;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
 }
 
@@ -52,27 +50,26 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 32px;
-    padding: 24px 0;
-    border-bottom: 1px solid rgb(255 255 255 / 20%);
+    margin-bottom: 0;
+    padding: 20px 0 0;
 }
 
 /* Graph Info (Left side) */
 .cpp-hero-chart-graph-info {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 5px;
     flex: 0 0 auto;
 }
 
 .cpp-hero-chart-graph-info img {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
 }
 
 .graph-text {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.4;
     white-space: nowrap;
 }
@@ -80,21 +77,32 @@
 /* Period Tabs (Right side) */
 .cpp-hero-chart-periods {
     display: flex;
-    gap: 12px;
+    gap: 8px;
     flex: 0 0 auto;
+    width: auto;
+    height: auto;
+    border: 1px solid var(--white-transparent, #FFFFFF80);
+    border-radius: 8px;
+    padding: 8px;
 }
 
 .period-tab {
     background: transparent;
-    border: 1px solid rgb(255 255 255 / 40%);
+    border: none;
     color: rgb(255 255 255 / 80%);
-    padding: 8px 16px;
-    border-radius: 4px;
+    padding: 0;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     transition: all 0.3s ease;
     white-space: nowrap;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 }
 
 .period-tab:hover {
@@ -125,12 +133,12 @@
 
 .cpp-hero-chart-value {
     font-size: 42px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.2;
 }
 
 .cpp-hero-chart-badge {
-    background: rgb(255 255 255 / 15%);
+    background: #00C95066;
     border: 1px solid rgb(255 255 255 / 30%);
     color: #fff;
     padding: 8px 16px;
@@ -143,19 +151,19 @@
 /* Chart Container */
 .cpp-hero-chart {
     width: 100%;
-    min-height: 400px;
-    background: rgb(255 255 255 / 5%);
+    min-height: auto;
     border-radius: 8px;
-    padding: 24px;
     box-sizing: border-box;
+    padding-bottom: 20px;
 }
 
 /* Panel wrapper that groups controls, value and chart */
 .cpp-hero-chart-panel {
-    border: 1px solid #FFFF;
+    border: 1px solid #FFF;
     border-radius: 8px;
     max-width: 840px;
-    background: transparent;
+    background: linear-gradient(90deg, rgb(255 255 255 / 5%) 0%, rgb(255 255 255 / 10%) 100%);
+    box-shadow: 4px 4px 20px 0 rgb(0 0 0 / 5%);
     padding: 20px;
     box-sizing: border-box;
     margin-right: auto;
@@ -168,6 +176,30 @@
     border-radius: 8px;
     font-size: 14px;
     color: rgb(255 255 255 / 90%);
+}
+
+/* Learn More link under the chart */
+.cpp-hero-chart-learnmore-wrapper {
+    margin: 0 0 14px 12px;
+}
+
+.cpp-hero-chart-learnmore {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #FFFF !important;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cpp-hero-chart-learnmore:focus,
+.cpp-hero-chart-learnmore:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+}
+
+.cpp-hero-chart-learnmore-arrow {
+    font-size: 14px;
 }
 
 /* Mobile Responsive */
@@ -228,4 +260,8 @@
     .graph-text {
         font-size: 12px;
     }
+}
+
+g.highcharts-exporting-group {
+    display: none;
 }

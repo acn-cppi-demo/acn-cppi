@@ -55,73 +55,50 @@ function getDummyLineChartConfig() {
   return {
     chart: {
       type: 'line',
-      height: 400,
+      height: 170,
       backgroundColor: 'transparent',
     },
     title: {
       text: null,
     },
     xAxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      // show only the axis baseline (no labels or ticks)
+      labels: { enabled: false },
+      lineWidth: 1,
       lineColor: 'rgba(255, 255, 255, 0.2)',
-      tickColor: 'rgba(255, 255, 255, 0.2)',
-      labels: {
-        style: {
-          color: 'rgba(255, 255, 255, 0.8)',
-        },
-      },
+      tickLength: 0,
+      tickWidth: 0,
+      minorTickLength: 0,
     },
     yAxis: {
-      title: {
-        text: null,
-      },
-      gridLineColor: 'rgba(255, 255, 255, 0.1)',
-      labels: {
-        style: {
-          color: 'rgba(255, 255, 255, 0.8)',
-        },
-      },
+      title: { text: null },
+      labels: { enabled: false },
+      gridLineWidth: 0,
+      lineWidth: 0,
+      tickLength: 0,
     },
     plotOptions: {
-      line: {
-        dataLabels: {
-          enabled: false,
-        },
-        enableMouseTracking: true,
-      },
       series: {
-        color: '#FFD54A',
+        dataLabels: { enabled: false },
+        enableMouseTracking: false,
+        marker: { enabled: false },
+        color: 'var(--CPPI-White, #FFFFFF)',
+        lineWidth: 2,
       },
     },
     series: [
       {
-        name: 'Revenue',
+        name: 'Value',
         data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 354.4],
-        color: '#FFD54A',
-      },
-      {
-        name: 'Growth',
-        data: [15.2, 38.2, 61.1, 72.5, 85.3, 99.2, 78.4, 88.9, 125.7, 112.3, 168.2, 201.5],
-        color: 'rgba(255, 213, 74, 0.5)',
+        color: 'var(--CPPI-White, #FFFFFF)',
+        lineWidth: 2,
       },
     ],
     credits: {
       enabled: false,
     },
-    legend: {
-      enabled: true,
-      align: 'bottom',
-      itemStyle: {
-        color: 'rgba(255, 255, 255, 0.9)',
-      },
-    },
-    tooltip: {
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
-      borderColor: 'rgba(255, 255, 255, 0.2)',
-      style: {
-        color: '#fff',
-      },
-    },
+    legend: { enabled: false },
+    tooltip: { enabled: false },
   };
 }
 
@@ -166,7 +143,7 @@ function initializeChart(chartId, data) {
   const config = {
     chart: {
       type: 'area',
-      height: 400,
+      height: 170,
       backgroundColor: 'transparent',
     },
     credits: {
@@ -196,7 +173,10 @@ function initializeChart(chartId, data) {
 }
 
 export default function decorate(block) {
-  // Extract all data from the block into a JSON object
+  // Extract all data from the block into a JSON object.
+  // Prefer authoring attributes (data-aue-prop) when available, but fall
+  // back to parsing the sequential child <div> structure that AEM publishes
+  // on the live site (no data attributes).
   const cppHeroChartData = {
     title: null,
     description: null,
@@ -212,65 +192,7 @@ export default function decorate(block) {
     selectedPeriod: '1Y',
   };
 
-  // Find all elements with data-aue-prop attributes
-  const propElements = block.querySelectorAll('[data-aue-prop]');
-  propElements.forEach((element) => {
-    const propName = element.getAttribute('data-aue-prop');
-    const propType = element.getAttribute('data-aue-type');
-    let value = null;
-
-    // Extract value based on type
-    if (propType === 'richtext') {
-      value = element.innerHTML.trim() || element.textContent.trim();
-    } else if (propType === 'text') {
-      value = element.textContent.trim();
-    } else {
-      value = element.textContent.trim();
-    }
-
-    // Map to cppHeroChartData object
-    if (propName === 'title') {
-      cppHeroChartData.title = value;
-    } else if (propName === 'description') {
-      cppHeroChartData.description = value;
-    } else if (propName === 'buttonLabel') {
-      cppHeroChartData.buttonLabel = value;
-    } else if (propName === 'buttonLink') {
-      cppHeroChartData.buttonLink = element.getAttribute('href') || value;
-    } else if (propName === 'graphImage') {
-      cppHeroChartData.graphImage = value;
-    } else if (propName === 'graphImageAlt') {
-      cppHeroChartData.graphImageAlt = value;
-    } else if (propName === 'graphText') {
-      cppHeroChartData.graphText = value;
-    } else if (propName === 'chartData') {
-      cppHeroChartData.chartData = value;
-    } else if (propName === 'value') {
-      cppHeroChartData.value = value;
-    } else if (propName === 'badge') {
-      cppHeroChartData.badge = value;
-    } else if (propName === 'selectedPeriod') {
-      cppHeroChartData.selectedPeriod = value || '1Y';
-    }
-  });
-
-  // Extract button link from <a> tag if not set
-  if (!cppHeroChartData.buttonLink) {
-    const buttonLink = block.querySelector('a[href]');
-    if (buttonLink) {
-      cppHeroChartData.buttonLink = buttonLink.getAttribute('href');
-    }
-  }
-
-  // Store the JSON object for reference
-  const cppHeroChartJson = JSON.stringify(cppHeroChartData, null, 2);
-
-  // eslint-disable-next-line no-console
-  console.log('CPP Hero Chart Data JSON:', cppHeroChartJson);
-  // eslint-disable-next-line no-console
-  console.log('CPP Hero Chart Data Object:', cppHeroChartData);
-
-  // Helper function to extract plain text from HTML
+  // Helper: plain text from HTML string
   const getPlainText = (htmlString) => {
     if (!htmlString) return '';
     const tempDiv = document.createElement('div');
@@ -278,22 +200,125 @@ export default function decorate(block) {
     return tempDiv.textContent.trim();
   };
 
-  const titleText = getPlainText(cppHeroChartData.title);
-  const descriptionText = getPlainText(cppHeroChartData.description);
+  // Helper: get text content from the block's child by index
+  function getTextFromChild(idx) {
+    const child = block.children[idx];
+    if (!child) return '';
+    const p = child.querySelector('p');
+    if (p) return p.textContent.trim();
+    return child.textContent.trim();
+  }
+
+  // Helper: extract picture/img info from the block's child by index
+  function getPictureFromChild(idx) {
+    const child = block.children[idx];
+    if (!child) return null;
+    const pic = child.querySelector('picture');
+    if (!pic) return null;
+    const img = pic.querySelector('img');
+    if (!img) return null;
+    return {
+      src: img.getAttribute('src') || '',
+      alt: img.getAttribute('alt') || '',
+      srcset: img.getAttribute('srcset') || '',
+    };
+  }
+
+  // First attempt: read props from data-aue-prop (authoring metadata)
+  const propElements = block.querySelectorAll('[data-aue-prop]');
+  if (propElements && propElements.length > 0) {
+    propElements.forEach((element) => {
+      const propName = element.getAttribute('data-aue-prop');
+      const propType = element.getAttribute('data-aue-type');
+      let value = null;
+
+      // Extract value based on type
+      if (propType === 'richtext') {
+        value = element.innerHTML.trim() || element.textContent.trim();
+      } else if (propType === 'text') {
+        value = element.textContent.trim();
+      } else {
+        value = element.textContent.trim();
+      }
+
+      // Map to cppHeroChartData object
+      if (propName === 'title') {
+        cppHeroChartData.title = value;
+      } else if (propName === 'description') {
+        cppHeroChartData.description = value;
+      } else if (propName === 'buttonLabel') {
+        cppHeroChartData.buttonLabel = value;
+      } else if (propName === 'buttonLink') {
+        cppHeroChartData.buttonLink = element.getAttribute('href') || value;
+      } else if (propName === 'graphImage') {
+        cppHeroChartData.graphImage = value;
+      } else if (propName === 'graphImageAlt') {
+        cppHeroChartData.graphImageAlt = value;
+      } else if (propName === 'graphText') {
+        cppHeroChartData.graphText = value;
+      } else if (propName === 'chartData') {
+        cppHeroChartData.chartData = value;
+      } else if (propName === 'value') {
+        cppHeroChartData.value = value;
+      } else if (propName === 'badge') {
+        cppHeroChartData.badge = value;
+      } else if (propName === 'selectedPeriod') {
+        cppHeroChartData.selectedPeriod = value || '1Y';
+      }
+    });
+  } else {
+    // Fallback: AEM published markup typically places each authored field
+    // inside a sequential child <div>. Map by index based on the sample HTML.
+    // (helpers are defined at function root so linting rules are satisfied)
+
+    // Index mapping (based on provided HTML sample):
+    // 0 - title
+    // 1 - description
+    // 2 - CTA text
+    // 3 - CTA href (sometimes rendered as text)
+    // 4 - picture
+    // 5 - graph label
+    // 6 - value
+    // 7 - badge / change
+    // 8 - timeframe (e.g., 3M)
+    cppHeroChartData.title = getTextFromChild(0) || null;
+    cppHeroChartData.description = getTextFromChild(1) || null;
+    cppHeroChartData.buttonLabel = getTextFromChild(2) || null;
+    // Try to find an <a> inside the CTA child for href; otherwise, use child text
+    const ctaChild = block.children[2];
+    if (ctaChild) {
+      const a = ctaChild.querySelector('a[href]');
+      if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
+      else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
+    }
+    const pic = getPictureFromChild(4);
+    if (pic) {
+      cppHeroChartData.graphImage = pic.src;
+      cppHeroChartData.graphImageAlt = pic.alt;
+    }
+    cppHeroChartData.graphText = getTextFromChild(5) || null;
+    cppHeroChartData.value = getTextFromChild(6) || null;
+    cppHeroChartData.badge = getTextFromChild(7) || null;
+    cppHeroChartData.selectedPeriod = getTextFromChild(8) || cppHeroChartData.selectedPeriod;
+  }
 
   // Generate unique IDs for accessibility
   const titleId = `cpp-hero-chart-title-${Date.now()}`;
   const descriptionId = `cpp-hero-chart-description-${Date.now()}`;
   const chartId = `cpp-hero-chart-${Date.now()}`;
 
+  // Plain text versions for rendered template
+  const titleText = getPlainText(cppHeroChartData.title);
+  const descriptionText = getPlainText(cppHeroChartData.description);
+
   // Build button HTML
   let buttonHtml = '';
   if (cppHeroChartData.buttonLabel) {
     const hasHref = cppHeroChartData.buttonLink && cppHeroChartData.buttonLink !== '#';
     if (hasHref) {
-      buttonHtml = `<a href="${cppHeroChartData.buttonLink}" class="button button-primary">${cppHeroChartData.buttonLabel}</a>`;
+      buttonHtml = `<a href="${cppHeroChartData.buttonLink}" class="button button-secondary">${cppHeroChartData.buttonLabel}</a>`;
     } else {
-      buttonHtml = `<button type="button" class="button button-primary" disabled aria-disabled="true">${cppHeroChartData.buttonLabel}</button>`;
+      buttonHtml = `<button type="button" class="button button-secondary" disabled aria-disabled="true">${cppHeroChartData.buttonLabel}</button>`;
     }
   }
 
@@ -327,6 +352,16 @@ export default function decorate(block) {
     `;
   }
 
+  // Build Learn More link (separate from the primary CTA button)
+  let learnMoreHtml = '';
+  if (cppHeroChartData.buttonLink) {
+    learnMoreHtml = `
+      <div class="cpp-hero-chart-learnmore-wrapper">
+        <a class="cpp-hero-chart-learnmore" href="${cppHeroChartData.buttonLink}">Learn More <span class="cpp-hero-chart-learnmore-arrow" aria-hidden="true">→</span></a>
+      </div>
+    `;
+  }
+
   // Build main HTML structure
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
   const html = `
@@ -355,6 +390,7 @@ export default function decorate(block) {
 
         <!-- Chart Container -->
         <div class="cpp-hero-chart" id="${chartId}"></div>
+        ${learnMoreHtml}
       </div>
     </div>
   `;
