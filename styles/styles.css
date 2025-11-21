@@ -18,6 +18,15 @@
   --text-color: #2C3D50;
   --link-color: #0273CF;
   --link-hover-color: #1d3ecf;
+  
+  /* CPPI Brand Colors */
+  --cppi-blue: #0273CF;
+  --cppi-navy: #2C3D50;
+  --cppi-dark-navy: #1E2127;
+  --cppi-white: #FFFFFF;
+  --light-grey: #F5F7FA;
+  --grey-7: #E3E4E5;
+  --white-transparent: rgba(255, 255, 255, 0.5);
 
   /* fonts */
   --body-font-family: 'Open Sans', sans-serif;
@@ -35,7 +44,7 @@
   --heading-font-weight: 600;
 
   /* nav height */
-  --nav-height: 64px;
+  --nav-height: 80px;
 }
 
 /* fallback fonts */
