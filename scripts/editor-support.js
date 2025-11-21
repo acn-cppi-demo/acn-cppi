@@ -11,6 +11,43 @@ import {
 import { decorateRichtext } from './editor-support-rte.js';
 import { decorateMain } from './scripts.js';
 
+window.xwalk = window.xwalk || {};
+window.xwalk.isAuthorEnv = true;
+window.xwalk.previewSku = 'ADB150';
+
+// set the filter for an UE editable
+function setUEFilter(element, filter) {
+  element.dataset.aueFilter = filter;
+}
+
+/**
+ * See:
+ * https://experienceleague.adobe.com/en/docs/experience-manager-cloud-service/content/implementing/developing/universal-editor/attributes-types#data-properties
+ */
+function updateUEInstrumentation() {
+  const main = document.querySelector('main');
+  const template = document.querySelector('meta[name="template"]')?.content;
+  const sections = main.querySelectorAll('[data-aue-model$="section"]');
+  const templates = ['order-details', 'enrichment', 'pdp', 'cart', 'mini-cart', 'plp',
+    'checkout', 'search-order', 'search', 'login', 'forgot-password', 'create-account',
+    'account', 'orders', 'address', 'returns', 'account-order-details', 'order-status',
+    'create-return', 'return-details', 'confirm-account', 'create-password', 'wishlist'];
+  const columnTemplates = ['account', 'orders', 'address', 'returns', 'account-order-details'];
+
+  // updated section filters according to the template
+  if (templates.includes(template)) {
+    // update section filters
+    sections.forEach((section) => {
+      setUEFilter(section, `${template}-section`);
+    });
+  }
+
+  // templates with column design have additional section type
+  if (columnTemplates.includes(template)) {
+    setUEFilter(main, 'columns-main');
+  }
+}
+
 async function applyChanges(event) {
   // redecorate default content and blocks on patches (in the properties rail)
   const { detail } = event;
@@ -104,16 +141,15 @@ function attachEventListners(main) {
   ].forEach((eventType) => main?.addEventListener(eventType, async (event) => {
     event.stopPropagation();
     const applied = await applyChanges(event);
-    if (!applied) window.location.reload();
+    if (applied) {
+      updateUEInstrumentation();
+    } else {
+      window.location.reload();
+    }
   }));
 }
 
 attachEventListners(document.querySelector('main'));
 
-// decorate rich text
-// this has to happen after decorateMain(), and everythime decorateBlocks() is called
-decorateRichtext();
-// in cases where the block decoration is not done in one synchronous iteration we need to listen
-// for new richtext-instrumented elements. this happens for example when using experimentation.
-const observer = new MutationObserver(() => decorateRichtext());
-observer.observe(document, { attributeFilter: ['data-richtext-prop'], subtree: true });
+// update UE component filters on page load
+updateUEInstrumentation();
