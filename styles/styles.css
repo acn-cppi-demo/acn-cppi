@@ -271,7 +271,7 @@ main img {
 /* sections */
 
 main > .section > div {
-  max-width: 1272px;
+  max-width: 1440px;
   margin: auto;
   padding: 0 24px;
 }
@@ -282,7 +282,7 @@ main > .section:first-of-type {
 
 @media (width >= 900px) {
   main > .section > div {
-    padding: 0 32px;
+    padding: 0 80px;
   }
 }
 

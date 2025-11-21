@@ -4,6 +4,7 @@ header .nav-wrapper {
   width: 100%;
   z-index: 2;
   position: fixed;
+  background: var(--cppi-white);
 }
 
 header nav {
@@ -14,11 +15,16 @@ header nav {
     'sections sections sections' 1fr / auto 1fr auto;
   align-items: center;
   margin: auto;
-  max-width: 1272px;
+  max-width: 1440px;
+  padding: 0 80px;
   height: var(--nav-height);
-  padding: 0 32px;
   font-family: var(--body-font-family);
-  background: white;
+}
+
+@media (width <= 899px) {
+    header nav {
+        padding: 0 24px;
+    }
 }
 
 header nav[aria-expanded='true'] {

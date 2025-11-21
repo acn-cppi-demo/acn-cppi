@@ -16,7 +16,7 @@
     margin-top: 0;
 }
 
-@media (width >= 600px) {
+@media (width >= 769px) {
   .cards > ul {
     grid-template-columns: repeat(3, 1fr);
   }

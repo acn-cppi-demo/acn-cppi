@@ -58,19 +58,34 @@ function extractFooterContent(fragment) {
   const firstSectionButtons = firstSection.querySelectorAll('.button-container a');
   let subscribeButton = '';
   const navigationLinks = [];
+  const socialLinks = [];
 
   firstSectionButtons.forEach((button) => {
     const title = button.getAttribute('title') || button.textContent.trim();
     const href = button.getAttribute('href');
+    const iconSpan = button.querySelector('.icon');
 
-    if (title.toLowerCase().includes('subscribe')) {
+    // Check if it's a social media link (has icon but no title text)
+    if (iconSpan && !title) {
+      const iconClass = iconSpan.className;
+      let ariaLabel = '';
+      if (iconClass.includes('twitter')) ariaLabel = 'Twitter';
+      else if (iconClass.includes('linkedin')) ariaLabel = 'LinkedIn';
+      else if (iconClass.includes('instagram')) ariaLabel = 'Instagram';
+      else if (iconClass.includes('youtube')) ariaLabel = 'YouTube';
+
+      if (ariaLabel) {
+        socialLinks.push(`<a href="${href}" aria-label="${ariaLabel}">${iconSpan.outerHTML}</a>`);
+      }
+    } else if (title.toLowerCase().includes('subscribe')) {
       subscribeButton = `<a href="${href}" class="footer-cta-button">
         ${title}
         <span class="icon icon-arrow_forward">
           <img data-icon-name="arrow_forward" src="/icons/arrow_forward.svg" alt="" loading="lazy" width="14" height="14">
         </span>
       </a>`;
-    } else {
+    } else if (title) {
+      // Regular navigation links
       navigationLinks.push(`<a href="${href}">${title}</a>`);
     }
   });
@@ -106,6 +121,7 @@ function extractFooterContent(fragment) {
     newsletterDescription,
     subscribeButton,
     navigationLinks,
+    socialLinks,
     copyright,
     legalLinks,
   };
@@ -145,56 +161,48 @@ export default async function decorate(block) {
 
   // Create footer HTML using extracted content
   const footerHTML = `
-    <div class="footer-content">
-      <!-- Left Section: Newsletter Signup -->
-      <div class="footer-left">
-        <div class="footer-logo">
-          ${extractedContent.logo}
-        </div>
-        <div class="footer-newsletter">
-          <h3>${extractedContent.newsletterTitle}</h3>
-          <p>${extractedContent.newsletterDescription}</p>
-          ${extractedContent.subscribeButton}
-        </div>
+    <div class="footer-container">
+      <div class="footer-first-section">
+          <div class="footer-logo">
+              ${extractedContent.logo}
+          </div>
+           <div class="footer-social">
+               ${extractedContent.socialLinks.join('')}
+           </div>
       </div>
-
-      <!-- Center Divider -->
-      <div class="footer-divider"></div>
-
-      <!-- Right Section: Navigation Links -->
-      <div class="footer-right">
-        <div class="footer-nav">
-          ${extractedContent.navigationLinks.join('')}
-        </div>
-        <div class="footer-social">
-          <a href="#" aria-label="LinkedIn">
-            <span class="icon icon-linkedin">
-              <img data-icon-name="linkedin" src="/icons/linkedin.svg" alt="" loading="lazy" width="24" height="24">
-            </span>
-          </a>
-          <a href="#" aria-label="Twitter">
-            <span class="icon icon-twitter">
-              <img data-icon-name="twitter" src="/icons/twitter.svg" alt="" loading="lazy" width="24" height="24">
-            </span>
-          </a>
-          <a href="#" aria-label="YouTube">
-            <span class="icon icon-youtube">
-              <img data-icon-name="youtube" src="/icons/youtube.svg" alt="" loading="lazy" width="24" height="24">
-            </span>
-          </a>
-        </div>
+      <div class="footer-second-section">
+          <div class="footer-content">
+              <!-- Left Section: Newsletter Signup -->
+              <div class="footer-left"> 
+                  <div class="footer-newsletter">
+                      <h3>${extractedContent.newsletterTitle}</h3>
+                      <p>${extractedContent.newsletterDescription}</p>
+                      ${extractedContent.subscribeButton}
+                  </div>
+              </div>
+              <!-- Center Divider -->
+              <div class="footer-divider"></div>
+      
+              <!-- Right Section: Navigation Links -->
+              <div class="footer-right">
+                  <div class="footer-nav">
+                      ${extractedContent.navigationLinks.join('')}
+                  </div>
+              </div>
+          </div>
       </div>
-    </div>
-
-    <!-- Bottom Section -->
-    <div class="footer-bottom">
-      <div class="footer-bottom-content">
-        <div class="footer-copyright">
-          <p>${extractedContent.copyright}</p>
-        </div>
-        <div class="footer-legal">
-          ${extractedContent.legalLinks.join('')}
-        </div>
+      <div class="footer-third-section">
+          <!-- Bottom Section -->
+          <div class="footer-bottom">
+              <div class="footer-bottom-content">
+                  <div class="footer-copyright">
+                  <p>${extractedContent.copyright}</p>
+                  </div>
+                  <div class="footer-legal">
+                  ${extractedContent.legalLinks.join('')}
+                  </div>
+              </div>
+          </div>
       </div>
     </div>
   `;
