@@ -21,13 +21,18 @@
     {
       "id": "fund-insights-container",
       "components": [
-        "fund-performance",
+        "badge",
+        "cards", 
+        "columns",
+        "cpp-hero",
+        "cpp-hero-chart",
+        "fragment",
         "fund-overview",
-        "text",
-        "image",
-        "button",
-        "title",
-        "badge"
+        "fund-performance",
+        "hero",
+        "image-with-content",
+        "insights",
+        "teaser"
       ]
     }
   ]
