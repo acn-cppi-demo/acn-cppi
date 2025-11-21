@@ -440,8 +440,8 @@
       },
       {
         "component": "richtext",
-        "name": "content",
-        "label": "Content"
+        "name": "rightSideText",
+        "label": "Right Side Text"
       }
     ]
   },
