@@ -23,10 +23,10 @@
   --cppi-blue: #0273CF;
   --cppi-navy: #2C3D50;
   --cppi-dark-navy: #1E2127;
-  --cppi-white: #FFFFFF;
+  --cppi-white: #FFF;
   --light-grey: #F5F7FA;
   --grey-7: #E3E4E5;
-  --white-transparent: rgba(255, 255, 255, 0.5);
+  --white-transparent: rgb(255 255 255 / 50%);
 
   /* fonts */
   --body-font-family: 'Open Sans', sans-serif;
