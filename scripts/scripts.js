@@ -11,7 +11,6 @@ import {
   loadSections,
   loadCSS,
 } from './aem.js';
-import gtmMartech from './gtm-martech.js';
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -97,10 +96,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
-    await Promise.all([
-      gtmMartech.eager(),
-      loadSection(main.querySelector('.section'), waitForFirstImage),
-    ]);
+    await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
   try {
@@ -120,7 +116,6 @@ async function loadEager(doc) {
 async function loadLazy(doc) {
   const main = doc.querySelector('main');
   await loadSections(main);
-  await gtmMartech.lazy();
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
@@ -138,7 +133,6 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  window.setTimeout(gtmMartech.delayed, 1000);
   // eslint-disable-next-line import/no-cycle
   window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
