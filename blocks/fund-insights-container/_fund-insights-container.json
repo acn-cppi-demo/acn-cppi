@@ -16,8 +16,7 @@
       }
     }
   ],
-  "models": [
-  ],
+  "models": [],
   "filters": [
     {
       "id": "fund-insights-container",
