@@ -432,6 +432,16 @@
         "name": "image",
         "label": "Image",
         "multi": false
+      },
+      {
+        "component": "text",
+        "name": "badgeLabel",
+        "label": "Badge Label"
+      },
+      {
+        "component": "richtext",
+        "name": "rightSideText",
+        "label": "Right Side Text"
       }
     ]
   },

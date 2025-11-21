@@ -50,19 +50,6 @@
   },
   {
     "id": "fund-insights-container",
-    "components": [
-      "badge",
-      "cards",
-      "columns",
-      "cpp-hero",
-      "cpp-hero-chart",
-      "fragment",
-      "fund-overview",
-      "fund-performance",
-      "hero",
-      "image-with-content",
-      "insights",
-      "teaser"
-    ]
+    "components": []
   }
 ]
