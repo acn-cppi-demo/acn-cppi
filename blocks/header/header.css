@@ -318,41 +318,11 @@ header nav .nav-tools a {
   color: var(--cppi-blue, #0273cf);
 }
 
-/* Menu icon - custom SVG */
-header nav .nav-tools .icon-menu {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 0; /* Hide any text */
-  line-height: 0;
-}
-
-header nav .nav-tools .icon-menu svg {
-  width: 18px;
-  height: 12px;
-}
-
-/* Hide default menu icon if present */
-header nav .nav-tools .icon-menu img {
-  display: none;
-}
-
 /* Hide any text content in menu elements */
 header nav .nav-tools *:contains("Menu") {
   font-size: 0;
 }
 
-/* Ensure menu text is hidden */
-header nav .nav-tools .icon-menu::before,
-header nav .nav-tools .icon-menu::after {
-  display: none;
-}
 
 /* Hide text nodes in menu elements */
 header nav .nav-tools [class*="menu"] {
@@ -363,15 +333,4 @@ header nav .nav-tools [class*="menu"] {
 header nav .nav-tools [class*="menu"] svg {
   font-size: initial;
   line-height: initial;
-}
-
-/* Ensure only SVG content is visible in menu elements */
-header nav .nav-tools .icon-menu * {
-  color: transparent;
-}
-
-header nav .nav-tools .icon-menu svg,
-header nav .nav-tools .icon-menu svg * {
-  color: initial;
-  fill: var(--cppi-blue, #0273cf);
 }
