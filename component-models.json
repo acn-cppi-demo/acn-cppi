@@ -404,6 +404,36 @@
     ]
   },
   {
+    "id": "fund-overview",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description"
+      }
+    ]
+  },
+  {
+    "id": "fund-performance",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title"
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description"
+      },
+      {
+        "component": "image",
+        "name": "image",
+        "label": "Image"
+      }
+    ]
+  },
+  {
     "id": "hero",
     "fields": [
       {
