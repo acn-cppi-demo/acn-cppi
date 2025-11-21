@@ -1,48 +1,43 @@
-.fund-performance {
+.fund-performance-container {
+    padding-block: 80px;
+}
+
+.fund-overview-layout {
+  display: flex;
+  gap: 80px;
+  align-items: flex-start;
+}
+
+.fund-overview-left {
+  flex: 0 0 400px;
+}
+
+.fund-performance-card {
   background: var(--cppi-navy);
   border-radius: 8px;
   overflow: hidden;
   color: var(--cppi-white);
-  
-}
-
-.fund-performance-card {
   padding: 40px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: center;
-  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 90px;
 }
 
 /* Content Section */
 .fund-performance-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 /* Header with Icon and Title */
 .fund-performance-header {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
-}
-
-.fund-performance-header .icon {
-  background-color: var(--cppi-blue);
-  border-radius: 8px;
-  padding: 8px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
+  margin-bottom: 24px;
 }
 
 .fund-performance-header p {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   font-family: var(--heading-font-family);
   font-size: 16px;
   font-weight: 600;
@@ -51,32 +46,29 @@
   line-height: normal;
 }
 
-/* Description */
-.fund-performance-description p {
-  font-family: var(--body-font-family);
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--cppi-white);
-  margin: 0;
-  line-height: 1.5;
-  max-width: 400px;
+.fund-performance-header .icon {
+  background-color: var(--cppi-blue);
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
 }
 
 /* CTA Button */
 .fund-performance-cta {
-  margin-top: 8px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .fund-performance-cta a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--body-font-family);
-  font-size: 16px;
-  font-weight: 700;
   color: var(--cppi-white);
-  text-decoration: none;
-  transition: opacity 0.2s ease;
 }
 
 .fund-performance-cta a:hover {
@@ -91,14 +83,6 @@
   justify-content: center;
 }
 
-/* Chart Section */
-.fund-performance-chart {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
 .fund-performance-chart picture,
 .fund-performance-chart img {
   width: 100%;
@@ -107,27 +91,125 @@
   border-radius: 4px;
 }
 
-/* Responsive Design */
-@media (width < 768px) {
-  .fund-performance-card {
-    grid-template-columns: 1fr;
-    gap: 32px;
-    padding: 32px 24px;
-  }
-  
-  .fund-performance-description p {
-    font-size: 14px;
-    max-width: 100%;
-  }
-  
-  .fund-performance-cta a {
-    font-size: 14px;
-  }
+.fund-performance-header .icon img {
+  width: 20px;
+  height: 20px;
 }
 
-@media (width >= 1200px) {
-  .fund-performance-card {
-    padding: 56px;
-    gap: 56px;
-  }
+@media (width < 900px) {
+    .fund-performance-container {
+        padding-block: 24px;
+    }
+
+    .fund-overview-layout {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .fund-performance-card {
+        padding: 24px;
+        gap: 71px;
+    }
+
+    .performance-row {
+        padding: 24px !important;
+    }
+}
+
+.fund-overview-right {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* General paragraph styles - must come before more specific selectors */
+.right-content-item p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--grey-4, #6f7176);
+  margin: 24px 0 0;
+  text-align: center;
+  line-height: normal;
+}
+
+/* Fund Overview Badge */
+.right-content-item:first-child {
+  display: flex;
+  justify-content: left;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.right-content-item:first-child p {
+  background: #fff;
+  color: var(--cppi-blue, #0273cf);
+  border: 1px solid var(--grey-7, #e3e4e5);
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Performance Data Rows */
+.performance-row {
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 28px 24px 28px 40px;
+    margin: 0 0 16px;
+}
+
+.performance-row:last-child {
+    margin-bottom: 0;
+}
+
+.period-column {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.period-text {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.performance-data {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.performance-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    min-width: 80px;
+}
+
+.performance-value {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cppi-navy, #2c3d50);
+    line-height: normal;
+    margin-bottom: 4px;
+}
+
+.performance-label {
+    font-weight: 600;
+    color: var(--grey-4, #6f7176);
+}
+
+.column-divider {
+    width: 1px;
+    height: 40px;
+    background-color: var(--grey-7, #e3e4e5);
 }
