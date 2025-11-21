@@ -1,0 +1,133 @@
+.fund-performance {
+  background: var(--cppi-navy);
+  border-radius: 8px;
+  overflow: hidden;
+  color: var(--cppi-white);
+  
+}
+
+.fund-performance-card {
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* Content Section */
+.fund-performance-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Header with Icon and Title */
+.fund-performance-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.fund-performance-header .icon {
+  background-color: var(--cppi-blue);
+  border-radius: 8px;
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.fund-performance-header p {
+  font-family: var(--heading-font-family);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cppi-white);
+  margin: 0;
+  line-height: normal;
+}
+
+/* Description */
+.fund-performance-description p {
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--cppi-white);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 400px;
+}
+
+/* CTA Button */
+.fund-performance-cta {
+  margin-top: 8px;
+}
+
+.fund-performance-cta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--body-font-family);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cppi-white);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.fund-performance-cta a:hover {
+  opacity: 0.8;
+}
+
+.fund-performance-cta .icon {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Chart Section */
+.fund-performance-chart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.fund-performance-chart picture,
+.fund-performance-chart img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 4px;
+}
+
+/* Responsive Design */
+@media (width < 768px) {
+  .fund-performance-card {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 24px;
+  }
+  
+  .fund-performance-description p {
+    font-size: 14px;
+    max-width: 100%;
+  }
+  
+  .fund-performance-cta a {
+    font-size: 14px;
+  }
+}
+
+@media (width >= 1200px) {
+  .fund-performance-card {
+    padding: 56px;
+    gap: 56px;
+  }
+}
