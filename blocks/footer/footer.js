@@ -166,7 +166,7 @@ export default async function decorate(block) {
           <div class="footer-logo">
               ${extractedContent.logo}
           </div>
-           <div class="footer-social">
+           <div class="footer-social footer-social-desktop">
                ${extractedContent.socialLinks.join('')}
            </div>
       </div>
@@ -187,6 +187,9 @@ export default async function decorate(block) {
               <div class="footer-right">
                   <div class="footer-nav">
                       ${extractedContent.navigationLinks.join('')}
+                  </div>
+                  <div class="footer-social footer-social-mobile">
+                      ${extractedContent.socialLinks.join('')}
                   </div>
               </div>
           </div>
