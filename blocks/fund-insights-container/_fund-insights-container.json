@@ -17,18 +17,5 @@
     }
   ],
   "models": [],
-  "filters": [
-    {
-      "id": "fund-insights-container",
-      "components": [
-        "fund-performance",
-        "fund-overview",
-        "text",
-        "image",
-        "button",
-        "title",
-        "badge"
-      ]
-    }
-  ]
+  "filters": []
 }
