@@ -345,7 +345,7 @@
         "valueType": "string"
       },
       {
-        "component": "text",
+        "component": "richtext",
         "name": "overall_data",
         "label": "Overall Data",
         "valueType": "string"
