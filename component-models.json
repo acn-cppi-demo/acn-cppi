@@ -459,8 +459,8 @@
       },
       {
         "component": "richtext",
-        "name": "rightSideText",
-        "label": "Right Side Text"
+        "name": "content",
+        "label": "Content"
       }
     ]
   },
