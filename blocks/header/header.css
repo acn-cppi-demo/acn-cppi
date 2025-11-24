@@ -379,7 +379,7 @@ header .nav-wrapper .megamenu .megamenu-desktop {
 
   /* Left Sidebar */
   header .nav-wrapper .megamenu .megamenu-desktop-left {
-    width: 300px;
+    width: 50%;
     flex-shrink: 0;
     border-right: 1px solid var(--grey-7, #e3e4e5);
     padding-right: 32px;
@@ -407,9 +407,9 @@ header .nav-wrapper .megamenu .megamenu-desktop {
 
   header .nav-wrapper .megamenu .megamenu-heading-button {
     width: 100%;
-    padding: 16px 0;
+    padding: 24px 16px;
     background: none;
-    border: none;
+    border-bottom: 1px solid var(--grey-7, #e3e4e5);
     text-align: left;
     cursor: pointer;
     display: flex;
@@ -427,6 +427,7 @@ header .nav-wrapper .megamenu .megamenu-desktop {
   header .nav-wrapper .megamenu .megamenu-heading-button:hover,
   header .nav-wrapper .megamenu .megamenu-heading-item.active .megamenu-heading-button {
     background-color: rgb(2 115 207 / 10%);
+    text-decoration: none;
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
@@ -477,20 +478,14 @@ header .nav-wrapper .megamenu .megamenu-desktop {
   }
 
   /* Quick Links Separator */
-  header .nav-wrapper .megamenu .megamenu-quick-links-separator {
-    height: 1px;
-    background-color: var(--grey-7, #e3e4e5);
-    margin: 24px 0;
-  }
 
   /* Quick Links Section (Left Sidebar) */
   header .nav-wrapper .megamenu .megamenu-quick-links {
-    margin-top: 0;
+    margin-top: 40px;
   }
 
   header .nav-wrapper .megamenu .megamenu-quick-links-title {
     margin: 0 0 16px;
-    color: var(--cppi-blue, #0273cf);
   }
 
   header .nav-wrapper .megamenu .megamenu-quick-links-list {
@@ -510,7 +505,6 @@ header .nav-wrapper .megamenu .megamenu-desktop {
     font-size: 16px;
     font-weight: 600;
     line-height: 1.5;
-    color: var(--cppi-blue, #0273cf);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
@@ -659,7 +653,6 @@ header .nav-wrapper .megamenu .megamenu-mobile-quick-links-title {
   font-weight: 700;
   line-height: 1.4;
   margin: 0 0 16px;
-  color: var(--cppi-blue, #0273cf);
 }
 
 header .nav-wrapper .megamenu .megamenu-mobile-quick-links-list {
@@ -679,7 +672,6 @@ header .nav-wrapper .megamenu .megamenu-mobile-quick-links-list a {
   font-size: 16px;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--cppi-blue, #0273cf);
   text-decoration: none;
   display: inline-flex;
   align-items: center;

@@ -111,6 +111,7 @@ function parseMegamenuData(navSections) {
   const megamenuData = {
     menuItems: [],
     quickLinks: [],
+    quickLinksTitle: null,
   };
 
   if (!navSections) return megamenuData;
@@ -119,7 +120,8 @@ function parseMegamenuData(navSections) {
   if (!contentWrapper) return megamenuData;
 
   let currentHeading = null;
-  let quickLinksStart = false;
+  let specialSectionStart = false;
+  let lastHeadingBeforeSpecialSection = null;
 
   // Iterate through all child nodes
   Array.from(contentWrapper.childNodes).forEach((node) => {
@@ -128,7 +130,7 @@ function parseMegamenuData(navSections) {
       return;
     }
 
-    // Check for H2 headings with brackets
+    // Check for H2 headings with brackets (menu items)
     if (node.tagName === 'H2') {
       const text = node.textContent || '';
       // Extract text inside brackets (e.g., "(The Fund" -> "The Fund")
@@ -145,23 +147,87 @@ function parseMegamenuData(navSections) {
           links: [],
         };
         megamenuData.menuItems.push(currentHeading);
+        // Store as potential special section title if it comes before special section
+        if (!specialSectionStart) {
+          lastHeadingBeforeSpecialSection = node;
+        }
+      } else if (!specialSectionStart) {
+        // H2 without brackets might be special section title
+        lastHeadingBeforeSpecialSection = node;
       }
       return;
     }
 
-    // Check for P tags with Quick Links
+    // Check for H3 headings that might be special section title
+    if ((node.tagName === 'H3' || node.tagName === 'H4') && !specialSectionStart) {
+      lastHeadingBeforeSpecialSection = node;
+    }
+
+    // Check for P tags with special sections (dynamic - any section starting with {)
     if (node.tagName === 'P') {
       const text = node.textContent || '';
-      if (text.includes('{ Quick Links') || quickLinksStart) {
-        quickLinksStart = true;
-        // Skip the opening brace P tag
-        if (text.trim() === '{ Quick Links' || text.includes('{ Quick Links')) {
-          // Check if this is the closing brace
-          if (text.includes('}')) {
-            quickLinksStart = false;
+      const trimmedText = text.trim();
+
+      // Check if this is the opening of a special section (starts with {)
+      if (trimmedText.startsWith('{') && !specialSectionStart) {
+        // Found opening of a special section
+        specialSectionStart = true;
+
+        // Extract section name and title from the opening tag
+        // Pattern: { SectionName } or { SectionName: Title } or
+        // { SectionName (without closing brace)
+        let sectionName = '';
+        let explicitTitle = null;
+
+        // Try to match with closing brace in same line:
+        // { SectionName } or { SectionName: Title }
+        const sectionMatchWithBrace = trimmedText.match(/\{\s*([^:}]+)(?::\s*(.+?))?\s*\}/);
+        if (sectionMatchWithBrace) {
+          sectionName = sectionMatchWithBrace[1].trim();
+          if (sectionMatchWithBrace[2]) {
+            explicitTitle = sectionMatchWithBrace[2].trim();
           }
+        } else {
+          // Match without closing brace: { SectionName or { SectionName: Title
+          const sectionMatchWithoutBrace = trimmedText.match(/\{\s*([^:]+)(?::\s*(.+?))?\s*$/);
+          if (sectionMatchWithoutBrace) {
+            sectionName = sectionMatchWithoutBrace[1].trim();
+            if (sectionMatchWithoutBrace[2]) {
+              explicitTitle = sectionMatchWithoutBrace[2].trim();
+            }
+          }
+        }
+
+        // Set the title based on priority
+        if (explicitTitle) {
+          megamenuData.quickLinksTitle = explicitTitle;
+        } else if (lastHeadingBeforeSpecialSection) {
+          // Use the heading before the section if available
+          const headingText = lastHeadingBeforeSpecialSection.textContent.trim();
+          // Only use if it's not a menu item heading (doesn't have brackets)
+          if (!headingText.includes('(')) {
+            megamenuData.quickLinksTitle = headingText;
+          } else {
+            // Fallback to section name if heading is a menu item
+            megamenuData.quickLinksTitle = sectionName;
+          }
+        } else {
+          // Use section name as title if no heading before it
+          megamenuData.quickLinksTitle = sectionName;
+        }
+
+        // If closing brace is in same tag, continue to process links in this tag
+        if (trimmedText.includes('}')) {
+          // Section closes in same tag, but continue processing this tag for links
+          // Don't return yet - process links below
+        } else {
+          // Opening tag only, return to skip this tag (no links in opening tag)
           return;
         }
+      }
+
+      // If we're inside a special section, extract links
+      if (specialSectionStart) {
         // Extract links from this P tag
         // Get full text content and extract items between brackets
         const pText = node.textContent.trim();
@@ -171,6 +237,8 @@ function parseMegamenuData(navSections) {
           let linkText = bracketMatch[1].trim();
           // Remove HTML entities like &nbsp;
           linkText = linkText.replace(/&nbsp;/g, ' ').trim();
+          // Remove :arrow_forward: or similar icon markers
+          linkText = linkText.replace(/:\s*arrow_forward\s*:?/gi, '').trim();
 
           // Find the anchor tag in this P
           const link = node.querySelector('a');
@@ -193,10 +261,14 @@ function parseMegamenuData(navSections) {
             });
           }
         }
-        // Check if this is the closing brace
-        if (text.includes('}')) {
-          quickLinksStart = false;
+
+        // Check if this is the closing brace (ends the section)
+        // Closing brace can be in opening tag (if { } in same tag) or standalone
+        if (trimmedText.includes('}')) {
+          specialSectionStart = false;
         }
+
+        // If we're in a special section, don't process as regular menu item link
         return;
       }
 
@@ -239,12 +311,12 @@ function buildMegamenuHTML(megamenuData) {
       // Heading item HTML
       headingsListHTML += `
       <li class="megamenu-heading-item">
-        <button type="button" class="megamenu-heading-button" data-menu-index="${index}">
+        <a href="#" class="megamenu-heading-button" data-menu-index="${index}">
           <h2 class="megamenu-heading-title">${menuItem.title}</h2>
           <span class="icon icon-arrow_forward">
             <img data-icon-name="arrow_forward" src="/icons/arrow_forward.svg" alt="" loading="lazy" width="16" height="16">
           </span>
-        </button>
+        </a>
       </li>`;
 
       // Sub-links panel HTML
@@ -335,9 +407,8 @@ function buildMegamenuHTML(megamenuData) {
         <ul class="megamenu-headings-list">${headingsListHTML}
         </ul>
         ${megamenuData.quickLinks.length > 0 ? `
-        <div class="megamenu-quick-links-separator"></div>
         <div class="megamenu-quick-links">
-          <h3 class="megamenu-quick-links-title">Quick Links</h3>
+          <p class="megamenu-quick-links-title">${megamenuData.quickLinksTitle || 'Quick Links'}</h3>
           <ul class="megamenu-quick-links-list">${quickLinksHTML}
           </ul>
         </div>` : ''}
@@ -352,7 +423,7 @@ function buildMegamenuHTML(megamenuData) {
     <div class="megamenu-mobile-content">${mobileAccordionHTML}
       ${megamenuData.quickLinks.length > 0 ? `
       <div class="megamenu-mobile-quick-links">
-        <h3 class="megamenu-mobile-quick-links-title">Quick Links</h3>
+        <h3 class="megamenu-mobile-quick-links-title">${megamenuData.quickLinksTitle || 'Quick Links'}</h3>
         <ul class="megamenu-mobile-quick-links-list">${mobileQuickLinksHTML}
         </ul>
       </div>` : ''}
@@ -468,6 +539,29 @@ function buildMegamenu(megamenuData) {
 }
 
 /**
+ * Opens the first megamenu panel by default (desktop only)
+ * @param {Element} megamenu The megamenu element
+ */
+function openFirstMegamenuPanel(megamenu) {
+  if (!megamenu || !isDesktop.matches) return;
+
+  const desktopMegamenu = megamenu.querySelector('.megamenu-desktop');
+  if (!desktopMegamenu) return;
+
+  // Check if any panel is already active
+  const hasActivePanel = desktopMegamenu.querySelector('.megamenu-heading-item.active');
+  if (hasActivePanel) return;
+
+  // Open the first panel
+  const firstHeadingItem = desktopMegamenu.querySelector('.megamenu-heading-item');
+  const firstPanel = desktopMegamenu.querySelector('.megamenu-sublinks-panel[data-menu-index="0"]');
+  if (firstHeadingItem && firstPanel) {
+    firstPanel.style.display = 'block';
+    firstHeadingItem.classList.add('active');
+  }
+}
+
+/**
  * Toggles megamenu visibility
  * @param {Element} megamenu The megamenu element
  * @param {Boolean} show Whether to show or hide the megamenu
@@ -480,6 +574,11 @@ function toggleMegamenu(megamenu, show) {
 
   megamenu.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
   document.body.style.overflowY = shouldShow && !isDesktop.matches ? 'hidden' : '';
+
+  // Open first panel by default when megamenu is shown (desktop only)
+  if (shouldShow) {
+    openFirstMegamenuPanel(megamenu);
+  }
 }
 
 /**
@@ -534,11 +633,14 @@ export default async function decorate(block) {
         const text = h2.textContent || '';
         if (text.includes('(')) {
           nodesToRemove.push(h2);
-          // Find and mark following P tags for removal until we hit another H2, Quick Links, or end
+          // Find and mark following P tags for removal until we hit another H2,
+          // special section, or end
           let nextSibling = h2.nextElementSibling;
           while (nextSibling) {
-            // Stop if we hit another H2 or Quick Links section
-            if (nextSibling.tagName === 'H2' || nextSibling.textContent?.includes('{ Quick Links')) {
+            // Stop if we hit another H2 or special section (starts with {)
+            const nextText = nextSibling.textContent || '';
+            const isSpecialSection = nextText.trim().startsWith('{');
+            if (nextSibling.tagName === 'H2' || isSpecialSection) {
               break;
             }
             // Only remove P tags that don't contain search or menu icons
@@ -557,16 +659,18 @@ export default async function decorate(block) {
         }
       });
 
-      // Remove Quick Links P tags (but not those with icons)
+      // Remove special section P tags (any section starting with {) but not those with icons
       Array.from(contentWrapper.querySelectorAll('p')).forEach((p) => {
         const text = p.textContent || '';
         const hasSearchIcon = p.querySelector('.icon-search');
         const hasMenuIcon = p.querySelector('.icon-menu, [class*="menu"]');
 
-        // Remove if it's Quick Links related and doesn't have icons
-        if (!hasSearchIcon && !hasMenuIcon
-            && (text.includes('{ Quick Links') || text.includes('}')
-                || (text.trim().startsWith('[') && text.includes(']') && !nodesToRemove.includes(p)))) {
+        // Remove if it's part of a special section (starts with { or contains })
+        // and doesn't have icons
+        const startsWithBrace = text.trim().startsWith('{');
+        const hasClosingBrace = text.includes('}') && !nodesToRemove.includes(p);
+        const hasBrackets = text.trim().startsWith('[') && text.includes(']') && !nodesToRemove.includes(p);
+        if (!hasSearchIcon && !hasMenuIcon && (startsWithBrace || hasClosingBrace || hasBrackets)) {
           nodesToRemove.push(p);
         }
       });
@@ -647,6 +751,9 @@ export default async function decorate(block) {
   // Add megamenu after nav
   if (megamenu) {
     navWrapper.appendChild(megamenu);
+
+    // Open first megamenu panel by default on page load (desktop only)
+    openFirstMegamenuPanel(megamenu);
 
     // Add click handler to menu button
     const menuIcon = navTools?.querySelector('.icon-menu, [class*="menu"]');
