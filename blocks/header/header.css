@@ -335,6 +335,22 @@ header nav .nav-tools [class*="menu"] svg {
   line-height: initial;
 }
 
+header .nav-wrapper .megamenu .megamenu-quick-links-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+header .nav-wrapper .megamenu .megamenu-quick-links-list a {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
 /* ==================== MEGAMENU STYLES ==================== */
 
 /* Megamenu Container */
@@ -371,7 +387,7 @@ header .nav-wrapper .megamenu .megamenu-desktop {
   header .nav-wrapper .megamenu .megamenu-desktop-content {
     max-width: 1280px;
     margin: 0 auto;
-    padding: 48px 80px;
+    padding: 16px 80px;
     display: flex;
     gap: 0;
     min-height: 500px;
@@ -381,14 +397,13 @@ header .nav-wrapper .megamenu .megamenu-desktop {
   header .nav-wrapper .megamenu .megamenu-desktop-left {
     width: 50%;
     flex-shrink: 0;
-    border-right: 1px solid var(--grey-7, #e3e4e5);
     padding-right: 32px;
   }
 
   /* Right Content */
   header .nav-wrapper .megamenu .megamenu-desktop-right {
     flex: 1;
-    padding-left: 48px;
+    padding-left: 40px;
   }
 
   /* Headings List (Left Sidebar) */
@@ -417,6 +432,10 @@ header .nav-wrapper .megamenu .megamenu-desktop {
     justify-content: space-between;
     transition: background-color 0.2s ease;
     font-family: inherit;
+  }
+
+  header .nav-wrapper .megamenu .megamenu-heading-button, header .nav-wrapper .megamenu .megamenu-quick-links {
+    padding-left: 16px;
   }
 
   header .nav-wrapper .megamenu .megamenu-heading-button h2 {
@@ -451,7 +470,9 @@ header .nav-wrapper .megamenu .megamenu-desktop {
 
   header .nav-wrapper .megamenu .megamenu-sublinks-title {
     margin: 0 0 24px;
-    color: var(--cppi-blue, #0273cf);
+    font-weight: 600;
+    border-bottom: 1px solid var(--grey-7, #e3e4e5);
+    padding-bottom: 16px;
   }
 
   header .nav-wrapper .megamenu .megamenu-sublinks-list {
@@ -460,7 +481,7 @@ header .nav-wrapper .megamenu .megamenu-desktop {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 24px;
   }
 
   header .nav-wrapper .megamenu .megamenu-sublinks-list li {
@@ -469,12 +490,36 @@ header .nav-wrapper .megamenu .megamenu-desktop {
 
   header .nav-wrapper .megamenu .megamenu-sublinks-list a {
     font-size: 16px;
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.5;
     color: var(--text-color, #333);
     text-decoration: none;
-    display: block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     transition: color 0.2s ease;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  header .nav-wrapper .megamenu .megamenu-sublinks-list .icon-arrow_forward {
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  header .nav-wrapper .megamenu .megamenu-sublinks-list .icon-arrow_forward img {
+    width: 16px;
+    height: 16px;
+  }
+
+  header .nav-wrapper .megamenu .megamenu-sublinks-list a:hover {
+    color: var(--cppi-blue, #0273cf);
+  }
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  header .nav-wrapper .megamenu .megamenu-sublinks-list a:hover .icon-arrow_forward {
+    transform: translateX(4px);
   }
 
   /* Quick Links Separator */
@@ -501,19 +546,18 @@ header .nav-wrapper .megamenu .megamenu-desktop {
     margin: 0;
   }
 
-  header .nav-wrapper .megamenu .megamenu-quick-links-list a {
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.5;
-    text-decoration: none;
+  /* stylelint-disable-next-line selector-class-pattern, no-descending-specificity */
+  header .nav-wrapper .megamenu .megamenu-quick-links-list .icon-arrow_forward {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    transition: opacity 0.2s ease;
+    transition: transform 0.2s ease;
   }
 
-  header .nav-wrapper .megamenu .megamenu-sublinks-list a:hover {
-    color: var(--cppi-blue, #0273cf);
+  /* stylelint-disable-next-line selector-class-pattern */
+  header .nav-wrapper .megamenu .megamenu-quick-links-list .icon-arrow_forward img {
+    width: 16px;
+    height: 16px;
+    filter: brightness(0) saturate(100%) invert(31%) sepia(98%) saturate(3731%) hue-rotate(195deg) brightness(98%) contrast(101%);
   }
 
   header .nav-wrapper .megamenu .megamenu-quick-links-list a:hover {
@@ -521,15 +565,8 @@ header .nav-wrapper .megamenu .megamenu-desktop {
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
-  header .nav-wrapper .megamenu .megamenu-quick-links-list .icon-arrow_forward {
-    display: inline-flex;
-    align-items: center;
-  }
-
-  /* stylelint-disable-next-line selector-class-pattern */
-  header .nav-wrapper .megamenu .megamenu-quick-links-list .icon-arrow_forward img {
-    width: 16px;
-    height: 16px;
+  header .nav-wrapper .megamenu .megamenu-quick-links-list a:hover .icon-arrow_forward {
+    transform: translateX(4px);
   }
 }
 

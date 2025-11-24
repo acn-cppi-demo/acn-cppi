@@ -325,7 +325,12 @@ function buildMegamenuHTML(megamenuData) {
         menuItem.links.forEach((link) => {
           subLinksHTML += `
           <li>
-            <a href="${link.href}" title="${link.title || link.text}">${link.text}</a>
+            <a href="${link.href}" title="${link.title || link.text}">
+              ${link.text}
+              <span class="icon icon-arrow_forward">
+                <img data-icon-name="arrow_forward" src="/icons/arrow_forward.svg" alt="" loading="lazy" width="16" height="16">
+              </span>
+            </a>
           </li>`;
         });
 
