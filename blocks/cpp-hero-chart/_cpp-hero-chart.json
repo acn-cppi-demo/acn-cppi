@@ -80,6 +80,12 @@
           "name": "chartData",
           "label": "Chart Data (JSON for Highcharts)",
           "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "overall_data",
+          "label": "Overall Data",
+          "valueType": "string"
         }
       ]
     }
