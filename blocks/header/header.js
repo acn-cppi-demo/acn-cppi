@@ -767,6 +767,21 @@ export default async function decorate(block) {
     // Open first megamenu panel by default on page load (desktop only)
     openFirstMegamenuPanel(megamenu);
 
+    // Mobile accordion: close other accordions when one is opened
+    const mobileAccordionItems = megamenu.querySelectorAll('.megamenu-accordion-item');
+    mobileAccordionItems.forEach((accordion) => {
+      accordion.addEventListener('toggle', () => {
+        if (accordion.open) {
+          // Close all other accordions
+          mobileAccordionItems.forEach((otherAccordion) => {
+            if (otherAccordion !== accordion && otherAccordion.open) {
+              otherAccordion.open = false;
+            }
+          });
+        }
+      });
+    });
+
     // Add click handler to menu button
     const menuIcon = navTools?.querySelector('.icon-menu, [class*="menu"]');
     if (menuIcon) {
