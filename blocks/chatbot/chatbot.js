@@ -47,13 +47,11 @@ export default function decorate(block) {
     const msg = chatInput.value.trim();
     if (!msg) return;
 
-    // Show user message
     chatBody.innerHTML += `<div class="msg user">${msg}</div>`;
     chatInput.value = "";
     chatBody.scrollTop = chatBody.scrollHeight;
 
     try {
-      // Call CPPI orchestrator API (NOT OpenAI)
       const response = await fetch("https://cppi-demo.accenture.com/es/api/v1/agent/orchestrator", {
         method: "POST",
         headers: {
