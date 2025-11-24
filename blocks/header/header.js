@@ -655,10 +655,44 @@ export default async function decorate(block) {
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
+  if (navBrand) {
+    // Find the brand link - could be .button or a direct link
+    let brandLink = navBrand.querySelector('.button');
+    if (!brandLink) {
+      brandLink = navBrand.querySelector('a');
+    }
+
+    // If no link exists, wrap the content (picture) in a link
+    if (!brandLink) {
+      const contentWrapper = navBrand.querySelector('.default-content-wrapper');
+      if (contentWrapper) {
+        // Create a new link element
+        brandLink = document.createElement('a');
+        brandLink.href = '/';
+        brandLink.setAttribute('aria-label', 'Home');
+        // Move all content from wrapper into the link
+        while (contentWrapper.firstChild) {
+          brandLink.appendChild(contentWrapper.firstChild);
+        }
+        // Replace wrapper with link
+        contentWrapper.parentNode.replaceChild(brandLink, contentWrapper);
+      }
+    }
+
+    if (brandLink) {
+      // Remove button class but keep it as a clickable link
+      brandLink.classList.remove('button');
+      // Remove button-container wrapper if it exists, but preserve the link
+      const buttonContainer = brandLink.closest('.button-container');
+      if (buttonContainer && buttonContainer.parentNode) {
+        // Move the link out of button-container
+        buttonContainer.parentNode.insertBefore(brandLink, buttonContainer);
+        buttonContainer.remove();
+      }
+      // Ensure the link is clickable
+      brandLink.style.pointerEvents = 'auto';
+      brandLink.style.cursor = 'pointer';
+    }
   }
 
   // Handle tools section - clean up unwanted button classes and containers

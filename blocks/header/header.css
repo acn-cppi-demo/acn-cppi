@@ -534,6 +534,7 @@ header .nav-wrapper .megamenu .megamenu-desktop {
     align-items: center;
     gap: 8px;
     transition: color 0.2s ease;
+    text-transform: capitalize;
   }
 
   /* stylelint-disable-next-line selector-class-pattern */
