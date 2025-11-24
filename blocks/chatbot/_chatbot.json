@@ -27,13 +27,6 @@
           "name": "title",
           "label": "Button Label",
           "value": "Need help?"
-        },
-        {
-          "component": "text",
-          "valueType": "string",
-          "name": "apiKey",
-          "label": "OpenAI API Key",
-          "value": ""
         }
       ]
     }
