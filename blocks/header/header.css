@@ -617,21 +617,25 @@ header .nav-wrapper .megamenu .megamenu-accordion-summary::-webkit-details-marke
   display: none;
 }
 
-header .nav-wrapper .megamenu .megamenu-accordion-summary::after {
-  content: '';
+header .nav-wrapper .megamenu .megamenu-accordion-arrow {
   position: absolute;
   top: 50%;
   right: 16px;
-  transform: translateY(-50%) rotate(135deg);
-  width: 6px;
-  height: 6px;
-  border: 2px solid var(--cppi-blue, #0273cf);
-  border-width: 2px 2px 0 0;
-  transition: transform 0.2s ease;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
 }
 
-header .nav-wrapper .megamenu .megamenu-accordion-item[open] .megamenu-accordion-summary::after {
-  transform: translateY(-50%) rotate(-45deg);
+header .nav-wrapper .megamenu .megamenu-accordion-arrow svg {
+  display: block;
+  width: 9px;
+  height: 5px;
+}
+
+header .nav-wrapper .megamenu .megamenu-accordion-item[open] .megamenu-accordion-arrow {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 header .nav-wrapper .megamenu .megamenu-accordion-summary:hover {

@@ -376,7 +376,14 @@ function buildMegamenuHTML(megamenuData) {
 
       mobileAccordionHTML += `
       <details class="megamenu-accordion-item">
-        <summary class="megamenu-accordion-summary">${menuItem.title}</summary>
+        <summary class="megamenu-accordion-summary">
+          ${menuItem.title}
+          <span class="megamenu-accordion-arrow">
+            <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.40375 4.40375L0 0H8.8075L4.40375 4.40375Z" fill="#0273CF"/>
+            </svg>
+          </span>
+        </summary>
         <div class="megamenu-accordion-body">
           <ul class="megamenu-mobile-links">${mobileLinksHTML}
           </ul>
