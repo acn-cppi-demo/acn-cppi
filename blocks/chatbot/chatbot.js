@@ -1,7 +1,6 @@
 export default function decorate(block) {
   const fields = block.model?.fields || {};
   const label = fields.title?.value || 'Need help?';
-  const apiKey = fields.apiKey?.value || '';
 
   block.innerHTML = `
       <!-- Floating Widget Button -->
@@ -48,18 +47,18 @@ export default function decorate(block) {
     if (!msg) return;
 
     chatBody.innerHTML += `<div class="msg user">${msg}</div>`;
-    chatInput.value = "";
+    chatInput.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
     try {
-      const response = await fetch("https://cppi-demo.accenture.com/es/api/v1/agent/orchestrator", {
-        method: "POST",
+      const response = await fetch('https://cppi-demo.accenture.com/es/api/v1/agent/orchestrator', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          request: msg
-        })
+          request: msg,
+        }),
       });
 
       if (!response.ok) {
@@ -71,10 +70,9 @@ export default function decorate(block) {
 
       chatBody.innerHTML += `<div class="msg bot">${reply}</div>`;
       chatBody.scrollTop = chatBody.scrollHeight;
-
     } catch (error) {
-      console.error("Chatbot error:", error);
-      chatBody.innerHTML += `<div class="msg bot error">Sorry, something went wrong.</div>`;
+      console.error('Chatbot error:', error);
+      chatBody.innerHTML += '<div class="msg bot error">Sorry, something went wrong.</div>';
     }
   }
 
