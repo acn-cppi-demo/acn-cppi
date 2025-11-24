@@ -47,27 +47,37 @@ export default function decorate(block) {
     const msg = chatInput.value.trim();
     if (!msg) return;
 
+    // Show user message
     chatBody.innerHTML += `<div class="msg user">${msg}</div>`;
-    chatInput.value = '';
+    chatInput.value = "";
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [{ role: 'user', content: msg }],
-      }),
-    });
+    try {
+      // Call CPPI orchestrator API (NOT OpenAI)
+      const response = await fetch("https://cppi-demo.accenture.com/es/api/v1/agent/orchestrator", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          request: msg
+        })
+      });
 
-    const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content || 'Error';
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
 
-    chatBody.innerHTML += `<div class="msg bot">${reply}</div>`;
-    chatBody.scrollTop = chatBody.scrollHeight;
+      const data = await response.json();
+      const reply = data?.response?.answer || "I couldn't generate a response.";
+
+      chatBody.innerHTML += `<div class="msg bot">${reply}</div>`;
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+    } catch (error) {
+      console.error("Chatbot error:", error);
+      chatBody.innerHTML += `<div class="msg bot error">Sorry, something went wrong.</div>`;
+    }
   }
 
   sendBtn.addEventListener('click', sendMessage);
