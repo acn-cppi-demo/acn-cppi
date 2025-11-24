@@ -51,7 +51,7 @@ export default function decorate(block) {
     chatBody.scrollTop = chatBody.scrollHeight;
 
     try {
-      const response = await fetch('https://cppi-demo.accenture.com/es/api/v1/agent/orchestrator', {
+      const response = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
