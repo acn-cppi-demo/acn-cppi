@@ -325,7 +325,12 @@ function buildMegamenuHTML(megamenuData) {
         menuItem.links.forEach((link) => {
           subLinksHTML += `
           <li>
-            <a href="${link.href}" title="${link.title || link.text}">${link.text}</a>
+            <a href="${link.href}" title="${link.title || link.text}">
+              ${link.text}
+              <span class="icon icon-arrow_forward">
+                <img data-icon-name="arrow_forward" src="/icons/arrow_forward.svg" alt="" loading="lazy" width="16" height="16">
+              </span>
+            </a>
           </li>`;
         });
 
@@ -371,7 +376,14 @@ function buildMegamenuHTML(megamenuData) {
 
       mobileAccordionHTML += `
       <details class="megamenu-accordion-item">
-        <summary class="megamenu-accordion-summary">${menuItem.title}</summary>
+        <summary class="megamenu-accordion-summary">
+          ${menuItem.title}
+          <span class="megamenu-accordion-arrow">
+            <svg width="9" height="5" viewBox="0 0 9 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4.40375 4.40375L0 0H8.8075L4.40375 4.40375Z" fill="#0273CF"/>
+            </svg>
+          </span>
+        </summary>
         <div class="megamenu-accordion-body">
           <ul class="megamenu-mobile-links">${mobileLinksHTML}
           </ul>
@@ -562,11 +574,42 @@ function openFirstMegamenuPanel(megamenu) {
 }
 
 /**
+ * Updates menu icon and text based on megamenu state
+ * @param {Element} menuIcon The menu icon element
+ * @param {Boolean} isOpen Whether megamenu is open
+ */
+function updateMenuIcon(menuIcon, isOpen) {
+  if (!menuIcon) return;
+
+  const closeSvg = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M1.05375 13.3075L0 12.2538L5.6 6.65375L0 1.05375L1.05375 0L6.65375 5.6L12.2537 0L13.3075 1.05375L7.7075 6.65375L13.3075 12.2538L12.2537 13.3075L6.65375 7.7075L1.05375 13.3075Z" fill="#0273CF"/>
+</svg>
+`;
+
+  if (isOpen) {
+    // Store original content if not already stored
+    if (!menuIcon.dataset.originalContent) {
+      menuIcon.dataset.originalContent = menuIcon.innerHTML;
+    }
+    // Update to close icon and text
+    menuIcon.innerHTML = `<span class="menu-close-text">Close</span>${closeSvg}`;
+    menuIcon.setAttribute('aria-label', 'Close menu');
+  } else {
+    // Restore original content
+    if (menuIcon.dataset.originalContent) {
+      menuIcon.innerHTML = menuIcon.dataset.originalContent;
+    }
+    menuIcon.setAttribute('aria-label', 'Toggle menu');
+  }
+}
+
+/**
  * Toggles megamenu visibility
  * @param {Element} megamenu The megamenu element
  * @param {Boolean} show Whether to show or hide the megamenu
+ * @param {Element} menuIcon Optional menu icon element to update
  */
-function toggleMegamenu(megamenu, show) {
+function toggleMegamenu(megamenu, show, menuIcon = null) {
   if (!megamenu) return;
 
   const isCurrentlyHidden = megamenu.getAttribute('aria-hidden') === 'true';
@@ -574,6 +617,11 @@ function toggleMegamenu(megamenu, show) {
 
   megamenu.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
   document.body.style.overflowY = shouldShow && !isDesktop.matches ? 'hidden' : '';
+
+  // Update menu icon if provided
+  if (menuIcon) {
+    updateMenuIcon(menuIcon, shouldShow);
+  }
 
   // Open first panel by default when megamenu is shown (desktop only)
   if (shouldShow) {
@@ -755,16 +803,31 @@ export default async function decorate(block) {
     // Open first megamenu panel by default on page load (desktop only)
     openFirstMegamenuPanel(megamenu);
 
+    // Mobile accordion: close other accordions when one is opened
+    const mobileAccordionItems = megamenu.querySelectorAll('.megamenu-accordion-item');
+    mobileAccordionItems.forEach((accordion) => {
+      accordion.addEventListener('toggle', () => {
+        if (accordion.open) {
+          // Close all other accordions
+          mobileAccordionItems.forEach((otherAccordion) => {
+            if (otherAccordion !== accordion && otherAccordion.open) {
+              otherAccordion.open = false;
+            }
+          });
+        }
+      });
+    });
+
     // Add click handler to menu button
     const menuIcon = navTools?.querySelector('.icon-menu, [class*="menu"]');
     if (menuIcon) {
       menuIcon.addEventListener('click', () => {
-        toggleMegamenu(megamenu);
+        toggleMegamenu(megamenu, undefined, menuIcon);
       });
       menuIcon.addEventListener('keydown', (e) => {
         if (e.code === 'Enter' || e.code === 'Space') {
           e.preventDefault();
-          toggleMegamenu(megamenu);
+          toggleMegamenu(megamenu, undefined, menuIcon);
         }
       });
     }
@@ -772,7 +835,7 @@ export default async function decorate(block) {
     // Close megamenu on escape
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Escape' && megamenu.getAttribute('aria-hidden') === 'false') {
-        toggleMegamenu(megamenu, false);
+        toggleMegamenu(megamenu, false, menuIcon);
       }
     });
   }
