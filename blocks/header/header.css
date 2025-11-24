@@ -330,9 +330,45 @@ header nav .nav-tools [class*="menu"] {
   line-height: 0;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
+body:has(.megamenu[aria-hidden='false']) header nav .nav-tools [class*="menu"] {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+}
+
 header nav .nav-tools [class*="menu"] svg {
   font-size: initial;
   line-height: initial;
+  width: 100%;
+}
+
+/* Show "Close" text when menu is open */
+header nav .nav-tools [class*="menu"] .menu-close-text {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--cppi-blue, #0273cf);
+  display: inline-block;
+}
+
+/* Hide other nav-tools elements when megamenu is open on mobile */
+@media (width <= 899px) {
+  /* stylelint-disable-next-line no-descending-specificity */
+  body:has(.megamenu[aria-hidden='false']) header nav .nav-tools .icon-search,
+  /* stylelint-disable-next-line no-descending-specificity */
+  body:has(.megamenu[aria-hidden='false']) header nav .nav-tools .custom-search-icon,
+  /* stylelint-disable-next-line no-descending-specificity */
+  body:has(.megamenu[aria-hidden='false']) header nav .nav-tools a:not([class*="menu"]) {
+    display: none;
+  }
+
+  /* Hide separators when menu is open */
+  /* stylelint-disable-next-line no-descending-specificity */
+  body:has(.megamenu[aria-hidden='false']) header nav .nav-tools .default-content-wrapper > *:not([class*="menu"])::after {
+    display: none;
+  }
 }
 
 header .nav-wrapper .megamenu .megamenu-quick-links-title {
@@ -733,7 +769,9 @@ header .nav-wrapper .megamenu .megamenu-mobile-quick-links-list .icon-arrow_forw
 }
 
 /* Menu icon cursor */
+/* stylelint-disable-next-line no-descending-specificity */
 header nav .nav-tools .icon-menu,
+/* stylelint-disable-next-line no-descending-specificity */
 header nav .nav-tools [class*="menu"] {
   cursor: pointer;
 }
