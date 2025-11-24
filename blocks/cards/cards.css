@@ -12,7 +12,11 @@
   margin-top: 40px;
 }
 
-@media (width >= 600px) {
+.cards-container:not(:has(h2)) ul {
+    margin-top: 0;
+}
+
+@media (width >= 769px) {
   .cards > ul {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -31,7 +35,6 @@
 
 .cards-card-body h1,
 .cards-card-body h2,
-.cards-card-body h3,
 .cards-card-body h4,
 .cards-card-body h5,
 .cards-card-body h6 {
@@ -40,6 +43,17 @@
 
 .cards .cards-card-body .cards-link {
     margin-top: 18.5px
+}
+
+.cards-card-body pre {
+    background: none;
+    padding: 0;
+    border: none;
+    color: #6F7176;    
+}
+
+.cards-card-body pre code {
+    font-family: var(--body-font-family);
 }
 
 /* AAA Accessibility: Focus styles for keyboard navigation */

@@ -55,8 +55,11 @@
         "teaser",
         "insights",
         "cpp-hero",
-        "cpp-hero-chart"
-        "image-with-content"
+        "cpp-hero-chart",
+        "image-with-content",
+        "fund-performance",
+        "fund-overview",
+        "fund-insights-container"
       ]
     }
   ]

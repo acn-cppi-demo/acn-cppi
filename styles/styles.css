@@ -18,6 +18,15 @@
   --text-color: #2C3D50;
   --link-color: #0273CF;
   --link-hover-color: #1d3ecf;
+  
+  /* CPPI Brand Colors */
+  --cppi-blue: #0273CF;
+  --cppi-navy: #2C3D50;
+  --cppi-dark-navy: #1E2127;
+  --cppi-white: #FFF;
+  --light-grey: #F5F7FA;
+  --grey-7: #E3E4E5;
+  --white-transparent: rgb(255 255 255 / 50%);
 
   /* fonts */
   --body-font-family: 'Open Sans', sans-serif;
@@ -35,7 +44,7 @@
   --heading-font-weight: 600;
 
   /* nav height */
-  --nav-height: 64px;
+  --nav-height: 80px;
 }
 
 /* fallback fonts */
@@ -81,15 +90,6 @@ header {
   height: var(--nav-height);
 }
 
-header .header,
-footer .footer {
-  visibility: hidden;
-}
-
-header .header[data-block-status="loaded"],
-footer .footer[data-block-status="loaded"] {
-  visibility: visible;
-}
 
 h1,
 h2,
@@ -271,7 +271,7 @@ main img {
 /* sections */
 
 main > .section > div {
-  max-width: 1272px;
+  max-width: 1280px;
   margin: auto;
   padding: 0 24px;
 }
@@ -282,7 +282,7 @@ main > .section:first-of-type {
 
 @media (width >= 900px) {
   main > .section > div {
-    padding: 0 32px;
+    padding: 0 80px;
   }
 }
 

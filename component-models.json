@@ -209,6 +209,34 @@
           {
             "name": "thunderstorm",
             "value": "thunderstorm"
+          },
+          {
+            "name": "dollar-sign",
+            "value": "dollar-sign"
+          },
+          {
+            "name": "chart",
+            "value": "chart"
+          },
+          {
+            "name": "user",
+            "value": "user"
+          },
+          {
+            "name": "bag",
+            "value": "bag"
+          },
+          {
+            "name": "handshake",
+            "value": "handshake"
+          },
+          {
+            "name": "earth",
+            "value": "earth"
+          },
+          {
+            "name": "timewatch",
+            "value": "timewatch"
           }
         ]
       },
@@ -372,6 +400,48 @@
         "component": "aem-content",
         "name": "reference",
         "label": "Reference"
+      }
+    ]
+  },
+  {
+    "id": "fund-overview",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description"
+      }
+    ]
+  },
+  {
+    "id": "fund-performance",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title"
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "badgeLabel",
+        "label": "Badge Label"
+      },
+      {
+        "component": "richtext",
+        "name": "rightSideText",
+        "label": "Right Side Text"
       }
     ]
   },
