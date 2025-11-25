@@ -280,10 +280,13 @@ export default function decorate(block) {
         }
       }
 
-      // First paragraph is usually the identifier "{right side}"
+      // First paragraph might be the identifier "{right side}" - but don't require it
       if (tagName === 'p' && index === 0 && text.includes('{right side}')) {
         overallData.identifier = text;
-      } else if (tagName === 'h1') {
+      }
+
+      // Look for h1 which contains the main value ($17.0B)
+      if (tagName === 'h1') {
         // Look for h1 which contains the main value ($17.0B)
         overallData.netIncreaseValue = text;
         // The previous paragraph should be the label
@@ -346,16 +349,17 @@ export default function decorate(block) {
     }
 
     // Return null if no meaningful data was extracted
-    if (!overallData.netIncreaseValue && !overallData.netReturnValue) {
+    // But be more lenient - if we have any data (label, value, button), return it
+    const hasData = overallData.netIncreaseValue
+      || overallData.netReturnValue
+      || overallData.buttonLink
+      || overallData.netIncreaseLabel
+      || overallData.netReturnLabel;
+    if (!hasData) {
       return null;
     }
 
     return overallData;
-  }
-
-  // Helper: extract overall data from the last child div (right side content)
-  function getOverallDataFromChild(idx) {
-    return parseOverallData(idx);
   }
 
   cppHeroChartData.title = getTextFromChild(0) || null;
@@ -378,7 +382,7 @@ export default function decorate(block) {
   cppHeroChartData.badge = getTextFromChild(7) || null;
   cppHeroChartData.selectedPeriod = getTextFromChild(8) || cppHeroChartData.selectedPeriod;
 
-  // Extract overall data from the last child div (index 9 - right side content)
+  // Extract overall data from the last child div (right side content)
   // First check for data-aue-prop
   const overallDataProp = block.querySelector('[data-aue-prop="overall_data"], [data-aue-prop="overallData"]');
   if (overallDataProp) {
@@ -402,8 +406,25 @@ export default function decorate(block) {
       }
     }
   } else {
-    // Fallback: extract from child div at index 9
-    const overallData = getOverallDataFromChild(9);
+    // Fallback: try to find the overall data div by checking multiple indices
+    // Start from the end and work backwards to find the div with overall data
+    let overallData = null;
+    const childrenLength = block.children.length;
+    for (let i = childrenLength - 1; i >= 0; i -= 1) {
+      const child = block.children[i];
+      const innerDiv = child.querySelector('div');
+      if (innerDiv) {
+        // Check if this div contains overall data indicators (h1, button, etc.)
+        const hasH1 = innerDiv.querySelector('h1');
+        const hasButton = innerDiv.querySelector('a.button, .button-container a, a[class*="button"]');
+        if (hasH1 || hasButton) {
+          overallData = parseOverallData(i);
+          if (overallData) {
+            break;
+          }
+        }
+      }
+    }
     if (overallData) {
       cppHeroChartData.overallData = overallData;
     }
