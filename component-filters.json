@@ -31,8 +31,7 @@
   {
     "id": "cards",
     "components": [
-      "card",
-      "button"
+      "card"
     ]
   },
   {
