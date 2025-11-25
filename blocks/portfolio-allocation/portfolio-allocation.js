@@ -3,17 +3,32 @@
  * @param {string} chartId - The chart container ID
  * @param {Object} data - The chart data object
  */
-function initializePortfolioChart(chartId, data) {
-  // Check if Highcharts is available
+async function initializePortfolioChart(chartId, data) {
+  // Dynamically load Highcharts if not available
   if (typeof window.Highcharts === 'undefined') {
-    // eslint-disable-next-line no-console
-    console.warn('Highcharts library not loaded');
-
     const container = document.getElementById(chartId);
     if (container) {
-      container.innerHTML = '<div class="portfolio-allocation-error">Chart library not available. Please ensure Highcharts is loaded.</div>';
+      container.innerHTML = '<div class="portfolio-allocation-error">Loading chart...</div>';
     }
-    return;
+
+    try {
+      // Import loadHighcharts from aem.js
+      const { loadHighcharts } = await import(`${window.hlx.codeBasePath}/scripts/aem.js`);
+      await loadHighcharts();
+
+      // Verify Highcharts is loaded
+      if (typeof window.Highcharts === 'undefined') {
+        throw new Error('Highcharts failed to load');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to load Highcharts:', error);
+      const errorContainer = document.getElementById(chartId);
+      if (errorContainer) {
+        errorContainer.innerHTML = '<div class="portfolio-allocation-error">Chart library not available. Please refresh the page.</div>';
+      }
+      return;
+    }
   }
 
   // Asset class descriptions for tooltips
@@ -625,27 +640,30 @@ export default function decorate(block) {
     card.removeAttribute('role'); // Remove radio role
   });
 
-  // Initialize chart
-  initializePortfolioChart(chartId, portfolioData);
+  // Initialize chart (async)
+  initializePortfolioChart(chartId, portfolioData).then(() => {
+    // Set up hover event handlers after chart is created
+    setTimeout(() => {
+      const chart = window[`highchart_${chartId}`];
+      if (chart && chart.series && chart.series[0]) {
+        chart.series[0].points.forEach((point) => {
+          // On hover: highlight this segment, dim others
+          point.on('mouseOver', () => {
+            updateChartHighlight(chartId, point.name);
+          });
 
-  // Set up hover event handlers after chart is created
-  setTimeout(() => {
-    const chart = window[`highchart_${chartId}`];
-    if (chart && chart.series && chart.series[0]) {
-      chart.series[0].points.forEach((point) => {
-        // On hover: highlight this segment, dim others
-        point.on('mouseOver', () => {
-          updateChartHighlight(chartId, point.name);
+          // On mouse out: restore all segments to full opacity
+          point.on('mouseOut', () => {
+            updateChartHighlight(chartId, null);
+          });
         });
+      }
 
-        // On mouse out: restore all segments to full opacity
-        point.on('mouseOut', () => {
-          updateChartHighlight(chartId, null);
-        });
-      });
-    }
-
-    // Initialize chart with all segments visible
-    updateChartHighlight(chartId, null);
-  }, 100);
+      // Initialize chart with all segments visible
+      updateChartHighlight(chartId, null);
+    }, 100);
+  }).catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Chart initialization failed:', error);
+  });
 }

@@ -285,18 +285,32 @@ function getDummyLineChartConfig() {
  * @param {string} chartId - The chart container ID
  * @param {Object} data - The chart data object
  */
-function initializeChart(chartId, data) {
-  // Check if Highcharts is available
+async function initializeChart(chartId, data) {
+  // Dynamically load Highcharts if not available
   if (typeof window.Highcharts === 'undefined') {
-    // eslint-disable-next-line no-console
-    console.warn('Highcharts library not loaded');
-
-    // Render a placeholder or error message
     const container = document.getElementById(chartId);
     if (container) {
-      container.innerHTML = '<div class="cpp-hero-chart-error">Chart library not available. Please ensure Highcharts is loaded.</div>';
+      container.innerHTML = '<div class="cpp-hero-chart-error">Loading chart...</div>';
     }
-    return;
+
+    try {
+      // Import loadHighcharts from aem.js
+      const { loadHighcharts } = await import(`${window.hlx.codeBasePath}/scripts/aem.js`);
+      await loadHighcharts();
+
+      // Verify Highcharts is loaded
+      if (typeof window.Highcharts === 'undefined') {
+        throw new Error('Highcharts failed to load');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to load Highcharts:', error);
+      const errorContainer = document.getElementById(chartId);
+      if (errorContainer) {
+        errorContainer.innerHTML = '<div class="cpp-hero-chart-error">Chart library not available. Please refresh the page.</div>';
+      }
+      return;
+    }
   }
 
   // Parse chart data (assumed to be JSON string)
@@ -793,14 +807,17 @@ export default function decorate(block) {
     });
   });
 
-  // Initialize Highcharts with provided data or dummy line chart
-  initializeChart(chartId, cppHeroChartData);
-
-  // Load initial period data (default selected period) after chart is initialized
-  // Use setTimeout to ensure chart is fully initialized before updating
-  setTimeout(() => {
-    updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
-  }, 100);
+  // Initialize Highcharts with provided data or dummy line chart (async)
+  initializeChart(chartId, cppHeroChartData).then(() => {
+    // Load initial period data (default selected period) after chart is initialized
+    // Use setTimeout to ensure chart is fully initialized before updating
+    setTimeout(() => {
+      updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
+    }, 100);
+  }).catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error('Chart initialization failed:', error);
+  });
 
   // Log overallData for debugging
   if (cppHeroChartData.overallData) {

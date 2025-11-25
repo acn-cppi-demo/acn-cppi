@@ -275,6 +275,45 @@ async function loadScript(src, attrs) {
 }
 
 /**
+ * Loads Highcharts library and required modules dynamically
+ * @returns {Promise} Resolves when Highcharts is loaded
+ */
+export async function loadHighcharts() {
+  if (typeof window.Highcharts !== 'undefined') {
+    return Promise.resolve();
+  }
+
+  const baseUrl = 'https://code.highcharts.com';
+  const scripts = [
+    `${baseUrl}/highcharts.js`,
+    `${baseUrl}/modules/accessibility.js`,
+    `${baseUrl}/modules/exporting.js`,
+    `${baseUrl}/modules/export-data.js`,
+  ];
+
+  try {
+    // Load scripts sequentially (modules depend on main library)
+    // Load main library first
+    await loadScript(scripts[0]);
+    // Small delay to ensure Highcharts is initialized
+    await new Promise((resolve) => {
+      setTimeout(resolve, 50);
+    });
+    // Then load modules in parallel
+    await Promise.all(scripts.slice(1).map((src) => loadScript(src)));
+    // Verify Highcharts is available
+    if (typeof window.Highcharts === 'undefined') {
+      throw new Error('Highcharts library failed to initialize');
+    }
+    return Promise.resolve();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to load Highcharts:', error);
+    return Promise.reject(error);
+  }
+}
+
+/**
  * Retrieves the content of metadata tags.
  * @param {string} name The metadata name (or property)
  * @param {Document} doc Document object to query for metadata. Defaults to the window's document
