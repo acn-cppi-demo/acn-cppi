@@ -16,42 +16,48 @@ function initializePortfolioChart(chartId, data) {
     return;
   }
 
-  // Generate random mock data for portfolio allocation (matching Figma design colors)
-  const generateRandomChartData = () => {
-    const segments = [
-      { name: 'Equities', color: '#1E2127' },
-      { name: 'Fixed Income', color: '#2C3D50' },
-      { name: 'Real Estate', color: '#0052A4' },
-      { name: 'Infrastructure', color: '#0273CF' },
-      { name: 'Credit', color: '#D9E4FF' },
-    ];
-
-    // Generate random percentages that sum to 100
-    const percentages = [];
-    let remaining = 100;
-    for (let i = 0; i < segments.length - 1; i += 1) {
-      const max = remaining - (segments.length - i - 1) * 5; // Ensure at least 5% for remaining
-      const min = 5;
-      const value = Math.floor(Math.random() * (max - min + 1)) + min;
-      percentages.push(value);
-      remaining -= value;
-    }
-    percentages.push(remaining); // Last segment gets the remainder
-
-    // Shuffle percentages for randomness
-    for (let i = percentages.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [percentages[i], percentages[j]] = [percentages[j], percentages[i]];
-    }
-
-    return segments.map((segment, index) => ({
-      name: segment.name,
-      y: percentages[index],
-      color: segment.color,
-    }));
+  // Asset class descriptions for tooltips
+  const assetDescriptions = {
+    Equities: 'Investments in publicly traded company stocks across global markets',
+    'Fixed Income': 'Bonds and other debt securities providing steady income streams',
+    'Real Estate': 'Property investments including commercial and residential real estate',
+    Infrastructure: 'Investments in essential infrastructure assets like transportation and utilities',
+    Credit: 'Corporate bonds, private debt, and structured credit opportunities',
   };
 
-  const mockChartData = generateRandomChartData();
+  // Fixed mock data for portfolio allocation (matching Figma design colors)
+  const mockChartData = [
+    {
+      name: 'Equities',
+      y: 30,
+      color: '#1E2127',
+      description: assetDescriptions.Equities,
+    },
+    {
+      name: 'Fixed Income',
+      y: 25,
+      color: '#2C3D50',
+      description: assetDescriptions['Fixed Income'],
+    },
+    {
+      name: 'Real Estate',
+      y: 20,
+      color: '#0052A4',
+      description: assetDescriptions['Real Estate'],
+    },
+    {
+      name: 'Infrastructure',
+      y: 15,
+      color: '#0273CF',
+      description: assetDescriptions.Infrastructure,
+    },
+    {
+      name: 'Credit',
+      y: 10,
+      color: '#99BCFF',
+      description: assetDescriptions.Credit,
+    },
+  ];
 
   // Parse chart data if provided, otherwise use mock data
   let chartData = mockChartData;
@@ -84,24 +90,145 @@ function initializePortfolioChart(chartId, data) {
       enabled: false,
     },
     tooltip: {
-      enabled: false,
+      enabled: true,
+      backgroundColor: 'rgba(0, 0, 0, 0.85)',
+      borderColor: '#FFFFFF',
+      borderWidth: 1,
+      borderRadius: 8,
+      style: {
+        color: '#FFFFFF',
+        fontSize: '14px',
+        fontFamily: "'Open Sans', sans-serif",
+      },
+      padding: 12,
+      useHTML: true,
+      outside: true, // Allow tooltip to render outside chart container
+      followPointer: false, // Don't follow mouse, position relative to point
+      distance: 15, // Distance from point
+      hideDelay: 100, // Small delay before hiding to prevent flickering
+      shape: 'rect', // Use rectangular shape with connecting line
+      connectorWidth: 1, // Width of the connecting line
+      connectorColor: '#FFFFFF', // Color of the connecting line
+      positioner(width, height, point) {
+        // Position tooltip just after the portion in chart (relative to the point)
+        const { chart } = this;
+        const {
+          plotLeft,
+          plotTop,
+          plotWidth,
+          plotHeight,
+        } = chart;
+        const { plotX, plotY } = point;
+        const chartContainer = chart.renderTo;
+        const containerRect = chartContainer.getBoundingClientRect();
+        const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Calculate the angle of the point to determine which side to place tooltip
+        const centerX = plotWidth / 2;
+        const centerY = plotHeight / 2;
+        const angle = Math.atan2(plotY - centerY, plotX - centerX);
+        const gap = 15; // Gap between chart and tooltip
+
+        // Position tooltip based on the angle of the point
+        // For points on the right side (0 to PI/2 and -PI/2 to 0), show tooltip to the right
+        // For points on the left side, show tooltip to the left
+        let tooltipX;
+        let tooltipY = plotY + plotTop - (height / 2);
+
+        if (Math.abs(angle) < Math.PI / 2) {
+          // Right side of chart - position tooltip to the right
+          tooltipX = plotX + plotLeft + gap;
+        } else {
+          // Left side of chart - position tooltip to the left
+          tooltipX = plotX + plotLeft - width - gap;
+        }
+
+        // Check if tooltip would go off the right edge of viewport
+        const viewportWidth = window.innerWidth;
+        const tooltipRightEdge = containerRect.left + scrollX + tooltipX + width;
+        if (tooltipRightEdge > viewportWidth) {
+          // Position to the left instead
+          tooltipX = plotX + plotLeft - width - gap;
+        }
+
+        // Check if tooltip would go off the left edge of viewport
+        const tooltipLeftEdge = containerRect.left + scrollX + tooltipX;
+        if (tooltipLeftEdge < 0) {
+          // Position to the right instead
+          tooltipX = plotX + plotLeft + gap;
+        }
+
+        // Check if tooltip would go off the bottom of viewport
+        const viewportHeight = window.innerHeight;
+        const tooltipBottomEdge = containerRect.top + scrollY + tooltipY + height;
+        if (tooltipBottomEdge > viewportHeight) {
+          tooltipY = viewportHeight - (containerRect.top + scrollY) - height - 10;
+        }
+
+        // Check if tooltip would go off the top of viewport
+        const tooltipTopEdge = containerRect.top + scrollY + tooltipY;
+        if (tooltipTopEdge < scrollY) {
+          tooltipY = scrollY - containerRect.top + 10;
+        }
+
+        // Ensure tooltip doesn't go below chart bottom
+        if (tooltipY + height > plotHeight + plotTop) {
+          tooltipY = plotHeight + plotTop - height - 10;
+        }
+
+        // Ensure tooltip doesn't go above chart top
+        if (tooltipY < plotTop) {
+          tooltipY = plotTop + 10;
+        }
+
+        return {
+          x: tooltipX,
+          y: tooltipY,
+        };
+      },
+      formatter() {
+        const { point } = this;
+        const { name, y } = point;
+        const description = point.description || point.options.description || '';
+        return `
+          <div style="min-width: 200px; max-width: 280px; word-wrap: break-word; overflow-wrap: break-word;">
+            <div style="font-weight: 600; margin-bottom: 8px; font-size: 16px; word-wrap: break-word; overflow-wrap: break-word;">
+              ${name}
+            </div>
+            <div style="font-weight: 600; margin-bottom: 8px; color: #FFFFFF;">
+              ${y}%
+            </div>
+            ${description ? `<div style="font-size: 12px; line-height: 1.4; color: rgba(255, 255, 255, 0.9); word-wrap: break-word; overflow-wrap: break-word; white-space: normal;">
+              ${description}
+            </div>` : ''}
+          </div>
+        `;
+      },
     },
     plotOptions: {
       pie: {
         allowPointSelect: false,
-        cursor: 'default',
+        cursor: 'pointer', // Change cursor to pointer on hover
         dataLabels: {
           enabled: false,
         },
         showInLegend: false,
         innerSize: '60%',
-        borderWidth: 1,
-        borderColor: '#FFFFFF',
+        borderWidth: 1, // 1px border for all segments
+        borderColor: '#FFFFFF', // White border color
+        borderRadius: 0, // No border radius on segments
         size: '100%', // Use full available space
         center: ['50%', '50%'], // Center the pie chart
         states: {
           hover: {
-            brightness: 0.1,
+            brightness: 0.15, // Slightly brighten on hover
+            borderWidth: 1, // Keep 1px border on hover
+            borderRadius: 0, // No border radius on hover
+            halo: {
+              size: 5,
+              opacity: 0.25,
+            },
           },
         },
       },
@@ -111,9 +238,15 @@ function initializePortfolioChart(chartId, data) {
         name: 'Allocation',
         colorByPoint: true,
         innerSize: '60%',
+        borderWidth: 1, // Ensure 1px border on series level
+        borderColor: '#FFFFFF', // White border color
         data: chartData.map((item) => ({
           ...item,
           opacity: 1, // Initial opacity, will be updated based on selection
+          description: item.description || assetDescriptions[item.name] || '',
+          borderWidth: 1, // 1px border for each segment
+          borderColor: '#FFFFFF', // White border for each segment
+          borderRadius: 0, // No border radius for each segment
         })),
       },
     ],
@@ -124,6 +257,59 @@ function initializePortfolioChart(chartId, data) {
     const chart = window.Highcharts.chart(chartId, config);
     // Store chart instance for later updates
     window[`highchart_${chartId}`] = chart;
+
+    // Add custom connecting line for tooltip
+    let tooltipLine = null;
+
+    // Override tooltip refresh to draw connecting line
+    const originalRefresh = chart.tooltip.refresh;
+    chart.tooltip.refresh = function refresh(point, mouseEvent) {
+      // Call original refresh
+      originalRefresh.call(this, point, mouseEvent);
+
+      // Remove existing line if any
+      if (tooltipLine) {
+        tooltipLine.destroy();
+        tooltipLine = null;
+      }
+
+      // Draw connecting line
+      if (point && this.label && this.label.element) {
+        // Get point position on chart
+        const pointX = point.plotX + chart.plotLeft;
+        const pointY = point.plotY + chart.plotTop;
+
+        // Get tooltip position
+        const tooltipBox = this.label.element.getBoundingClientRect();
+        const chartBox = chart.container.getBoundingClientRect();
+        const tooltipX = tooltipBox.left - chartBox.left;
+        const tooltipY = tooltipBox.top - chartBox.top + (tooltipBox.height / 2);
+
+        // Draw line from point to tooltip
+        tooltipLine = chart.renderer.path([
+          ['M', pointX, pointY],
+          ['L', tooltipX, tooltipY],
+        ])
+          .attr({
+            stroke: '#FFFFFF',
+            'stroke-width': 1,
+            zIndex: 5,
+          })
+          .add();
+      }
+    };
+
+    // Remove line when tooltip is hidden
+    const originalHide = chart.tooltip.hide;
+    chart.tooltip.hide = function hide() {
+      if (tooltipLine) {
+        tooltipLine.destroy();
+        tooltipLine = null;
+      }
+      originalHide.call(this);
+    };
+
+    // Chart is created, hover handlers will be set up after function definitions
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to create Portfolio Allocation chart:', error);
@@ -136,11 +322,11 @@ function initializePortfolioChart(chartId, data) {
 }
 
 /**
- * Update chart to highlight selected segment (radio button behavior - only one selected)
+ * Update chart to highlight/dim segments based on hover
  * @param {string} chartId - The chart container ID
- * @param {Array} assetClasses - Array of asset class objects with selected state
+ * @param {string} hoveredSegmentName - Name of the hovered segment (null to show all)
  */
-function updateChartHighlight(chartId, assetClasses) {
+function updateChartHighlight(chartId, hoveredSegmentName = null) {
   const chart = window[`highchart_${chartId}`];
   if (!chart || !chart.series || !chart.series[0]) {
     return;
@@ -148,85 +334,24 @@ function updateChartHighlight(chartId, assetClasses) {
 
   const { points } = chart.series[0];
 
-  // Find the selected asset class (radio button - only one selected)
-  const selectedAsset = assetClasses.find((asset) => asset.selected === true);
-
-  // Update each point based on asset class selection
+  // Update each point based on hover state
   points.forEach((point) => {
-    const assetClass = assetClasses.find((asset) => asset.name === point.name);
-    if (assetClass) {
-      const isSelected = assetClass === selectedAsset;
-      // Set opacity: selected = 1, unselected = 0.3
+    if (hoveredSegmentName === null) {
+      // Show all segments at full opacity
       point.update({
-        opacity: isSelected ? 1 : 0.3,
-      }, false); // false = don't redraw yet
+        opacity: 1,
+      }, false);
+    } else {
+      // Highlight hovered segment, dim others
+      const isHovered = point.name === hoveredSegmentName;
+      point.update({
+        opacity: isHovered ? 1 : 0.3,
+      }, false);
     }
   });
 
   // Redraw chart once after all updates
   chart.redraw();
-}
-
-/**
- * Handle asset class card click (radio button: only one selected, at least one always selected)
- * @param {Element} card - The clicked card element
- * @param {Object} assetData - The asset class data
- * @param {string} chartId - The chart container ID
- * @param {Array} assetClasses - Array of all asset classes
- * @param {NodeList} allCards - All asset class card elements
- */
-function handleAssetClassClick(card, assetData, chartId, assetClasses, allCards) {
-  // Radio button behavior: if already selected, do nothing (at least one must be selected)
-  const isSelected = card.classList.contains('selected');
-  if (isSelected) {
-    return; // Don't allow deselecting if it's the only selected one
-  }
-
-  // Deselect all other cards (radio button behavior)
-  allCards.forEach((otherCard, index) => {
-    if (otherCard !== card) {
-      otherCard.classList.remove('selected');
-      assetClasses[index].selected = false;
-      otherCard.setAttribute('aria-checked', 'false');
-
-      // Update indicator for unselected cards
-      const indicator = otherCard.querySelector('.asset-class-indicator');
-      if (indicator) {
-        indicator.classList.remove('selected');
-        indicator.classList.add('unselected');
-        const fill = indicator.querySelector('.indicator-fill');
-        if (fill) {
-          fill.remove();
-        }
-      }
-    }
-  });
-
-  // Select the clicked card
-  card.classList.add('selected');
-  assetData.selected = true;
-  card.setAttribute('aria-checked', 'true');
-
-  // Update the radio button indicator for selected card
-  const indicator = card.querySelector('.asset-class-indicator');
-  if (indicator) {
-    indicator.classList.add('selected');
-    indicator.classList.remove('unselected');
-    // Update indicator fill
-    const fill = indicator.querySelector('.indicator-fill');
-    if (!fill) {
-      const fillDiv = document.createElement('div');
-      fillDiv.className = 'indicator-fill';
-      fillDiv.style.backgroundColor = assetData.color || '#000000';
-      indicator.appendChild(fillDiv);
-    }
-  }
-
-  // Update chart highlight
-  updateChartHighlight(chartId, assetClasses);
-
-  // eslint-disable-next-line no-console
-  console.log('Asset class selected (radio):', assetData.name);
 }
 
 export default function decorate(block) {
@@ -273,31 +398,72 @@ export default function decorate(block) {
     });
   }
 
-  // Generate random mock asset classes data (matching Figma design colors)
-  const generateRandomAssetClasses = () => {
-    const assetConfig = [
-      { name: 'Equities', color: '#1E2127', defaultSelected: true },
-      { name: 'Fixed Income', color: '#2C3D50', defaultSelected: true },
-      { name: 'Real Estate', color: '#0052A4', defaultSelected: false },
-      { name: 'Infrastructure', color: '#0273CF', defaultSelected: false },
-      { name: 'Credit', color: '#D9E4FF', defaultSelected: true },
-    ];
+  // Fixed mock asset classes data (matching Figma design colors)
+  const mockAssetClasses = [
+    {
+      name: 'Equities',
+      percentage: '30%',
+      selected: false,
+      color: '#1E2127',
+    },
+    {
+      name: 'Fixed Income',
+      percentage: '25%',
+      selected: false,
+      color: '#2C3D50',
+    },
+    {
+      name: 'Real Estate',
+      percentage: '20%',
+      selected: false,
+      color: '#0052A4',
+    },
+    {
+      name: 'Infrastructure',
+      percentage: '15%',
+      selected: false,
+      color: '#0273CF',
+    },
+    {
+      name: 'Credit',
+      percentage: '10%',
+      selected: false,
+      color: '#99BCFF',
+    },
+  ];
 
-    return assetConfig.map((config) => {
-      const percentage = Math.floor(Math.random() * 100);
-      // Use default selected state but allow some randomness
-      const selected = Math.random() > 0.3 ? config.defaultSelected : !config.defaultSelected;
+  // Fixed mock chart data for color matching (same colors as in initializePortfolioChart)
+  const mockChartDataForColors = [
+    { name: 'Equities', color: '#1E2127' },
+    { name: 'Fixed Income', color: '#2C3D50' },
+    { name: 'Real Estate', color: '#0052A4' },
+    { name: 'Infrastructure', color: '#0273CF' },
+    { name: 'Credit', color: '#99BCFF' },
+  ];
 
-      return {
-        name: config.name,
-        percentage: `${percentage.toString().padStart(2, '0')}%`,
-        selected,
-        color: config.color,
-      };
-    });
-  };
-
-  const mockAssetClasses = generateRandomAssetClasses();
+  // Parse chart data first (needed for color matching)
+  let chartDataForColors = mockChartDataForColors;
+  try {
+    if (portfolioData.chartData && typeof portfolioData.chartData === 'string' && portfolioData.chartData.trim()) {
+      const parsed = JSON.parse(portfolioData.chartData);
+      if (Array.isArray(parsed)) {
+        // Extract just name and color for color matching
+        chartDataForColors = parsed.map((item) => ({
+          name: item.name,
+          color: item.color,
+        }));
+      }
+    } else if (portfolioData.chartData && Array.isArray(portfolioData.chartData)) {
+      // Extract just name and color for color matching
+      chartDataForColors = portfolioData.chartData.map((item) => ({
+        name: item.name,
+        color: item.color,
+      }));
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to parse chart data for colors:', error);
+  }
 
   // Parse asset classes data if provided
   let assetClasses = mockAssetClasses;
@@ -314,6 +480,25 @@ export default function decorate(block) {
     // eslint-disable-next-line no-console
     console.error('Failed to parse asset classes data:', error);
   }
+
+  // Ensure asset class colors match chart data colors
+  // Match by name and update colors from chart data
+  const chartDataMap = new Map();
+  chartDataForColors.forEach((item) => {
+    chartDataMap.set(item.name, item.color);
+  });
+
+  // Update asset class colors to match chart data
+  assetClasses = assetClasses.map((asset) => {
+    const chartColor = chartDataMap.get(asset.name);
+    if (chartColor) {
+      return {
+        ...asset,
+        color: chartColor, // Use color from chart data
+      };
+    }
+    return asset;
+  });
 
   // Generate unique IDs
   const titleId = `portfolio-allocation-title-${Date.now()}`;
@@ -342,16 +527,14 @@ export default function decorate(block) {
   // Build asset class cards HTML (matching Figma layout)
   const assetCardsHtml = assetClasses
     .map((asset, index) => {
-      const isSelected = asset.selected === true; // Radio button: only true means selected
-      const indicatorClass = isSelected ? 'selected' : 'unselected';
+      // Always show indicator with color (matching pie chart segment)
       const fillColor = asset.color || '#000000';
-      const cardClass = isSelected ? 'selected' : '';
-      const fillStyle = isSelected ? `style="background-color: ${fillColor};"` : '';
+      const fillStyle = `style="background-color: ${fillColor};"`;
       return `
-        <div class="asset-class-card ${cardClass}" data-asset-index="${index}" role="radio" aria-checked="${isSelected ? 'true' : 'false'}" aria-label="Select ${asset.name}">
+        <div class="asset-class-card" data-asset-index="${index}" aria-label="Color indicator for ${asset.name}">
           <div class="asset-class-indicator-inner">
-            <div class="asset-class-indicator ${indicatorClass}">
-              ${isSelected ? `<div class="indicator-fill" ${fillStyle}></div>` : ''}
+            <div class="asset-class-indicator selected">
+              <div class="indicator-fill" ${fillStyle}></div>
             </div>
             <div class="asset-class-name">${asset.name}</div>
           </div>
@@ -403,35 +586,41 @@ export default function decorate(block) {
     block.innerHTML = html;
   }
 
+  // Asset class cards are visual indicators only (not clickable)
+  // They show which color represents which portion
+  const assetCards = block.querySelectorAll('.asset-class-card');
+  assetCards.forEach((card) => {
+    // Remove click handlers - cards are not interactive
+    // Remove keyboard handlers - cards are not interactive
+    // Remove focusability - cards are not interactive
+    const cardName = card.querySelector('.asset-class-name')?.textContent || 'asset class';
+    card.setAttribute('aria-label', `Color indicator for ${cardName}`);
+    card.style.cursor = 'default'; // Show default cursor, not pointer
+    card.removeAttribute('tabindex'); // Remove focusability
+    card.removeAttribute('role'); // Remove radio role
+  });
+
   // Initialize chart
   initializePortfolioChart(chartId, portfolioData);
 
-  // Update chart after initialization to set initial highlight state
+  // Set up hover event handlers after chart is created
   setTimeout(() => {
-    updateChartHighlight(chartId, assetClasses);
+    const chart = window[`highchart_${chartId}`];
+    if (chart && chart.series && chart.series[0]) {
+      chart.series[0].points.forEach((point) => {
+        // On hover: highlight this segment, dim others
+        point.on('mouseOver', () => {
+          updateChartHighlight(chartId, point.name);
+        });
+
+        // On mouse out: restore all segments to full opacity
+        point.on('mouseOut', () => {
+          updateChartHighlight(chartId, null);
+        });
+      });
+    }
+
+    // Initialize chart with all segments visible
+    updateChartHighlight(chartId, null);
   }, 100);
-
-  // Initial state is already set in HTML generation above, so cards are already rendered correctly
-
-  // Add click handlers for asset class cards (radio button behavior)
-  const assetCards = block.querySelectorAll('.asset-class-card');
-  assetCards.forEach((card, index) => {
-    card.addEventListener('click', () => {
-      handleAssetClassClick(card, assetClasses[index], chartId, assetClasses, assetCards);
-    });
-
-    // Keyboard accessibility
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleAssetClassClick(card, assetClasses[index], chartId, assetClasses, assetCards);
-      }
-    });
-
-    // Make cards focusable and set radio button role
-    card.setAttribute('tabindex', '0');
-    card.setAttribute('role', 'radio');
-    card.setAttribute('aria-checked', assetClasses[index].selected === true ? 'true' : 'false');
-    card.setAttribute('aria-label', `Select ${assetClasses[index].name}`);
-  });
 }

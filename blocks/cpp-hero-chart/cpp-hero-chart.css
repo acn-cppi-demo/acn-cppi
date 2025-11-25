@@ -1,7 +1,7 @@
 .cpp-hero-chart-container {
     background: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%);
     color: #fff;
-    padding-block: 62px;
+    padding-block: 40px 80px;
     width: 100%;
 }
 
