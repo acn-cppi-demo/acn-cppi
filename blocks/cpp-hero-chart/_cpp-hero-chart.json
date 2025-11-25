@@ -45,19 +45,6 @@
           "valueType": "string"
         },
         {
-          "component": "reference",
-          "name": "graphImage",
-          "label": "Graph Info Image",
-          "valueType": "string",
-          "multi": false
-        },
-        {
-          "component": "text",
-          "name": "graphImageAlt",
-          "label": "Graph Image Alt Text",
-          "valueType": "string"
-        },
-        {
           "component": "text",
           "name": "graph_title",
           "label": "Graph Title",

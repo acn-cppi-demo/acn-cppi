@@ -53,15 +53,8 @@
 /* Graph Info (Left side) */
 .cpp-hero-chart-graph-info {
     display: flex;
-    align-items: flex-start;
-    gap: 5px;
-    flex: 0 0 auto;
-}
-
-.cpp-hero-chart-graph-info img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
+    align-items: center;
+    gap: 8px;
 }
 
 .graph-text {
@@ -142,6 +135,9 @@
     font-size: 12px;
     font-weight: 600;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* Chart Container */
