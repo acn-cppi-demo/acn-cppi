@@ -35,6 +35,17 @@
     white-space: nowrap;
 }
 
+/* ADA-compliant focus indicator for buttons */
+.cpp-hero-chart-main .button:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.cpp-hero-chart-main .button:focus:not(:focus-visible) {
+    outline: none;
+}
+
 /* Controls Section (Graph Info + Period Tabs) */
 .cpp-hero-chart-controls {
     display: flex;
@@ -108,16 +119,24 @@
     transition-duration: 120ms;
 }
 
-.period-tab:focus,
+/* ADA-compliant focus indicator for period tabs */
 .period-tab:focus-visible {
-    /* Remove yellow focus outline and dark highlight; keep no outline */
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+    border-radius: 8px;
+    background: rgb(255 255 255 / 10%) !important;
+    color: #fff !important;
+}
+
+.period-tab:focus:not(:focus-visible) {
     outline: none;
-    box-shadow: none;
-    
-    /* Prevent global button:focus dark-blue background from applying */
-    background: transparent !important;
-    color: rgb(255 255 255 / 80%) !important;
-    border-color: transparent !important;
+}
+
+.period-tab.active:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+    background: #fff !important;
+    color: #0273CF !important;
 }
 
 /* Value Section */
@@ -230,6 +249,26 @@
 
 .cpp-hero-chart-overall-button-container a {
     color: #fff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity 0.2s ease;
+}
+
+.cpp-hero-chart-overall-button-container a:hover {
+    opacity: 0.8;
+}
+
+/* ADA-compliant focus indicator for overall data button */
+.cpp-hero-chart-overall-button-container a:focus-visible {
+    outline: 3px solid #FFD54A;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.cpp-hero-chart-overall-button-container a:focus:not(:focus-visible) {
+    outline: none;
 }
 
 .cpp-hero-chart-error {
@@ -254,10 +293,19 @@
     text-decoration: none;
 }
 
-.cpp-hero-chart-learnmore:focus,
+/* ADA-compliant focus indicator for Learn More link */
+.cpp-hero-chart-learnmore:hover {
+    text-decoration: underline;
+}
+
 .cpp-hero-chart-learnmore:focus-visible {
     outline: 3px solid #FFD54A;
     outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.cpp-hero-chart-learnmore:focus:not(:focus-visible) {
+    outline: none;
 }
 
 .cpp-hero-chart-learnmore-arrow {

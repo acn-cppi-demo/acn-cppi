@@ -82,12 +82,32 @@ function initializePortfolioChart(chartId, data) {
       backgroundColor: 'transparent',
       spacing: [0, 0, 0, 0], // Remove all padding: [top, right, bottom, left]
       margin: [0, 0, 0, 0], // Remove all margins: [top, right, bottom, left]
+      accessibility: {
+        enabled: true,
+        description: 'Portfolio allocation donut chart showing asset class distribution. Use arrow keys to navigate between segments.',
+        keyboardNavigation: {
+          enabled: true,
+        },
+      },
     },
     title: {
       text: null,
     },
     credits: {
       enabled: false,
+    },
+    accessibility: {
+      enabled: true,
+      point: {
+        descriptionFormatter(point) {
+          const { name, y, description } = point;
+          return `${name}: ${y}% of portfolio. ${description || ''}`;
+        },
+        valueDescriptionFormat: '{index}. {point.name}, {point.y}%.',
+      },
+      screenReaderSection: {
+        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
+      },
     },
     tooltip: {
       enabled: true,
@@ -247,6 +267,11 @@ function initializePortfolioChart(chartId, data) {
           borderWidth: 1, // 1px border for each segment
           borderColor: '#FFFFFF', // White border for each segment
           borderRadius: 0, // No border radius for each segment
+          accessibility: {
+            enabled: true,
+            description: `${item.name} represents ${item.y}% of the portfolio allocation. ${item.description || ''}`,
+            exposeAsGroupOnly: false,
+          },
         })),
       },
     ],

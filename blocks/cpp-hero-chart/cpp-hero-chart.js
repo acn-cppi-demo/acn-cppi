@@ -200,9 +200,28 @@ function getDummyLineChartConfig() {
       type: 'area',
       height: 170,
       backgroundColor: 'transparent',
+      accessibility: {
+        enabled: true,
+        description: 'Line chart showing portfolio value over time. Use arrow keys to navigate between data points.',
+        keyboardNavigation: {
+          enabled: true,
+        },
+      },
     },
     title: {
       text: null,
+    },
+    accessibility: {
+      enabled: true,
+      point: {
+        descriptionFormatter(point) {
+          return `Value: ${point.y}`;
+        },
+        valueDescriptionFormat: '{index}. {point.y}.',
+      },
+      screenReaderSection: {
+        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
+      },
     },
     xAxis: {
       // show only the axis baseline (no labels or ticks)
@@ -306,6 +325,22 @@ function initializeChart(chartId, data) {
     legend: {
       enabled: true,
       align: 'bottom',
+    },
+    accessibility: {
+      enabled: true,
+      description: data.graphText ? `Chart showing ${data.graphText} over time. Use arrow keys to navigate between data points.` : 'Line chart showing portfolio value over time. Use arrow keys to navigate between data points.',
+      keyboardNavigation: {
+        enabled: true,
+      },
+      point: {
+        descriptionFormatter(point) {
+          return `Value: ${point.y}`;
+        },
+        valueDescriptionFormat: '{index}. {point.y}.',
+      },
+      screenReaderSection: {
+        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
+      },
     },
     ...chartOptions,
   };
