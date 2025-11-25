@@ -59,7 +59,8 @@
         "image-with-content",
         "fund-performance",
         "fund-overview",
-        "fund-insights-container"
+        "fund-insights-container",
+        "portfolio-allocation"
       ]
     }
   ]
