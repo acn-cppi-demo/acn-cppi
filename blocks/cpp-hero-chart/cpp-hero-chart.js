@@ -1,25 +1,168 @@
 /**
+ * Mock data for different periods with different chart values
+ * Each period has different data points and overall metrics
+ */
+function getPeriodMockData() {
+  return {
+    '3M': {
+      chartData: [34.2, 45.8, 52.3, 48.9, 61.2, 58.7, 65.4, 72.1, 68.9, 75.3, 82.1, 88.5],
+      value: '$45.32B',
+      badge: '+12.5%',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '$5.2B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+8.4%',
+        netReturnType: 'Nominal',
+      },
+    },
+    '6M': {
+      chartData: [29.9, 39.5, 48.4, 52.2, 61.0, 55.6, 68.5, 72.5, 76.4, 84.1, 92.5, 95.4],
+      value: '$52.48B',
+      badge: '+18.7%',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '$8.5B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+14.2%',
+        netReturnType: 'Nominal',
+      },
+    },
+    '1Y': {
+      chartData: [25.5, 35.8, 42.3, 38.9, 51.2, 48.7, 55.4, 62.1, 58.9, 65.3, 72.1, 78.5],
+      value: '$64.92B',
+      badge: '+28.3%',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '$15.3B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+23.6%',
+        netReturnType: 'Nominal',
+      },
+    },
+    '2Y': {
+      chartData: [20.1, 28.4, 35.6, 32.2, 42.5, 40.1, 48.9, 55.3, 52.8, 61.2, 68.9, 75.2],
+      value: '$78.56B',
+      badge: '+35.8%',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '$21.8B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+38.2%',
+        netReturnType: 'Nominal',
+      },
+    },
+    '5Y': {
+      chartData: [15.2, 22.8, 28.4, 25.6, 35.9, 32.1, 42.3, 50.6, 48.2, 58.9, 68.4, 85.6],
+      value: '$125.34B',
+      badge: '+52.4%',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '$45.2B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+56.8%',
+        netReturnType: 'Nominal',
+      },
+    },
+  };
+}
+
+/**
+ * Update period-specific values in the DOM
+ * @param {Object} data - The chart data object
+ * @param {string} period - The selected period
+ * @param {Object} periodData - The period-specific mock data
+ */
+function updatePeriodValues(data, period, periodData) {
+  const block = data.blockElement;
+
+  // Update the value section
+  const valueElement = block.querySelector('.cpp-hero-chart-value');
+  if (valueElement && periodData.value) {
+    valueElement.textContent = periodData.value;
+  }
+
+  // Update the badge
+  const badgeElement = block.querySelector('.cpp-hero-chart-badge');
+  if (badgeElement && periodData.badge) {
+    // Update badge text (skip the SVG)
+    const badgeText = badgeElement.querySelector('svg')?.nextSibling || badgeElement.lastChild;
+    if (badgeText) {
+      badgeText.textContent = periodData.badge;
+    }
+  }
+
+  // Update the overall data panel if it exists
+  if (periodData.overallData) {
+    const overallDataSection = block.querySelector('.cpp-hero-chart-overall-data');
+    if (overallDataSection) {
+      const netIncreaseLabel = overallDataSection.querySelector('.cpp-hero-chart-overall-label');
+      const netIncreaseValue = overallDataSection.querySelector('.cpp-hero-chart-overall-value');
+      const netReturnLabel = overallDataSection.querySelectorAll('.cpp-hero-chart-overall-label')[1];
+      const netReturnValue = overallDataSection.querySelector('.cpp-hero-chart-overall-return-value');
+      const netReturnType = overallDataSection.querySelector('.cpp-hero-chart-overall-type');
+
+      if (netIncreaseLabel && periodData.overallData.netIncreaseLabel) {
+        netIncreaseLabel.textContent = periodData.overallData.netIncreaseLabel;
+      }
+      if (netIncreaseValue && periodData.overallData.netIncreaseValue) {
+        netIncreaseValue.textContent = periodData.overallData.netIncreaseValue;
+      }
+      if (netReturnLabel && periodData.overallData.netReturnLabel) {
+        netReturnLabel.textContent = periodData.overallData.netReturnLabel;
+      }
+      if (netReturnValue && periodData.overallData.netReturnValue) {
+        netReturnValue.textContent = periodData.overallData.netReturnValue;
+      }
+      if (netReturnType && periodData.overallData.netReturnType) {
+        netReturnType.textContent = periodData.overallData.netReturnType;
+      }
+    }
+  }
+}
+
+/**
  * Update chart data based on selected period
  * @param {Object} data - The chart data object
  * @param {string} period - The selected period
  */
 function updateChart(data, period) {
-  // This function should be customized based on your data fetching strategy
-  // For now, it's a placeholder for future implementation
+  const mockData = getPeriodMockData();
+  const periodData = mockData[period];
 
-  // Example implementation:
-  // 1. Fetch new data from an API based on the period
-  // 2. Update the chart with new data
-  // 3. Animate the transition
+  if (!periodData) {
+    // eslint-disable-next-line no-console
+    console.warn(`No mock data found for period: ${period}`);
+    return;
+  }
+
+  // Get the chart instance directly from the data object using destructuring
+  const { chartInstance } = data;
 
   // eslint-disable-next-line no-console
-  console.log('Updating chart for period:', period);
+  console.log('Attempting to update chart for period:', period);
+  // eslint-disable-next-line no-console
+  console.log('Chart instance available:', !!chartInstance);
 
-  // TODO: Implement actual data update logic
-  // This might involve:
-  // - Calling an API endpoint with the selected period
-  // - Transforming the data to match Highcharts format
-  // - Updating the chart instance with new series data
+  if (chartInstance && typeof chartInstance.series !== 'undefined' && chartInstance.series.length > 0) {
+    // Update the chart series data with animation
+    try {
+      chartInstance.series[0].setData(periodData.chartData, true);
+      // eslint-disable-next-line no-console
+      console.log('Chart updated successfully for period:', period);
+      // eslint-disable-next-line no-console
+      console.log('New chart data:', periodData.chartData);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error updating chart:', error);
+    }
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn('Chart instance not found or not ready. Chart:', chartInstance, 'Series:', chartInstance?.series);
+  }
+
+  // Update value and badge in the DOM
+  updatePeriodValues(data, period, periodData);
 }
 
 /**
@@ -54,7 +197,7 @@ function handlePeriodChange(period, block, data) {
 function getDummyLineChartConfig() {
   return {
     chart: {
-      type: 'line',
+      type: 'area',
       height: 170,
       backgroundColor: 'transparent',
     },
@@ -78,6 +221,22 @@ function getDummyLineChartConfig() {
       tickLength: 0,
     },
     plotOptions: {
+      area: {
+        lineWidth: 2,
+        fillOpacity: 1,
+        fillColor: {
+          linearGradient: {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: 1,
+          },
+          stops: [
+            [0, 'rgba(255, 255, 255, 0.2)'],
+            [1, 'rgba(255, 255, 255, 0)'],
+          ],
+        },
+      },
       series: {
         dataLabels: { enabled: false },
         enableMouseTracking: false,
@@ -141,11 +300,6 @@ function initializeChart(chartId, data) {
 
   // Merge with default Highcharts configuration
   const config = {
-    chart: {
-      type: 'area',
-      height: 170,
-      backgroundColor: 'transparent',
-    },
     credits: {
       enabled: false,
     },
@@ -156,11 +310,25 @@ function initializeChart(chartId, data) {
     ...chartOptions,
   };
 
+  // Ensure chart height is set (but don't override the chart type from chartOptions)
+  if (!config.chart) {
+    config.chart = {};
+  }
+  if (!config.chart.height) {
+    config.chart.height = 170;
+  }
+  if (!config.chart.backgroundColor) {
+    config.chart.backgroundColor = 'transparent';
+  }
+
   // Create the chart
   try {
     const chart = window.Highcharts.chart(chartId, config);
-    // Store chart instance for later updates
+    // Store chart instance for later updates - BOTH in window and in data object
     window[`highchart_${chartId}`] = chart;
+    data.chartInstance = chart;
+    // eslint-disable-next-line no-console
+    console.log('Chart initialized and stored:', chartId);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to create Highchart:', error);
@@ -191,6 +359,9 @@ export default function decorate(block) {
     overallData: null,
     periods: ['3M', '6M', '1Y', '2Y', '5Y'],
     selectedPeriod: '1Y',
+    blockElement: null,
+    chartInstanceId: null,
+    chartInstance: null,
   };
 
   // Helper: plain text from HTML string
@@ -434,6 +605,10 @@ export default function decorate(block) {
   const titleId = `cpp-hero-chart-title-${Date.now()}`;
   const descriptionId = `cpp-hero-chart-description-${Date.now()}`;
   const chartId = `cpp-hero-chart-${Date.now()}`;
+
+  // Store references in data object for later use
+  cppHeroChartData.blockElement = block;
+  cppHeroChartData.chartInstanceId = chartId;
 
   // Plain text versions for rendered template
   const titleText = getPlainText(cppHeroChartData.title);

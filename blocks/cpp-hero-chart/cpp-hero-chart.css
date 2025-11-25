@@ -35,12 +35,6 @@
     white-space: nowrap;
 }
 
-.cpp-hero-chart-main .button:focus,
-.cpp-hero-chart-main .button:focus-visible {
-    outline: 3px solid #FFD54A;
-    outline-offset: 2px;
-}
-
 /* Controls Section (Graph Info + Period Tabs) */
 .cpp-hero-chart-controls {
     display: flex;
@@ -84,7 +78,9 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
-    transition: all 0.3s ease;
+
+    /* Short transition but no delay so active state animates to white immediately */
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
     white-space: nowrap;
     width: 40px;
     height: 40px;
@@ -94,22 +90,35 @@
     margin: 0;
 }
 
+/* Subtle hover affordance; when hover ends the element will transition back
+   to its normal state or to the .active state (white) in 120ms. */
 .period-tab:hover {
     background: rgb(255 255 255 / 10%);
-    border-color: #fff;
     color: #fff;
+    border-color: #fff;
 }
 
-.period-tab.active {
-    background: #fff;
-    color: #0273CF;
-    border-color: #fff;
+.period-tab.active,
+.period-tab.active:focus,
+.period-tab.active:focus-visible {
+    background: #fff !important;
+    color: #0273CF !important;
+    border-color: #fff !important;
+    
+    /* keep active transition short and immediate (no delay) */
+    transition-duration: 120ms;
 }
 
 .period-tab:focus,
 .period-tab:focus-visible {
-    outline: 3px solid #FFD54A;
-    outline-offset: 2px;
+    /* Remove yellow focus outline and dark highlight; keep no outline */
+    outline: none;
+    box-shadow: none;
+    
+    /* Prevent global button:focus dark-blue background from applying */
+    background: transparent !important;
+    color: rgb(255 255 255 / 80%) !important;
+    border-color: transparent !important;
 }
 
 /* Value Section */
