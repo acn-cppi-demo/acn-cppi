@@ -59,7 +59,7 @@
         },
         {
           "component": "text",
-          "name": "graphTitle",
+          "name": "graph_title",
           "label": "Graph Title",
           "valueType": "string"
         },
