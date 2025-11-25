@@ -45,36 +45,60 @@ export default function decorate(block) {
   async function sendMessage() {
     const msg = chatInput.value.trim();
     if (!msg) return;
-
+  
+    // UI update
     chatBody.innerHTML += `<div class="msg user">${msg}</div>`;
     chatInput.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
-
+  
+    // 🔥 Fire dataLayer event: user message
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'message_sent',
+      message_detail: msg,
+    });
+  
     try {
-      const response = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
+      const res = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          accept: 'application/json'
         },
         body: JSON.stringify({
-          request: msg,
+          request: msg
         }),
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
-      }
-
-      const data = await response.json();
-      const reply = data?.response?.answer || "I couldn't generate a response.";
-
+  
+      const data = await res.json();
+  
+      // Extract bot text response
+      const reply =
+        data?.response_data?.text_responses?.[0] ||
+        'I couldn’t generate a response.';
+  
       chatBody.innerHTML += `<div class="msg bot">${reply}</div>`;
       chatBody.scrollTop = chatBody.scrollHeight;
-    } catch (error) {
-      console.error('Chatbot error:', error);
-      chatBody.innerHTML += '<div class="msg bot error">Sorry, something went wrong.</div>';
+  
+      // 🔥 Extract citation for dataLayer
+      const citation =
+        data?.response_data?.references?.[0]?.url ||
+        data?.response_data?.references?.[0]?.doc_id ||
+        null;
+  
+      // 🔥 Fire dataLayer event: bot response citation
+      if (citation) {
+        window.dataLayer.push({
+          event: 'message_response',
+          citation: citation,
+        });
+      }
+  
+    } catch (e) {
+      chatBody.innerHTML += `<div class="msg bot">Sorry, something went wrong.</div>`;
     }
   }
+  
 
   sendBtn.addEventListener('click', sendMessage);
   chatInput.addEventListener('keypress', (e) => {
