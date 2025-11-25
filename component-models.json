@@ -322,6 +322,12 @@
       },
       {
         "component": "text",
+        "name": "graphTitle",
+        "label": "Graph Title",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
         "name": "value",
         "label": "Value (e.g., $100.00B)",
         "valueType": "string"
