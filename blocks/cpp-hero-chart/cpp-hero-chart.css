@@ -66,12 +66,11 @@
     height: auto;
     border: 1px solid var(--white-transparent, #FFFFFF80);
     border-radius: 8px;
-    padding: 8px;
+    padding: 4px;
 }
 
 .period-tab {
     background: transparent;
-    border: none;
     color: rgb(255 255 255 / 80%);
     padding: 0;
     border-radius: 8px;
@@ -137,7 +136,6 @@
 
 .cpp-hero-chart-badge {
     background: #00C95066;
-    border: 1px solid rgb(255 255 255 / 30%);
     color: #fff;
     padding: 8px 16px;
     border-radius: 30px;
