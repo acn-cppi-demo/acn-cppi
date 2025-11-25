@@ -188,6 +188,7 @@ export default function decorate(block) {
     chartData: null,
     value: null,
     badge: null,
+    overallData: null,
     periods: ['3M', '6M', '1Y', '2Y', '5Y'],
     selectedPeriod: '1Y',
   };
@@ -224,82 +225,188 @@ export default function decorate(block) {
     };
   }
 
-  // First attempt: read props from data-aue-prop (authoring metadata)
-  const propElements = block.querySelectorAll('[data-aue-prop]');
-  if (propElements && propElements.length > 0) {
-    propElements.forEach((element) => {
-      const propName = element.getAttribute('data-aue-prop');
-      const propType = element.getAttribute('data-aue-type');
-      let value = null;
+  // Helper: extract overall data from HTML element or string
+  function parseOverallData(elementOrHtml) {
+    let innerDiv = null;
 
-      // Extract value based on type
-      if (propType === 'richtext') {
-        value = element.innerHTML.trim() || element.textContent.trim();
-      } else if (propType === 'text') {
-        value = element.textContent.trim();
-      } else {
-        value = element.textContent.trim();
+    // If it's a number, treat it as child index
+    if (typeof elementOrHtml === 'number') {
+      const child = block.children[elementOrHtml];
+      if (!child) return null;
+      innerDiv = child.querySelector('div');
+    } else if (typeof elementOrHtml === 'string') {
+      // If it's a string, parse it as HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = elementOrHtml;
+      innerDiv = tempDiv.querySelector('div') || tempDiv;
+    } else if (elementOrHtml instanceof Element) {
+      // If it's already a DOM element
+      innerDiv = elementOrHtml.querySelector('div') || elementOrHtml;
+    }
+
+    if (!innerDiv) return null;
+
+    // Find all paragraphs and headings
+    const elements = Array.from(innerDiv.children);
+    const overallData = {
+      identifier: null,
+      netIncreaseLabel: null,
+      netIncreaseValue: null,
+      netReturnLabel: null,
+      netReturnValue: null,
+      netReturnType: null,
+      buttonLink: null,
+      buttonText: null,
+      buttonTitle: null,
+    };
+
+    // Parse the content structure
+    elements.forEach((el, index) => {
+      const tagName = el.tagName.toLowerCase();
+      const text = el.textContent.trim();
+
+      // First check for button container (priority check)
+      if (tagName === 'p') {
+        const hasButtonClass = el.classList.contains('button-container') || (el.className && el.className.includes('button-container'));
+        const link = el.querySelector('a.button, a[class*="button"], a');
+        const linkHasButtonClass = link && (link.classList.contains('button') || (link.className && link.className.includes('button')));
+        if (hasButtonClass || linkHasButtonClass) {
+          const buttonLink = link || el.querySelector('a');
+          if (buttonLink) {
+            overallData.buttonLink = buttonLink.getAttribute('href') || null;
+            overallData.buttonText = buttonLink.textContent.trim();
+            overallData.buttonTitle = buttonLink.getAttribute('title') || null;
+          }
+        }
       }
 
-      // Map to cppHeroChartData object
-      if (propName === 'title') {
-        cppHeroChartData.title = value;
-      } else if (propName === 'description') {
-        cppHeroChartData.description = value;
-      } else if (propName === 'buttonLabel') {
-        cppHeroChartData.buttonLabel = value;
-      } else if (propName === 'buttonLink') {
-        cppHeroChartData.buttonLink = element.getAttribute('href') || value;
-      } else if (propName === 'graphImage') {
-        cppHeroChartData.graphImage = value;
-      } else if (propName === 'graphImageAlt') {
-        cppHeroChartData.graphImageAlt = value;
-      } else if (propName === 'graphText') {
-        cppHeroChartData.graphText = value;
-      } else if (propName === 'chartData') {
-        cppHeroChartData.chartData = value;
-      } else if (propName === 'value') {
-        cppHeroChartData.value = value;
-      } else if (propName === 'badge') {
-        cppHeroChartData.badge = value;
-      } else if (propName === 'selectedPeriod') {
-        cppHeroChartData.selectedPeriod = value || '1Y';
+      // First paragraph is usually the identifier "{right side}"
+      if (tagName === 'p' && index === 0 && text.includes('{right side}')) {
+        overallData.identifier = text;
+      } else if (tagName === 'h1') {
+        // Look for h1 which contains the main value ($17.0B)
+        overallData.netIncreaseValue = text;
+        // The previous paragraph should be the label
+        if (index > 0 && elements[index - 1].tagName.toLowerCase() === 'p') {
+          const prevText = elements[index - 1].textContent.trim();
+          if (prevText && !prevText.includes('{right side}') && !prevText.includes('<hr') && !prevText.includes('&lt;hr')) {
+            overallData.netIncreaseLabel = prevText;
+          }
+        }
+      } else if (tagName === 'p' && !text.includes('<hr') && !text.includes('&lt;hr') && !text.includes('{right side}') && !el.classList.contains('button-container') && !(el.className && el.className.includes('button-container'))) {
+        // Look for paragraphs that might be labels or values (exclude button container)
+        // Check if it's a percentage value (contains %)
+        if (text.includes('%')) {
+          overallData.netReturnValue = text;
+          // Previous paragraph should be the label
+          if (index > 0 && elements[index - 1].tagName.toLowerCase() === 'p') {
+            const prevText = elements[index - 1].textContent.trim();
+            if (prevText && !prevText.includes('<hr') && !prevText.includes('&lt;hr')) {
+              overallData.netReturnLabel = prevText;
+            }
+          }
+        } else if (text.toLowerCase() === 'nominal' || text.toLowerCase() === 'real') {
+          // Check if it's "Nominal" or similar type indicator
+          overallData.netReturnType = text;
+        }
       }
     });
-  } else {
-    // Fallback: AEM published markup typically places each authored field
-    // inside a sequential child <div>. Map by index based on the sample HTML.
-    // (helpers are defined at function root so linting rules are satisfied)
 
-    // Index mapping (based on provided HTML sample):
-    // 0 - title
-    // 1 - description
-    // 2 - CTA text
-    // 3 - CTA href (sometimes rendered as text)
-    // 4 - picture
-    // 5 - graph label
-    // 6 - value
-    // 7 - badge / change
-    // 8 - timeframe (e.g., 3M)
-    cppHeroChartData.title = getTextFromChild(0) || null;
-    cppHeroChartData.description = getTextFromChild(1) || null;
-    cppHeroChartData.buttonLabel = getTextFromChild(2) || null;
-    // Try to find an <a> inside the CTA child for href; otherwise, use child text
-    const ctaChild = block.children[2];
-    if (ctaChild) {
-      const a = ctaChild.querySelector('a[href]');
-      if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
-      else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
+    // Fallback: try to find button if not found yet
+    if (!overallData.buttonLink) {
+      // Try multiple selectors to find the button
+      const buttonLink = innerDiv.querySelector('a.button, .button-container a, a[class*="button"], p.button-container a');
+      if (buttonLink) {
+        overallData.buttonLink = buttonLink.getAttribute('href') || null;
+        overallData.buttonText = buttonLink.textContent.trim();
+        overallData.buttonTitle = buttonLink.getAttribute('title') || null;
+      } else {
+        // Last resort: find any link that contains "review" or "return" in text
+        const allLinks = innerDiv.querySelectorAll('a');
+        allLinks.forEach((link) => {
+          const linkText = link.textContent.toLowerCase();
+          if ((linkText.includes('review') || linkText.includes('return')) && !overallData.buttonLink) {
+            overallData.buttonLink = link.getAttribute('href') || null;
+            overallData.buttonText = link.textContent.trim();
+            overallData.buttonTitle = link.getAttribute('title') || null;
+          }
+        });
+      }
     }
-    const pic = getPictureFromChild(4);
-    if (pic) {
-      cppHeroChartData.graphImage = pic.src;
-      cppHeroChartData.graphImageAlt = pic.alt;
+
+    // Fallback: try to find netIncreaseLabel if not found
+    if (!overallData.netIncreaseLabel) {
+      const h1 = innerDiv.querySelector('h1');
+      if (h1 && h1.previousElementSibling) {
+        const prevText = h1.previousElementSibling.textContent.trim();
+        if (prevText && !prevText.includes('{right side}') && !prevText.includes('<hr') && !prevText.includes('&lt;hr')) {
+          overallData.netIncreaseLabel = prevText;
+        }
+      }
     }
-    cppHeroChartData.graphText = getTextFromChild(5) || null;
-    cppHeroChartData.value = getTextFromChild(6) || null;
-    cppHeroChartData.badge = getTextFromChild(7) || null;
-    cppHeroChartData.selectedPeriod = getTextFromChild(8) || cppHeroChartData.selectedPeriod;
+
+    // Return null if no meaningful data was extracted
+    if (!overallData.netIncreaseValue && !overallData.netReturnValue) {
+      return null;
+    }
+
+    return overallData;
+  }
+
+  // Helper: extract overall data from the last child div (right side content)
+  function getOverallDataFromChild(idx) {
+    return parseOverallData(idx);
+  }
+
+  cppHeroChartData.title = getTextFromChild(0) || null;
+  cppHeroChartData.description = getTextFromChild(1) || null;
+  cppHeroChartData.buttonLabel = getTextFromChild(2) || null;
+  // Try to find an <a> inside the CTA child for href; otherwise, use child text
+  const ctaChild = block.children[2];
+  if (ctaChild) {
+    const a = ctaChild.querySelector('a[href]');
+    if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
+    else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
+  }
+  const pic = getPictureFromChild(4);
+  if (pic) {
+    cppHeroChartData.graphImage = pic.src;
+    cppHeroChartData.graphImageAlt = pic.alt;
+  }
+  cppHeroChartData.graphText = getTextFromChild(5) || null;
+  cppHeroChartData.value = getTextFromChild(6) || null;
+  cppHeroChartData.badge = getTextFromChild(7) || null;
+  cppHeroChartData.selectedPeriod = getTextFromChild(8) || cppHeroChartData.selectedPeriod;
+
+  // Extract overall data from the last child div (index 9 - right side content)
+  // First check for data-aue-prop
+  const overallDataProp = block.querySelector('[data-aue-prop="overall_data"], [data-aue-prop="overallData"]');
+  if (overallDataProp) {
+    const propType = overallDataProp.getAttribute('data-aue-type');
+    let value = null;
+    if (propType === 'richtext') {
+      value = overallDataProp.innerHTML.trim() || overallDataProp.textContent.trim();
+    } else {
+      value = overallDataProp.textContent.trim();
+    }
+    // Try to parse as JSON if it's a string
+    if (value) {
+      try {
+        cppHeroChartData.overallData = JSON.parse(value);
+      } catch (e) {
+        // If not JSON, try to extract from HTML structure
+        const extracted = parseOverallData(value);
+        if (extracted) {
+          cppHeroChartData.overallData = extracted;
+        }
+      }
+    }
+  } else {
+    // Fallback: extract from child div at index 9
+    const overallData = getOverallDataFromChild(9);
+    if (overallData) {
+      cppHeroChartData.overallData = overallData;
+    }
   }
 
   // Generate unique IDs for accessibility
@@ -366,6 +473,32 @@ export default function decorate(block) {
     `;
   }
 
+  // Build Overall Data panel (right side)
+  let overallDataHtml = '';
+  if (cppHeroChartData.overallData) {
+    const data = cppHeroChartData.overallData;
+    overallDataHtml = `
+      <div class="cpp-hero-chart-overall-data">
+        ${data.netIncreaseLabel ? `<div class="cpp-hero-chart-overall-label">${data.netIncreaseLabel}</div>` : ''}
+        ${data.netIncreaseValue ? `<h1 class="cpp-hero-chart-overall-value">${data.netIncreaseValue}</h1>` : ''}
+        ${data.netReturnLabel || data.netReturnValue ? '<hr class="cpp-hero-chart-separator" />' : ''}
+        ${data.netReturnLabel ? `<div class="cpp-hero-chart-overall-label">${data.netReturnLabel}</div>` : ''}
+        ${data.netReturnValue ? `<div class="cpp-hero-chart-overall-return-value">${data.netReturnValue}</div>` : ''}
+        ${data.netReturnType ? `<div class="cpp-hero-chart-overall-type">${data.netReturnType}</div>` : ''}
+        ${data.buttonLink ? '<hr class="cpp-hero-chart-separator" />' : ''}
+        ${data.buttonLink ? `
+          <div class="cpp-hero-chart-overall-button-container">
+            <a href="${data.buttonLink}" class="link-primary" ${data.buttonTitle ? ` title="${data.buttonTitle}"` : ''}>${data.buttonText || 'Review our return details'}
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="currentColor"></path>
+              </svg>
+            </a>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
   // Build main HTML structure
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
   const html = `
@@ -379,22 +512,28 @@ export default function decorate(block) {
         </div>
       </div>
 
-      <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
-      <div class="cpp-hero-chart-panel">
-        <!-- Controls Section (Graph Info + Period Tabs) -->
-        <div class="cpp-hero-chart-controls">
-          ${graphInfoHtml}
-          <div class="cpp-hero-chart-periods" role="tablist" aria-label="Time period selector">
-            ${periodTabsHtml}
+      <!-- Main Content Area: Chart Panel (Left) and Overall Data Panel (Right) -->
+      <div class="cpp-hero-chart-content-wrapper">
+        <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
+        <div class="cpp-hero-chart-panel">
+          <!-- Controls Section (Graph Info + Period Tabs) -->
+          <div class="cpp-hero-chart-controls">
+            ${graphInfoHtml}
+            <div class="cpp-hero-chart-periods" role="tablist" aria-label="Time period selector">
+              ${periodTabsHtml}
+            </div>
           </div>
+
+          <!-- Value with Badge Section -->
+          ${valueHtml}
+
+          <!-- Chart Container -->
+          <div class="cpp-hero-chart" id="${chartId}"></div>
+          ${learnMoreHtml}
         </div>
 
-        <!-- Value with Badge Section -->
-        ${valueHtml}
-
-        <!-- Chart Container -->
-        <div class="cpp-hero-chart" id="${chartId}"></div>
-        ${learnMoreHtml}
+        <!-- Overall Data Panel (Right Side) -->
+        ${overallDataHtml}
       </div>
     </div>
   `;
@@ -419,4 +558,10 @@ export default function decorate(block) {
 
   // Initialize Highcharts with provided data or dummy line chart
   initializeChart(chartId, cppHeroChartData);
+
+  // Log overallData for debugging
+  if (cppHeroChartData.overallData) {
+    // eslint-disable-next-line no-console
+    console.log('Overall Data extracted:', cppHeroChartData.overallData);
+  }
 }
