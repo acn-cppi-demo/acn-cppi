@@ -761,6 +761,12 @@ export default function decorate(block) {
   // Initialize Highcharts with provided data or dummy line chart
   initializeChart(chartId, cppHeroChartData);
 
+  // Load initial period data (default selected period) after chart is initialized
+  // Use setTimeout to ensure chart is fully initialized before updating
+  setTimeout(() => {
+    updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
+  }, 100);
+
   // Log overallData for debugging
   if (cppHeroChartData.overallData) {
     // eslint-disable-next-line no-console
