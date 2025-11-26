@@ -165,6 +165,29 @@
     ]
   },
   {
+    "id": "asset-allocation",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "chartData",
+        "label": "Chart Data (JSON for Highcharts)",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "assetClasses",
+        "label": "Asset Classes Data (JSON)",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "badge",
     "fields": [
       {

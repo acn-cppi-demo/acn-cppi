@@ -1,0 +1,222 @@
+.asset-allocation {
+    color: #000;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #e0e0e0;
+    box-shadow: 4px 4px 20px 0 #0000000d;
+    padding: 40px;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.asset-allocation-wrapper {
+    color: #000;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #e0e0e0;
+    box-shadow: 4px 4px 20px 0 #0000000d;
+    padding: 40px;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.asset-allocation-title-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.asset-allocation-title-icon-wrapper {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.asset-allocation-title-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+
+.asset-allocation-title {
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.2;
+    font-size: 16px;
+    font-family: 'Open Sans', sans-serif;
+    color: #000;
+}
+
+.asset-allocation-content {
+    display: flex;
+    gap: 35px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.asset-allocation-chart-container {
+    flex: 0 0 200px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+    position: relative;
+}
+
+.asset-allocation-chart {
+    width: 200px;
+    height: 200px;
+    min-width: 200px;
+    min-height: 200px;
+    max-width: 200px;
+    max-height: 200px;
+}
+
+/* Remove Highcharts default spacing */
+.asset-allocation-chart .highcharts-container {
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.asset-allocation-chart .highcharts-root {
+    width: 200px !important;
+    height: 200px !important;
+}
+
+.asset-allocation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1 1 0;
+}
+
+.asset-class-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: default;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+/* Items are visual indicators only, no hover or focus states needed */
+
+.asset-class-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    background: transparent;
+}
+
+.indicator-fill {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.asset-class-name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #000;
+    font-family: 'Open Sans', sans-serif;
+    flex: 1;
+}
+
+.asset-class-percentage {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #000;
+    font-family: 'Open Sans', sans-serif;
+    min-width: 60px;
+    text-align: right;
+}
+
+.asset-allocation-error {
+    padding: 24px;
+    background: rgb(255 255 255 / 10%);
+    border-radius: 8px;
+    font-size: 14px;
+    color: rgb(255 255 255 / 90%);
+    text-align: center;
+}
+
+/* Mobile Responsive */
+@media (width <= 768px) {
+    .asset-allocation-wrapper {
+        padding: 32px 16px;
+    }
+
+    .asset-allocation-title-section {
+        margin-bottom: 24px;
+    }
+
+    .asset-allocation-title {
+        font-size: 14px;
+    }
+
+    .asset-allocation-content {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .asset-allocation-chart-container {
+        max-width: 100%;
+        width: 100%;
+        flex: 0 0 auto;
+    }
+
+    .asset-allocation-list {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .asset-class-item {
+        width: 100%;
+    }
+}
+
+@media (width <= 540px) {
+    .asset-allocation {
+        padding: 24px;
+    }
+    
+    .asset-allocation-wrapper {
+        padding: 24px;
+    }
+
+    .asset-allocation-title {
+        font-size: 20px;
+    }
+
+    .asset-class-item {
+        width: 100%;
+    }
+
+    .asset-class-name {
+        font-size: 12px;
+    }
+
+    .asset-class-percentage {
+        font-size: 12px;
+    }
+}
+
