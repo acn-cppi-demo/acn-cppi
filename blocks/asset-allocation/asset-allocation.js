@@ -31,77 +31,30 @@ async function initializeAssetChart(chartId, data) {
     }
   }
 
-  // Asset class descriptions for tooltips
-  const assetDescriptions = {
-    'Public Equities': 'Investments in publicly traded company stocks across global markets',
-    'Private Equities': 'Investments in privately held companies and equity funds',
-    'Real Assets': 'Investments in real estate, infrastructure, and tangible assets',
-    'Credit Investments': 'Corporate bonds, private debt, and structured credit opportunities',
-    'Government Bonds': 'Government-issued debt securities providing stable returns',
-  };
-
-  // Fixed mock data for asset allocation (matching design colors)
-  const mockChartData = [
-    {
-      name: 'Real Assets',
-      y: 35,
-      color: '#0052A4',
-      description: assetDescriptions['Real Assets'],
-    },
-    {
-      name: 'Government Bonds',
-      y: 25,
-      color: '#99BCFF',
-      description: assetDescriptions['Government Bonds'],
-    },
-    {
-      name: 'Credit Investments',
-      y: 18,
-      color: '#0273CF',
-      description: assetDescriptions['Credit Investments'],
-    },
-    {
-      name: 'Private Equities',
-      y: 12,
-      color: '#2C3D50',
-      description: assetDescriptions['Private Equities'],
-    },
-    {
-      name: 'Public Equities',
-      y: 10,
-      color: '#1E2127',
-      description: assetDescriptions['Public Equities'],
-    },
-  ];
-
-  // Parse chart data if provided, otherwise use mock data
-  let chartData = mockChartData;
-  try {
-    if (data.chartData && typeof data.chartData === 'string' && data.chartData.trim()) {
-      const parsed = JSON.parse(data.chartData);
-      if (Array.isArray(parsed)) {
-        chartData = parsed;
-      }
-    } else if (data.chartData && Array.isArray(data.chartData)) {
-      chartData = data.chartData;
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data:', error);
-  }
+  // Chart data is already parsed and passed from decorate function
+  // Use the chartData array directly from data parameter
+  const chartData = Array.isArray(data.chartData) ? data.chartData : [];
 
   // Highcharts configuration for donut chart
   const config = {
     chart: {
       type: 'pie',
       backgroundColor: 'transparent',
+      width: 200,
+      height: 200,
       spacing: [0, 0, 0, 0], // Remove all padding: [top, right, bottom, left]
       margin: [0, 0, 0, 0], // Remove all margins: [top, right, bottom, left]
       accessibility: {
         enabled: true,
-        description: 'Asset allocation donut chart showing asset class distribution. Use arrow keys to navigate between segments.',
+        description: 'Asset allocation donut chart showing asset class distribution across five categories: Public Equities, Private Equities, Real Assets, Credit Investments, and Government Bonds. Use arrow keys to navigate between segments.',
         keyboardNavigation: {
           enabled: true,
+        },
+        announceNewData: {
+          enabled: true,
+        },
+        point: {
+          valueDescriptionFormat: '{name}: {y}%.',
         },
       },
     },
@@ -109,6 +62,9 @@ async function initializeAssetChart(chartId, data) {
       text: null,
     },
     credits: {
+      enabled: false,
+    },
+    exporting: {
       enabled: false,
     },
     accessibility: {
@@ -278,7 +234,7 @@ async function initializeAssetChart(chartId, data) {
         data: chartData.map((item) => ({
           ...item,
           opacity: 1, // Initial opacity, will be updated based on selection
-          description: item.description || assetDescriptions[item.name] || '',
+          description: item.description || '',
           borderWidth: 1, // 1px border for each segment
           borderColor: '#FFFFFF', // White border for each segment
           borderRadius: 0, // No border radius for each segment
@@ -399,7 +355,6 @@ export default function decorate(block) {
   const assetData = {
     title: null,
     chartData: null,
-    assetClasses: null,
   };
 
   // Helper: get text content from the block's child by index
@@ -432,128 +387,85 @@ export default function decorate(block) {
         assetData.title = value;
       } else if (propName === 'chartData') {
         assetData.chartData = value;
-      } else if (propName === 'assetClasses') {
-        assetData.assetClasses = value;
       }
     });
   }
 
-  // Fixed mock asset classes data (matching design colors)
-  const mockAssetClasses = [
-    {
-      name: 'Public Equities',
-      percentage: '00.0%',
-      selected: false,
-      color: '#1E2127',
-    },
-    {
-      name: 'Private Equities',
-      percentage: '00.0%',
-      selected: false,
-      color: '#2C3D50',
-    },
+  // Parse chart data - this will be the single source of truth for both chart and legend
+  // Fixed mock data structure (matching design colors)
+  const mockChartData = [
     {
       name: 'Real Assets',
-      percentage: '00.0%',
-      selected: false,
+      y: 35,
       color: '#0052A4',
-    },
-    {
-      name: 'Credit Investments',
-      percentage: '00.0%',
-      selected: false,
-      color: '#0273CF',
+      description: 'Investments in real estate, infrastructure, and tangible assets',
     },
     {
       name: 'Government Bonds',
-      percentage: '00.0%',
-      selected: false,
+      y: 25,
       color: '#99BCFF',
+      description: 'Government-issued debt securities providing stable returns',
+    },
+    {
+      name: 'Credit Investments',
+      y: 18,
+      color: '#0273CF',
+      description: 'Corporate bonds, private debt, and structured credit opportunities',
+    },
+    {
+      name: 'Private Equities',
+      y: 12,
+      color: '#2C3D50',
+      description: 'Investments in privately held companies and equity funds',
+    },
+    {
+      name: 'Public Equities',
+      y: 10,
+      color: '#1E2127',
+      description: 'Investments in publicly traded company stocks across global markets',
     },
   ];
 
-  // Fixed mock chart data for color matching (same colors as in initializeAssetChart)
-  const mockChartDataForColors = [
-    { name: 'Real Assets', color: '#0052A4' },
-    { name: 'Government Bonds', color: '#99BCFF' },
-    { name: 'Credit Investments', color: '#0273CF' },
-    { name: 'Private Equities', color: '#2C3D50' },
-    { name: 'Public Equities', color: '#1E2127' },
-  ];
-
-  // Parse chart data first (needed for color matching)
-  let chartDataForColors = mockChartDataForColors;
+  // Parse chart data from assetData - single source of truth
+  let chartData = mockChartData;
   try {
     if (assetData.chartData && typeof assetData.chartData === 'string' && assetData.chartData.trim()) {
       const parsed = JSON.parse(assetData.chartData);
       if (Array.isArray(parsed)) {
-        // Extract just name and color for color matching
-        chartDataForColors = parsed.map((item) => ({
-          name: item.name,
-          color: item.color,
-        }));
+        chartData = parsed;
       }
     } else if (assetData.chartData && Array.isArray(assetData.chartData)) {
-      // Extract just name and color for color matching
-      chartDataForColors = assetData.chartData.map((item) => ({
-        name: item.name,
-        color: item.color,
-      }));
+      chartData = assetData.chartData;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data for colors:', error);
+    console.error('Failed to parse chart data:', error);
   }
 
-  // Parse asset classes data if provided
-  let assetClasses = mockAssetClasses;
-  try {
-    if (assetData.assetClasses && typeof assetData.assetClasses === 'string' && assetData.assetClasses.trim()) {
-      const parsed = JSON.parse(assetData.assetClasses);
-      if (Array.isArray(parsed)) {
-        assetClasses = parsed;
-      }
-    } else if (assetData.assetClasses && Array.isArray(assetData.assetClasses)) {
-      assetClasses = assetData.assetClasses;
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to parse asset classes data:', error);
-  }
+  // Store parsed chartData back for chart initialization (single source of truth)
+  assetData.chartData = chartData;
 
-  // Ensure asset class colors match chart data colors
-  // Match by name and update colors from chart data
-  const chartDataMap = new Map();
-  chartDataForColors.forEach((item) => {
-    chartDataMap.set(item.name, item.color);
-  });
-
-  // Update asset class colors to match chart data
-  assetClasses = assetClasses.map((asset) => {
-    const chartColor = chartDataMap.get(asset.name);
-    if (chartColor) {
-      return {
-        ...asset,
-        color: chartColor, // Use color from chart data
-      };
-    }
-    return asset;
+  // Generate asset classes list from chartData (single source of truth)
+  // Format: { name, percentage, color, description }
+  const assetClasses = chartData.map((item) => {
+    // Format percentage from y value (e.g., 35 -> "35.0%")
+    const percentage = typeof item.y === 'number' ? `${item.y.toFixed(1)}%` : '00.0%';
+    return {
+      name: item.name || '',
+      percentage,
+      color: item.color || '#000000',
+      description: item.description || '',
+    };
   });
 
   // Generate unique IDs
   const titleId = `asset-allocation-title-${Date.now()}`;
   const chartId = `asset-allocation-chart-${Date.now()}`;
 
-  // Build title HTML with icon (matching design - circular icon with green L on blue background)
+  // Build title HTML
   const titleHtml = assetData.title
     ? `
       <div class="asset-allocation-title-section">
-        <div class="asset-allocation-title-icon-wrapper">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="16" cy="16" r="16" fill="#0273CF"/>
-            <text x="16" y="22" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00FF00" text-anchor="middle">L</text>
-          </svg>
-        </div>
         <h2 class="asset-allocation-title" id="${titleId}">${assetData.title}</h2>
       </div>
     `
@@ -561,17 +473,18 @@ export default function decorate(block) {
 
   // Build asset class list HTML (matching design - vertical list with bullets)
   const assetListHtml = assetClasses
-    .map((asset) => {
+    .map((asset, index) => {
       // Always show indicator with color (matching pie chart segment)
       const fillColor = asset.color || '#000000';
       const fillStyle = `style="background-color: ${fillColor};"`;
+      const itemId = `asset-class-${chartId}-${index}`;
       return `
-        <div class="asset-class-item" aria-label="Color indicator for ${asset.name}">
-          <div class="asset-class-indicator">
+        <div class="asset-class-item" role="listitem" aria-label="${asset.name}: ${asset.percentage}" id="${itemId}">
+          <div class="asset-class-indicator" aria-hidden="true">
             <div class="indicator-fill" ${fillStyle}></div>
           </div>
           <div class="asset-class-name">${asset.name}</div>
-          <div class="asset-class-percentage">${asset.percentage || '00.0%'}</div>
+          <div class="asset-class-percentage" aria-label="${asset.name} allocation is ${asset.percentage}">${asset.percentage || '00.0%'}</div>
         </div>
       `;
     })
@@ -586,11 +499,26 @@ export default function decorate(block) {
   const innerContent = `
     ${titleHtml}
     <div class="asset-allocation-content">
-      <div class="asset-allocation-chart-container">
-        <div class="asset-allocation-chart" id="${chartId}"></div>
-      </div>
-      <div class="asset-allocation-list">
-        ${assetListHtml}
+      <div class="asset-allocation-chart-content">
+        <div class="asset-allocation-chart-container">
+          <div class="asset-allocation-chart-wrapper">
+            <h3 class="asset-allocation-chart-title" id="${chartId}-title">Asset Allocation</h3>
+            <div 
+              class="asset-allocation-chart" 
+              id="${chartId}" 
+              role="img"
+              aria-label="Asset allocation donut chart"
+              aria-describedby="${chartId}-title ${chartId}-description"
+            >
+              <div id="${chartId}-description" class="sr-only">
+                This donut chart visualizes the portfolio asset allocation across five categories. Use arrow keys to navigate between segments.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="asset-allocation-list" role="list" aria-label="Asset allocation breakdown">
+          ${assetListHtml}
+        </div>
       </div>
     </div>
   `;
@@ -617,21 +545,17 @@ export default function decorate(block) {
     block.innerHTML = html;
   }
 
-  // Asset class items are visual indicators only (not clickable)
+  // Asset class items are visual indicators - enhance accessibility
   const assetItems = block.querySelectorAll('.asset-class-item');
   assetItems.forEach((item) => {
-    // Remove click handlers - items are not interactive
-    // Remove keyboard handlers - items are not interactive
-    // Remove focusability - items are not interactive
-    const itemName = item.querySelector('.asset-class-name')?.textContent || 'asset class';
-    item.setAttribute('aria-label', `Color indicator for ${itemName}`);
+    // Keep role="listitem" for proper semantic structure
+    // Already has aria-label from HTML generation
     item.style.cursor = 'default'; // Show default cursor, not pointer
-    item.removeAttribute('tabindex'); // Remove focusability
-    item.removeAttribute('role'); // Remove radio role
+    item.setAttribute('tabindex', '-1'); // Not keyboard focusable but accessible to screen readers
   });
 
-  // Initialize chart (async)
-  initializeAssetChart(chartId, assetData).then(() => {
+  // Initialize chart (async) - pass parsed chartData
+  initializeAssetChart(chartId, { chartData }).then(() => {
     // Set up hover event handlers after chart is created
     setTimeout(() => {
       const chart = window[`highchart_${chartId}`];
@@ -657,4 +581,3 @@ export default function decorate(block) {
     console.error('Chart initialization failed:', error);
   });
 }
-

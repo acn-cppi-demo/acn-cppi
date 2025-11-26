@@ -2,6 +2,7 @@
   padding: 40px;
   border: 1px solid #E3E4E5;
   box-shadow: 4px 4px 20px 0 #0000001A;
+  border-radius: 8px;
 }
 
 .annual-performance-history-header {

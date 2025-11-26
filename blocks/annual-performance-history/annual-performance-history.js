@@ -48,21 +48,9 @@ async function initializePerformanceChart(chartId, data) {
     ],
   };
 
-  // Parse chart data if provided
-  let chartData = mockChartData;
-  try {
-    if (data.chartData && typeof data.chartData === 'string' && data.chartData.trim()) {
-      const parsed = JSON.parse(data.chartData);
-      if (parsed.categories && parsed.series) {
-        chartData = parsed;
-      }
-    } else if (data.chartData && typeof data.chartData === 'object' && data.chartData.categories) {
-      chartData = data.chartData;
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data:', error);
-  }
+  // Chart data is already parsed and passed from decorate function
+  // Use the chartData directly from data parameter
+  const chartData = (data.chartData && data.chartData.categories) ? data.chartData : mockChartData;
 
   // Determine chart height based on screen size
   const isMobile = window.innerWidth <= 480;
@@ -217,7 +205,6 @@ export default function decorate(block) {
   const performanceData = {
     title: null,
     chartData: null,
-    legendData: null,
   };
 
   // Helper: get text content from the block's child by index
@@ -232,29 +219,40 @@ export default function decorate(block) {
   // Extract title (first child)
   performanceData.title = getTextFromChild(0) || 'Annual Performance History';
 
-  // Extract chart data (second child) - JSON string
+  // Extract chart data (second child) - JSON string - single source of truth
   const chartDataText = getTextFromChild(1);
-  if (chartDataText) {
+
+  // Try to get data from data-aue-prop attributes (AEM editor)
+  const propElements = block.querySelectorAll('[data-aue-prop]');
+  if (propElements && propElements.length > 0) {
+    propElements.forEach((element) => {
+      const propName = element.getAttribute('data-aue-prop');
+      const propType = element.getAttribute('data-aue-type');
+      let value = null;
+
+      if (propType === 'richtext') {
+        value = element.innerHTML.trim() || element.textContent.trim();
+      } else {
+        value = element.textContent.trim();
+      }
+
+      if (propName === 'title') {
+        performanceData.title = value;
+      } else if (propName === 'chartData') {
+        performanceData.chartData = value;
+      }
+    });
+  } else if (chartDataText) {
+    // Fallback: parse from block children
     try {
-      performanceData.chartData = JSON.parse(chartDataText);
+      performanceData.chartData = chartDataText;
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error('Failed to parse chart data:', error);
+      console.error('Failed to extract chart data:', error);
     }
   }
 
-  // Extract legend data (third child) - optional
-  const legendDataText = getTextFromChild(2);
-  if (legendDataText) {
-    try {
-      performanceData.legendData = JSON.parse(legendDataText);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to parse legend data:', error);
-    }
-  }
-
-  // Parse chart data for legend (use mock data if not provided)
+  // Mock data structure (single source for both chart and legend)
   const mockChartData = {
     categories: ['2020', '2021', '2022', '2023', '2024', '2025'],
     series: [
@@ -271,27 +269,31 @@ export default function decorate(block) {
     ],
   };
 
-  let chartDataForLegend = mockChartData;
+  // Parse chart data - single source of truth for both chart and legend
+  let chartData = mockChartData;
   try {
     if (performanceData.chartData && typeof performanceData.chartData === 'string' && performanceData.chartData.trim()) {
       const parsed = JSON.parse(performanceData.chartData);
       if (parsed.categories && parsed.series) {
-        chartDataForLegend = parsed;
+        chartData = parsed;
       }
     } else if (performanceData.chartData && typeof performanceData.chartData === 'object' && performanceData.chartData.categories) {
-      chartDataForLegend = performanceData.chartData;
+      chartData = performanceData.chartData;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data for legend:', error);
+    console.error('Failed to parse chart data:', error);
   }
+
+  // Store parsed chartData back for chart initialization
+  performanceData.chartData = chartData;
 
   // Generate unique IDs
   const titleId = `annual-performance-history-title-${Date.now()}`;
   const chartId = `annual-performance-history-chart-${Date.now()}`;
 
-  // Build legend HTML from chart data
-  const legendItems = chartDataForLegend.series.map((series) => `
+  // Build legend HTML from chart data (single source of truth)
+  const legendItems = chartData.series.map((series) => `
     <div class="annual-performance-history-legend-item">
       <span class="annual-performance-history-legend-symbol" style="background-color: ${series.color || '#0273CF'};"></span>
       <span class="annual-performance-history-legend-label">${series.name}</span>

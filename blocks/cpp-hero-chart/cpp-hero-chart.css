@@ -363,10 +363,6 @@
     .cpp-hero-chart-overall-value {
         font-size: 36px;
     }
-
-    .cpp-hero-chart {
-        min-height: 300px;
-    }
 }
 
 @media (width <= 480px) {
@@ -394,6 +390,7 @@
     .period-tab {
         padding: 6px 12px;
         font-size: 12px;
+        border: none;
     }
 
     .graph-text {

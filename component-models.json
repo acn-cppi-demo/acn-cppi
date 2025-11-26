@@ -153,13 +153,7 @@
       {
         "component": "richtext",
         "name": "chartData",
-        "label": "Chart Data (JSON for Highcharts)",
-        "valueType": "string"
-      },
-      {
-        "component": "richtext",
-        "name": "legendData",
-        "label": "Legend Data (JSON)",
+        "label": "Chart Data (JSON - Single source for chart and legend with categories and series)",
         "valueType": "string"
       }
     ]
@@ -176,13 +170,7 @@
       {
         "component": "richtext",
         "name": "chartData",
-        "label": "Chart Data (JSON for Highcharts)",
-        "valueType": "string"
-      },
-      {
-        "component": "richtext",
-        "name": "assetClasses",
-        "label": "Asset Classes Data (JSON)",
+        "label": "Chart Data (JSON - Single source for chart and legend with name, y, color, description)",
         "valueType": "string"
       }
     ]
@@ -629,12 +617,6 @@
         "component": "richtext",
         "name": "chartData",
         "label": "Chart Data (JSON for Highcharts)",
-        "valueType": "string"
-      },
-      {
-        "component": "richtext",
-        "name": "assetClasses",
-        "label": "Asset Classes Data (JSON)",
         "valueType": "string"
       }
     ]

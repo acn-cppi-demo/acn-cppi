@@ -399,7 +399,6 @@ export default function decorate(block) {
   const portfolioData = {
     title: null,
     chartData: null,
-    assetClasses: null,
   };
 
   // Helper: get text content from the block's child by index
@@ -413,6 +412,8 @@ export default function decorate(block) {
 
   // Extract data from children (fallback for AEM published markup)
   portfolioData.title = getTextFromChild(0) || null;
+
+  let jsonDataString = null;
 
   // Try to get data from data-aue-prop attributes
   const propElements = block.querySelectorAll('[data-aue-prop]');
@@ -431,113 +432,82 @@ export default function decorate(block) {
       if (propName === 'title') {
         portfolioData.title = value;
       } else if (propName === 'chartData') {
-        portfolioData.chartData = value;
-      } else if (propName === 'assetClasses') {
-        portfolioData.assetClasses = value;
+        jsonDataString = value;
       }
     });
   }
 
-  // Fixed mock asset classes data (matching Figma design colors)
-  const mockAssetClasses = [
+  // Fallback: try to get JSON from child elements if no prop found
+  if (!jsonDataString) {
+    jsonDataString = getTextFromChild(1);
+  }
+
+  // Parse chart data - this will be the single source of truth for both chart and legend
+  // Fixed mock data structure (matching design colors)
+  const mockChartData = [
     {
       name: 'Equities',
-      percentage: '30%',
-      selected: false,
+      y: 30,
       color: '#1E2127',
+      description: 'Investments in publicly traded company stocks across global markets',
     },
     {
       name: 'Fixed Income',
-      percentage: '25%',
-      selected: false,
+      y: 25,
       color: '#2C3D50',
+      description: 'Bonds and other debt securities providing steady income streams',
     },
     {
       name: 'Real Estate',
-      percentage: '20%',
-      selected: false,
+      y: 20,
       color: '#0052A4',
+      description: 'Property investments including commercial and residential real estate',
     },
     {
       name: 'Infrastructure',
-      percentage: '15%',
-      selected: false,
+      y: 15,
       color: '#0273CF',
+      description: 'Investments in essential infrastructure assets like transportation and utilities',
     },
     {
       name: 'Credit',
-      percentage: '10%',
-      selected: false,
+      y: 10,
       color: '#99BCFF',
+      description: 'Corporate bonds, private debt, and structured credit opportunities',
     },
   ];
 
-  // Fixed mock chart data for color matching (same colors as in initializePortfolioChart)
-  const mockChartDataForColors = [
-    { name: 'Equities', color: '#1E2127' },
-    { name: 'Fixed Income', color: '#2C3D50' },
-    { name: 'Real Estate', color: '#0052A4' },
-    { name: 'Infrastructure', color: '#0273CF' },
-    { name: 'Credit', color: '#99BCFF' },
-  ];
-
-  // Parse chart data first (needed for color matching)
-  let chartDataForColors = mockChartDataForColors;
+  // Parse chart data from jsonDataString - single source of truth
+  let chartData = mockChartData;
   try {
-    if (portfolioData.chartData && typeof portfolioData.chartData === 'string' && portfolioData.chartData.trim()) {
-      const parsed = JSON.parse(portfolioData.chartData);
+    if (jsonDataString && typeof jsonDataString === 'string' && jsonDataString.trim()) {
+      const parsed = JSON.parse(jsonDataString);
       if (Array.isArray(parsed)) {
-        // Extract just name and color for color matching
-        chartDataForColors = parsed.map((item) => ({
-          name: item.name,
-          color: item.color,
-        }));
+        chartData = parsed;
       }
-    } else if (portfolioData.chartData && Array.isArray(portfolioData.chartData)) {
-      // Extract just name and color for color matching
-      chartDataForColors = portfolioData.chartData.map((item) => ({
-        name: item.name,
-        color: item.color,
-      }));
+    } else if (jsonDataString && Array.isArray(jsonDataString)) {
+      chartData = jsonDataString;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data for colors:', error);
+    console.error('Failed to parse chart data:', error);
   }
 
-  // Parse asset classes data if provided
-  let assetClasses = mockAssetClasses;
-  try {
-    if (portfolioData.assetClasses && typeof portfolioData.assetClasses === 'string' && portfolioData.assetClasses.trim()) {
-      const parsed = JSON.parse(portfolioData.assetClasses);
-      if (Array.isArray(parsed)) {
-        assetClasses = parsed;
-      }
-    } else if (portfolioData.assetClasses && Array.isArray(portfolioData.assetClasses)) {
-      assetClasses = portfolioData.assetClasses;
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Failed to parse asset classes data:', error);
-  }
+  // Store parsed chartData for chart initialization (single source of truth)
+  portfolioData.chartData = chartData;
 
-  // Ensure asset class colors match chart data colors
-  // Match by name and update colors from chart data
-  const chartDataMap = new Map();
-  chartDataForColors.forEach((item) => {
-    chartDataMap.set(item.name, item.color);
-  });
-
-  // Update asset class colors to match chart data
-  assetClasses = assetClasses.map((asset) => {
-    const chartColor = chartDataMap.get(asset.name);
-    if (chartColor) {
-      return {
-        ...asset,
-        color: chartColor, // Use color from chart data
-      };
-    }
-    return asset;
+  // Generate asset classes list from chartData (single source of truth)
+  // Format: { name, percentage, color, description, selected }
+  const assetClasses = chartData.map((item) => {
+    // Format percentage from y value (e.g., 30 -> "30%")
+    const percentage = typeof item.y === 'number' ? `${item.y}%` : '00%';
+    return {
+      name: item.name || '',
+      percentage,
+      color: item.color || '#000000',
+      description: item.description || '',
+      selected: false,
+    };
   });
 
   // Generate unique IDs
