@@ -1,0 +1,102 @@
+.annual-performance-history-wrapper {
+  width: 100%;
+  padding: 40px 0;
+}
+
+.annual-performance-history-header {
+  margin-bottom: 24px;
+}
+
+.annual-performance-history-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.annual-performance-history-title-wrapper svg {
+  width: 24px;
+  height: 24px;
+  color: #0273CF;
+  flex-shrink: 0;
+}
+
+.annual-performance-history-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2C3D50;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.annual-performance-history-chart-container {
+  width: 100%;
+  position: relative;
+}
+
+.annual-performance-history-chart {
+  width: 100%;
+  min-height: 400px;
+}
+
+.annual-performance-history-error {
+  padding: 24px;
+  background: rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgb(44 61 80 / 90%);
+  text-align: center;
+}
+
+/* Highcharts legend customization */
+.annual-performance-history-chart .highcharts-legend {
+  margin-bottom: 20px;
+}
+
+.annual-performance-history-chart .highcharts-legend-item {
+  margin-right: 24px;
+}
+
+.annual-performance-history-chart .highcharts-legend-item rect {
+  rx: 0;
+  ry: 0;
+}
+
+/* Responsive adjustments */
+@media (width <= 768px) {
+  .annual-performance-history-wrapper {
+    padding: 32px 0;
+  }
+
+  .annual-performance-history-title {
+    font-size: 18px;
+  }
+
+  .annual-performance-history-chart {
+    min-height: 300px;
+  }
+}
+
+@media (width <= 480px) {
+  .annual-performance-history-wrapper {
+    padding: 24px 0;
+  }
+
+  .annual-performance-history-title {
+    font-size: 16px;
+  }
+
+  .annual-performance-history-title-wrapper {
+    gap: 8px;
+  }
+
+  .annual-performance-history-title-wrapper svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .annual-performance-history-chart {
+    min-height: 250px;
+  }
+}
+
