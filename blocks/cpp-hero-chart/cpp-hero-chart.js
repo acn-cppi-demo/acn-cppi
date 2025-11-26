@@ -127,12 +127,18 @@ function updatePeriodValues(data, period, periodData) {
  * @param {string} period - The selected period
  */
 function updateChart(data, period) {
-  const mockData = getPeriodMockData();
-  const periodData = mockData[period];
+  // Use periodsData from JSON if available, otherwise fall back to mock data
+  let periodData = null;
+  if (data.periodsData && data.periodsData[period]) {
+    periodData = data.periodsData[period];
+  } else {
+    const mockData = getPeriodMockData();
+    periodData = mockData[period];
+  }
 
   if (!periodData) {
     // eslint-disable-next-line no-console
-    console.warn(`No mock data found for period: ${period}`);
+    console.warn(`No data found for period: ${period}`);
     return;
   }
 
@@ -403,10 +409,11 @@ export default function decorate(block) {
     graphImageAlt: null,
     graphText: null,
     chartData: null,
+    periodsData: null, // Will store the periods object from JSON
     value: null,
     badge: null,
     overallData: null,
-    periods: ['3M', '6M', '1Y', '2Y', '5Y'],
+    periods: [], // Default, will be synced from JSON or mock data
     selectedPeriod: '1Y',
     blockElement: null,
     chartInstanceId: null,
@@ -592,15 +599,84 @@ export default function decorate(block) {
     if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
     else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
   }
+  // Check for picture at index 4, if present use it and adjust subsequent indices
   const pic = getPictureFromChild(4);
+  let graphTextIndex = 4;
+  let valueIndex = 5;
+  let badgeIndex = 6;
+  let periodIndex = 7;
+
   if (pic) {
     cppHeroChartData.graphImage = pic.src;
     cppHeroChartData.graphImageAlt = pic.alt;
+    // If picture exists, shift indices by 1
+    graphTextIndex = 5;
+    valueIndex = 6;
+    badgeIndex = 7;
+    periodIndex = 8;
   }
-  cppHeroChartData.graphText = getTextFromChild(5) || null;
-  cppHeroChartData.value = getTextFromChild(6) || null;
-  cppHeroChartData.badge = getTextFromChild(7) || null;
-  cppHeroChartData.selectedPeriod = getTextFromChild(8) || cppHeroChartData.selectedPeriod;
+
+  cppHeroChartData.graphText = getTextFromChild(graphTextIndex) || null;
+  cppHeroChartData.value = getTextFromChild(valueIndex) || null;
+  cppHeroChartData.badge = getTextFromChild(badgeIndex) || null;
+  const selectedPeriodFromChild = getTextFromChild(periodIndex);
+  cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
+
+  // Parse JSON data if chartData contains a JSON string with periods object
+  // The JSON structure might be: { "periods": { "3M": {...}, "6M": {...}, ... } }
+  if (cppHeroChartData.chartData) {
+    try {
+      let parsedData = null;
+      if (typeof cppHeroChartData.chartData === 'string' && cppHeroChartData.chartData.trim()) {
+        parsedData = JSON.parse(cppHeroChartData.chartData);
+      } else if (typeof cppHeroChartData.chartData === 'object') {
+        parsedData = cppHeroChartData.chartData;
+      }
+
+      // If parsed data contains a periods object, extract it and sync periods list
+      if (parsedData && parsedData.periods && typeof parsedData.periods === 'object') {
+        cppHeroChartData.periodsData = parsedData.periods;
+        // Extract period keys from the periods object
+        const periodKeys = Object.keys(parsedData.periods);
+        if (periodKeys.length > 0) {
+          cppHeroChartData.periods = periodKeys;
+          // If selectedPeriod is not in the new periods list, set to first period
+          if (!cppHeroChartData.periods.includes(cppHeroChartData.selectedPeriod)) {
+            const [firstPeriod] = cppHeroChartData.periods;
+            cppHeroChartData.selectedPeriod = firstPeriod;
+          }
+          // Update initial value, badge, and overallData from selected period's data
+          const selectedPeriodData = cppHeroChartData.periodsData[cppHeroChartData.selectedPeriod];
+          if (selectedPeriodData) {
+            if (selectedPeriodData.value) cppHeroChartData.value = selectedPeriodData.value;
+            if (selectedPeriodData.badge) cppHeroChartData.badge = selectedPeriodData.badge;
+            if (selectedPeriodData.overallData) {
+              cppHeroChartData.overallData = selectedPeriodData.overallData;
+            }
+          }
+        }
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to parse chartData JSON:', error);
+    }
+  }
+
+  // If no periodsData was extracted from JSON, sync periods from mock data
+  if (!cppHeroChartData.periodsData) {
+    const mockPeriodsData = getPeriodMockData();
+    cppHeroChartData.periodsData = mockPeriodsData;
+    // Extract period keys from mock data and sync periods array
+    const periodKeys = Object.keys(mockPeriodsData);
+    if (periodKeys.length > 0) {
+      cppHeroChartData.periods = periodKeys;
+      // If selectedPeriod is not in the periods list, set to first period
+      if (!cppHeroChartData.periods.includes(cppHeroChartData.selectedPeriod)) {
+        const [firstPeriod] = cppHeroChartData.periods;
+        cppHeroChartData.selectedPeriod = firstPeriod;
+      }
+    }
+  }
 
   // Extract overall data from the last child div (right side content)
   // First check for data-aue-prop

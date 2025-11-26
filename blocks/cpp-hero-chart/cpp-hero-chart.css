@@ -352,7 +352,7 @@
     }
 
     .cpp-hero-chart-periods {
-        justify-content: flex-start;
+        justify-content: space-between;
         flex-wrap: wrap;
     }
 
