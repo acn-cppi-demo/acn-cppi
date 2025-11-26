@@ -61,7 +61,8 @@
         "fund-performance",
         "fund-overview",
         "fund-insights-container",
-        "portfolio-allocation"
+        "portfolio-allocation",
+        "annual-performance-history"
       ]
     }
   ]
