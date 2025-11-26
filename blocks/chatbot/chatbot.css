@@ -1,116 +1,173 @@
-/* Floating pill button */
+/* -----------------------------
+    Floating "Need help?" pill
+--------------------------------*/
 .chatbot-pill {
-    position: fixed;
-    bottom: 32px;
-    right: 32px;
-    background: #fff;
-    color: #0d6efd;
-    padding: 14px 26px;
-    border-radius: 50px;
-    border: 2px solid #0d6efd;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgb(0 0 0 / 15%);
-    z-index: 9999;
-  }
-  
-  .pill-icon {
-    width: 20px;
-    height: 20px;
-  }
-  
-  /* Popup modal */
-  .chatbot-modal {
-    position: fixed;
-    bottom: 100px;
-    right: 30px;
-    width: 360px;
-    height: 450px;
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 6px 15px rgb(0 0 0 / 20%);
-    display: flex;
-    flex-direction: column;
-    z-index: 9999;
-  }
-  
-  /* Hide/show */
-  .hidden {
-    display: none !important;
-  }
-  
-  /* Modal header */
-  .chat-header {
-    background: #0d6efd;
-    color: white;
-    padding: 14px 18px;
-    font-size: 16px;
-    border-radius: 16px 16px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .chat-close {
-    background: none;
-    border: none;
-    font-size: 22px;
-    color: white;
-    cursor: pointer;
-  }
-  
-  /* Chat messages */
-  .chat-body {
-    flex: 1;
-    padding: 12px;
-    overflow-y: auto;
-    background: #fafafa;
-  }
-  
-  .msg {
-    padding: 10px 14px;
-    margin-bottom: 10px;
-    border-radius: 12px;
-    max-width: 80%;
-    font-size: 14px;
-  }
-  
-  .msg.user {
-    background: #d8eaff;
-    align-self: flex-end;
-    margin-left: auto;
-  }
-  
-  .msg.bot {
-    background: #ececec;
-    margin-right: auto;
-  }
-  
-  /* Input area */
-  .chat-input-wrapper {
-    display: flex;
-    border-top: 1px solid #ddd;
-  }
-  
-  .chat-input-wrapper input {
-    flex: 1;
-    border: none;
-    padding: 14px;
-    font-size: 14px;
-    outline: none;
-  }
-  
-  .chat-input-wrapper button {
-    background: #0d6efd;
-    color: white;
-    border: none;
-    padding: 14px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 0;
-  }
-  
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: #ffffff;
+  color: #1f78dd;
+  padding: 14px 26px;
+  border-radius: 999px;
+  border: 2px solid #1f78dd;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgb(0 0 0 / 18%);
+  z-index: 9999;
+}
+
+.chatbot-pill span {
+  white-space: nowrap;
+}
+
+/* Blue circular icon */
+.pill-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  background: #1f78dd;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pill-icon {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* -----------------------------
+    Chat Modal Container
+--------------------------------*/
+.chatbot-modal {
+  position: fixed;
+  bottom: 100px;
+  right: 30px;
+  width: 360px;
+  height: 500px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
+  display: flex;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.hidden {
+  display: none !important;
+}
+
+
+/* -----------------------------
+    Modal Header
+--------------------------------*/
+.chat-header {
+  background: #1f78dd;
+  color: white;
+  padding: 16px;
+  border-radius: 18px 18px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-title-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fundy-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.chat-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.chat-subtitle {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.chat-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+
+/* -----------------------------
+    Chat Body
+--------------------------------*/
+.chat-body {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  background: #f4f7fb;
+}
+
+.msg {
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  max-width: 80%;
+  font-size: 14px;
+}
+
+.msg.user {
+  background: #d8eaff;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.msg.bot {
+  background: #ececec;
+  margin-right: auto;
+}
+
+
+/* -----------------------------
+    Input Area
+--------------------------------*/
+.chat-input-wrapper {
+  display: flex;
+  border-top: 1px solid #ddd;
+  background: #fff;
+  padding: 10px;
+  gap: 10px;
+}
+
+.chat-input-wrapper input {
+  flex: 1;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+  outline: none;
+  background: #fafafa;
+}
+
+.send-btn {
+  background: #1f78dd;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}

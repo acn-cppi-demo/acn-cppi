@@ -3,27 +3,38 @@ export default function decorate(block) {
   const label = fields.title?.value || 'Need help?';
 
   block.innerHTML = `
-      <!-- Floating Widget Button -->
-      <div class="chatbot-pill">
-        <span>${label}</span>
-        <img class="pill-icon" src="https://img.icons8.com/?size=100&id=59820&format=png&color=0D6EFD" />
-      </div>
-  
-      <!-- Popup Modal -->
-      <div class="chatbot-modal hidden">
-        <div class="chat-header">
-          <span>AI Assistant</span>
-          <button class="chat-close">✕</button>
+  <!-- Floating Widget Button -->
+  <div class="chatbot-pill">
+    <span>${label}</span>
+    <div class="pill-icon-wrapper">
+      <img class="pill-icon" src="https://img.icons8.com/?size=100&id=59820&format=png&color=FFFFFF" />
+    </div>
+  </div>
+
+  <!-- Popup Modal -->
+  <div class="chatbot-modal hidden">
+    <div class="chat-header">
+      <div class="chat-title-left">
+        <img class="fundy-icon" 
+             src="https://img.icons8.com/?size=100&id=59820&format=png&color=FFFFFF" />
+        <div class="chat-title-group">
+          <div class="chat-title">AI Assistant</div>
+          <div class="chat-subtitle">CPP Investments FAQ</div>
         </div>
-  
-        <div class="chat-body" id="chatBody"></div>
-  
-        <div class="chat-input-wrapper">
-          <input id="chatInput" placeholder="Ask something…" />
-          <button id="chatSend">Send</button>
-        </div>
       </div>
-    `;
+      <button class="chat-close">✕</button>
+    </div>
+
+    <div class="chat-body" id="chatBody"></div>
+
+    <div class="chat-input-wrapper">
+      <input id="chatInput" placeholder="Ask a question..." />
+      <button id="chatSend" class="send-btn">Send</button>
+    </div>
+  </div>
+`;
+
+
 
   const widget = block.querySelector('.chatbot-pill');
   const modal = block.querySelector('.chatbot-modal');
