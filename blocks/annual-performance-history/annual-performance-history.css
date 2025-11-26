@@ -21,6 +21,10 @@
   flex-wrap: wrap;
 }
 
+.annual-performance-history-legend-mobile {
+  display: none;
+}
+
 .annual-performance-history-legend-item {
   display: flex;
   align-items: center;
@@ -131,6 +135,17 @@
   ry: 0;
 }
 
+/* Hide Highcharts context menu and export buttons */
+.annual-performance-history-chart .highcharts-exporting-group,
+.annual-performance-history-chart .highcharts-contextbutton,
+.annual-performance-history-chart .highcharts-button {
+  display: none !important;
+}
+
+.annual-performance-history-wrapper {
+    margin-top: 40px !important;
+}
+
 /* Responsive adjustments */
 @media (width <= 768px) {
   .annual-performance-history {
@@ -138,7 +153,12 @@
   }
 
   .annual-performance-history-wrapper {
-    padding: 32px 0;
+    padding: 24px 0;
+    margin-top: 24px !important;
+  }
+
+  .annual-performance-history-header {
+    margin-bottom: 16px;
   }
 
   .annual-performance-history-title {
@@ -163,7 +183,14 @@
 
 @media (width <= 480px) {
   .annual-performance-history-wrapper {
-    padding: 24px 0;
+    padding: 16px 0;
+  }
+
+  .annual-performance-history-header {
+    margin-bottom: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 
   .annual-performance-history-title {
@@ -180,7 +207,7 @@
   }
 
   .annual-performance-history-chart {
-    min-height: 200px;
+    min-height: 250px;
   }
 
   .annual-performance-history-chart-container {
@@ -188,7 +215,7 @@
     max-width: 100%;
     overflow-x: auto;
     padding: 0;
-    margin: 0;
+    margin: 0 0 12px;
   }
 
   .annual-performance-history-chart .highcharts-container {
@@ -197,14 +224,15 @@
     max-width: 100% !important;
   }
 
-  .annual-performance-history-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+  .annual-performance-history-legend-desktop {
+    display: none;
   }
 
-  .annual-performance-history-legend {
+  .annual-performance-history-legend-mobile {
+    display: flex;
     width: 100%;
+    margin-top: 16px;
+    justify-content: flex-start;
   }
 }
 

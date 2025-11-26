@@ -64,6 +64,10 @@ async function initializePerformanceChart(chartId, data) {
     console.error('Failed to parse chart data:', error);
   }
 
+  // Determine chart height based on screen size
+  const isMobile = window.innerWidth <= 480;
+  const chartHeight = isMobile ? 230 : 300;
+
   // Highcharts configuration
   const config = {
     chart: {
@@ -72,13 +76,16 @@ async function initializePerformanceChart(chartId, data) {
       spacing: [20, 0, 20, 0], // [top, right, bottom, left] - remove left and right spacing
       reflow: true, // Enable responsive reflow
       width: null, // Auto width
-      height: 300, // Set height to 300px
+      height: chartHeight, // Responsive height: 250px on mobile, 300px on desktop
     },
     title: {
       text: null,
     },
     credits: {
       enabled: false,
+    },
+    exporting: {
+      enabled: false, // Disable export menu
     },
     accessibility: {
       enabled: true,
@@ -182,6 +189,19 @@ async function initializePerformanceChart(chartId, data) {
   try {
     const chart = window.Highcharts.chart(chartId, config);
     window[`highchart_${chartId}`] = chart;
+
+    // Update chart height on window resize for responsive behavior
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        const isMobileNow = window.innerWidth <= 480;
+        const newHeight = isMobileNow ? 250 : 300;
+        if (chart && chart.chartHeight !== newHeight) {
+          chart.setSize(null, newHeight, false);
+        }
+      }, 250);
+    });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to create Annual Performance History chart:', error);
@@ -288,12 +308,15 @@ export default function decorate(block) {
       <div class="annual-performance-history-title-wrapper">
         <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
       </div>
-      <div class="annual-performance-history-legend">
+      <div class="annual-performance-history-legend annual-performance-history-legend-desktop">
         ${legendItems}
       </div>
     </div>
     <div class="annual-performance-history-chart-container">
       <div class="annual-performance-history-chart" id="${chartId}"></div>
+    </div>
+    <div class="annual-performance-history-legend annual-performance-history-legend-mobile">
+      ${legendItems}
     </div>
   `;
 
