@@ -37,12 +37,12 @@ async function initializePerformanceChart(chartId, data) {
     series: [
       {
         name: 'CPP Investments Return',
-        data: [2.5, 16.8, -8.2, 10.5, 9.3, 3.1],
+        data: [2.5, 16.8, -3.2, 10.5, 9.3, 3.1],
         color: '#0273CF', // Blue color for CPP Investments
       },
       {
         name: 'Benchmark Return',
-        data: [2.1, 15.2, -7.5, 9.8, 8.9, 2.8],
+        data: [2.1, 15.2, -4.5, 9.8, 8.9, 2.8],
         color: '#2C3D50', // Dark grey for Benchmark
       },
     ],
@@ -69,7 +69,10 @@ async function initializePerformanceChart(chartId, data) {
     chart: {
       type: 'column',
       backgroundColor: 'transparent',
-      spacing: [20, 20, 20, 20],
+      spacing: [20, 0, 20, 0], // [top, right, bottom, left] - remove left and right spacing
+      reflow: true, // Enable responsive reflow
+      width: null, // Auto width
+      height: 300, // Set height to 300px
     },
     title: {
       text: null,
@@ -86,9 +89,9 @@ async function initializePerformanceChart(chartId, data) {
       point: {
         descriptionFormatter(point) {
           const { name, y, series } = point;
-          return `${series.name} for ${name}: ${y > 0 ? '+' : ''}${y}%`;
+          return `${series.name} for ${name}: ${y > 0 ? '+' : ''}${y}`;
         },
-        valueDescriptionFormat: '{index}. {point.series.name} for {point.category}: {point.y}%.',
+        valueDescriptionFormat: '{index}. {point.series.name} for {point.category}: {point.y}.',
       },
       screenReaderSection: {
         beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
@@ -96,9 +99,10 @@ async function initializePerformanceChart(chartId, data) {
     },
     xAxis: {
       categories: chartData.categories,
-      lineWidth: 1,
-      lineColor: '#E3E4E5',
+      lineWidth: 0,
+      lineColor: 'transparent',
       tickWidth: 0,
+      offset: 0,
       labels: {
         style: {
           color: '#2C3D50',
@@ -116,10 +120,10 @@ async function initializePerformanceChart(chartId, data) {
       tickInterval: 7,
       gridLineWidth: 1,
       gridLineColor: '#E3E4E5',
-      lineWidth: 1,
-      lineColor: '#E3E4E5',
+      lineWidth: 0,
+      lineColor: 'transparent',
       labels: {
-        format: '{value}%',
+        format: '{value}',
         style: {
           color: '#2C3D50',
           fontSize: '14px',
@@ -128,23 +132,7 @@ async function initializePerformanceChart(chartId, data) {
       },
     },
     legend: {
-      enabled: true,
-      align: 'left',
-      verticalAlign: 'top',
-      x: 0,
-      y: 0,
-      itemStyle: {
-        color: '#2C3D50',
-        fontSize: '14px',
-        fontFamily: "'Open Sans', sans-serif",
-        fontWeight: '400',
-      },
-      itemHoverStyle: {
-        color: '#0273CF',
-      },
-      symbolHeight: 12,
-      symbolWidth: 12,
-      symbolRadius: 0,
+      enabled: false, // Disable Highcharts legend, we'll use custom HTML legend
     },
     tooltip: {
       enabled: true,
@@ -162,14 +150,14 @@ async function initializePerformanceChart(chartId, data) {
         let tooltip = `<b>${this.x}</b><br/>`;
         this.points.forEach((point) => {
           const value = point.y > 0 ? `+${point.y}` : point.y;
-          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${value}%</b><br/>`;
+          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${value}</b><br/>`;
         });
         return tooltip;
       },
     },
     plotOptions: {
       column: {
-        borderRadius: 0,
+        borderRadius: 8,
         borderWidth: 0,
         groupPadding: 0.2,
         pointPadding: 0.1,
@@ -246,29 +234,88 @@ export default function decorate(block) {
     }
   }
 
+  // Parse chart data for legend (use mock data if not provided)
+  const mockChartData = {
+    categories: ['2020', '2021', '2022', '2023', '2024', '2025'],
+    series: [
+      {
+        name: 'CPP Investments Return',
+        data: [2.5, 16.8, -8.2, 10.5, 9.3, 3.1],
+        color: '#0273CF',
+      },
+      {
+        name: 'Benchmark Return',
+        data: [2.1, 15.2, -7.5, 9.8, 8.9, 2.8],
+        color: '#2C3D50',
+      },
+    ],
+  };
+
+  let chartDataForLegend = mockChartData;
+  try {
+    if (performanceData.chartData && typeof performanceData.chartData === 'string' && performanceData.chartData.trim()) {
+      const parsed = JSON.parse(performanceData.chartData);
+      if (parsed.categories && parsed.series) {
+        chartDataForLegend = parsed;
+      }
+    } else if (performanceData.chartData && typeof performanceData.chartData === 'object' && performanceData.chartData.categories) {
+      chartDataForLegend = performanceData.chartData;
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to parse chart data for legend:', error);
+  }
+
   // Generate unique IDs
   const titleId = `annual-performance-history-title-${Date.now()}`;
   const chartId = `annual-performance-history-chart-${Date.now()}`;
 
-  // Build HTML structure
-  const html = `
-    <div class="annual-performance-history-wrapper" role="region" aria-labelledby="${titleId}">
-      <div class="annual-performance-history-header">
-        <div class="annual-performance-history-title-wrapper">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="annual-performance-history-icon">
-            <circle cx="12" cy="12" r="11" stroke="#0273CF" stroke-width="1.5" fill="none"/>
-            <text x="12" y="17" text-anchor="middle" font-size="14" font-weight="600" fill="#0273CF" font-family="'Open Sans', sans-serif">L</text>
-          </svg>
-          <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
-        </div>
+  // Build legend HTML from chart data
+  const legendItems = chartDataForLegend.series.map((series) => `
+    <div class="annual-performance-history-legend-item">
+      <span class="annual-performance-history-legend-symbol" style="background-color: ${series.color || '#0273CF'};"></span>
+      <span class="annual-performance-history-legend-label">${series.name}</span>
+    </div>
+  `).join('');
+
+  // Check if wrapper already exists
+  const parentHasWrapper = block.parentElement?.classList.contains('annual-performance-history-wrapper');
+  const blockIsWrapper = block.classList.contains('annual-performance-history-wrapper');
+
+  // Build inner content HTML
+  const innerContent = `
+    <div class="annual-performance-history-header">
+      <div class="annual-performance-history-title-wrapper">
+        <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
       </div>
-      <div class="annual-performance-history-chart-container">
-        <div class="annual-performance-history-chart" id="${chartId}"></div>
+      <div class="annual-performance-history-legend">
+        ${legendItems}
       </div>
+    </div>
+    <div class="annual-performance-history-chart-container">
+      <div class="annual-performance-history-chart" id="${chartId}"></div>
     </div>
   `;
 
-  block.innerHTML = html;
+  // If parent already has wrapper, add content directly to block and update parent attributes
+  if (parentHasWrapper) {
+    block.parentElement.setAttribute('role', 'region');
+    block.parentElement.setAttribute('aria-labelledby', titleId);
+    block.innerHTML = innerContent;
+  } else if (blockIsWrapper) {
+    // Block itself is the wrapper
+    block.setAttribute('role', 'region');
+    block.setAttribute('aria-labelledby', titleId);
+    block.innerHTML = innerContent;
+  } else {
+    // Create new wrapper
+    const html = `
+      <div class="annual-performance-history-wrapper" role="region" aria-labelledby="${titleId}">
+        ${innerContent}
+      </div>
+    `;
+    block.innerHTML = html;
+  }
 
   // Initialize chart (async)
   initializePerformanceChart(chartId, performanceData).catch((error) => {

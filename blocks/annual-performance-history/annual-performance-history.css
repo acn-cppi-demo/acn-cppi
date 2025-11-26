@@ -1,16 +1,53 @@
-.annual-performance-history-wrapper {
-  width: 100%;
-  padding: 40px 0;
+.annual-performance-history {
+  padding: 40px;
+  border: 1px solid #E3E4E5;
+  box-shadow: 4px 4px 20px 0 #0000001A;
 }
 
 .annual-performance-history-header {
   margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  min-height: 40px;
+}
+
+.annual-performance-history-legend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.annual-performance-history-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.annual-performance-history-legend-symbol {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+
+.annual-performance-history-legend-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #2C3D50;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.4;
 }
 
 .annual-performance-history-title-wrapper {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .annual-performance-history-title-wrapper svg {
@@ -22,7 +59,7 @@
 
 .annual-performance-history-title {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
   color: #2C3D50;
@@ -32,11 +69,36 @@
 .annual-performance-history-chart-container {
   width: 100%;
   position: relative;
+  margin-left: 0;
+  padding-left: 0;
+  overflow: auto visible;
+  -webkit-overflow-scrolling: touch;
 }
 
 .annual-performance-history-chart {
   width: 100%;
-  min-height: 400px;
+  min-height: 300px;
+  margin-left: 0;
+  padding-left: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Remove Highcharts default left spacing */
+.annual-performance-history-chart .highcharts-container {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.annual-performance-history-chart .highcharts-root {
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.annual-performance-history-chart .highcharts-plot-background {
+  left: 0 !important;
 }
 
 .annual-performance-history-error {
@@ -48,13 +110,20 @@
   text-align: center;
 }
 
-/* Highcharts legend customization */
+/* Highcharts legend customization - positioned to align with title */
 .annual-performance-history-chart .highcharts-legend {
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  padding-top: 0;
+}
+
+.annual-performance-history-chart .highcharts-legend-box {
+  fill: none;
+  stroke: none;
 }
 
 .annual-performance-history-chart .highcharts-legend-item {
   margin-right: 24px;
+  margin-bottom: 0;
 }
 
 .annual-performance-history-chart .highcharts-legend-item rect {
@@ -64,6 +133,10 @@
 
 /* Responsive adjustments */
 @media (width <= 768px) {
+  .annual-performance-history {
+    padding: 24px;
+  }
+
   .annual-performance-history-wrapper {
     padding: 32px 0;
   }
@@ -73,7 +146,18 @@
   }
 
   .annual-performance-history-chart {
-    min-height: 300px;
+    min-height: 250px;
+  }
+
+  .annual-performance-history-chart-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .annual-performance-history-chart .highcharts-container {
+    min-width: 100% !important;
+    width: 100% !important;
   }
 }
 
@@ -96,7 +180,31 @@
   }
 
   .annual-performance-history-chart {
-    min-height: 250px;
+    min-height: 200px;
+  }
+
+  .annual-performance-history-chart-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0;
+    margin: 0;
+  }
+
+  .annual-performance-history-chart .highcharts-container {
+    min-width: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .annual-performance-history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .annual-performance-history-legend {
+    width: 100%;
   }
 }
 
