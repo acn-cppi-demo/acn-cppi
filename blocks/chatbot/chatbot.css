@@ -246,7 +246,7 @@
   color: var(--cppi-blue, #0273cf);
 }
 
-.top-page-icon svg {
+.chatbot-top-page-card .top-page-icon svg {
   width: 24px;
   height: 24px;
 }
@@ -293,10 +293,10 @@
 /* Chat messages */
 .chat-message {
   display: flex;
-  animation: fadeIn 0.3s ease;
+  animation: fade-in 0.3s ease;
 }
 
-@keyframes fadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
     transform: translateY(8px);
@@ -512,7 +512,7 @@
   color: #0262b3;
 }
 
-.source-link svg {
+.sources-list .source-link svg {
   flex-shrink: 0;
   margin-top: 2px;
 }
@@ -528,7 +528,7 @@
   line-height: 1.4;
 }
 
-.source-item svg {
+.sources-list .source-item svg {
   flex-shrink: 0;
   margin-top: 2px;
   color: var(--cppi-blue, #0273cf);
@@ -550,7 +550,7 @@
   animation: spin 2s linear infinite;
 }
 
-.thinking-icon svg {
+.thinking-indicator .thinking-icon svg {
   width: 24px;
   height: 24px;
 }
@@ -578,7 +578,7 @@
 }
 
 .thinking-dots span {
-  animation: dotFade 1.4s ease-in-out infinite;
+  animation: dot-fade 1.4s ease-in-out infinite;
   opacity: 0;
 }
 
@@ -594,7 +594,7 @@
   animation-delay: 0.4s;
 }
 
-@keyframes dotFade {
+@keyframes dot-fade {
   0%,
   20% {
     opacity: 0;
@@ -650,7 +650,7 @@
   background: #0262b3;
 }
 
-.chat-input-wrapper button svg {
+.chatbot-chat-view .chat-input-wrapper button svg {
   width: 20px;
   height: 20px;
 }
