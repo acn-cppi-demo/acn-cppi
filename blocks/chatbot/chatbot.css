@@ -3,7 +3,7 @@
   position: fixed;
   bottom: 32px;
   right: 32px;
-  background: #ffffff;
+  background: #fff;
   color: #1f78dd;
   padding: 14px 26px;
   border-radius: 999px;
@@ -41,14 +41,14 @@
 
 /* -----------------------------
     Chat Modal Container
---------------------------------*/
+-------------------------------- */
 .chatbot-modal {
   position: fixed;
   bottom: 100px;
   right: 30px;
   width: 360px;
   height: 500px;
-  background: #ffffff;
+  background: #fff;
   border-radius: 18px;
   box-shadow: 0 8px 20px rgb(0 0 0 / 20%);
   display: flex;
@@ -136,7 +136,7 @@
 
 /* -----------------------------
     Input Area
---------------------------------*/
+-------------------------------- */
 .chat-input-wrapper {
   display: flex;
   border-top: 1px solid #ddd;
@@ -166,8 +166,9 @@
 }
 
 .suggestions {
-  margin: 10px 4px 20px 4px;
+  margin: 10px 4px 20px;
 }
+
 .suggestion-label {
   margin: 8px 4px 4px;
   font-size: 14px;
@@ -176,7 +177,7 @@
 }
 
 .suggestions {
-  margin: 6px 4px 20px 4px;
+  margin: 6px 4px 20px;
 }
 
 .suggestion-btn {
