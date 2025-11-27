@@ -276,6 +276,7 @@ async function loadScript(src, attrs) {
 
 /**
  * Loads Highcharts library and required modules dynamically from local files
+ * Only loads when charts are actually needed (lazy loading)
  * @returns {Promise} Resolves when Highcharts is loaded
  */
 export async function loadHighcharts() {
@@ -285,6 +286,7 @@ export async function loadHighcharts() {
 
   // Use local Highcharts files from node_modules (copied to scripts/lib)
   // Files are already minified for optimal performance
+  // Note: Exporting modules are loaded even though disabled - required for module structure
   const baseUrl = `${window.hlx.codeBasePath}/scripts/lib/highcharts`;
   const scripts = [
     `${baseUrl}/highcharts.js`,
@@ -294,19 +296,9 @@ export async function loadHighcharts() {
   ];
 
   try {
-    // Preload Highcharts for faster chart initialization
-    // Preload only the main library (modules will load after)
-    const [mainScript, ...moduleScripts] = scripts;
-    if ('link' in document.createElement('link')) {
-      const preloadLink = document.createElement('link');
-      preloadLink.rel = 'preload';
-      preloadLink.as = 'script';
-      preloadLink.href = mainScript;
-      document.head.appendChild(preloadLink);
-    }
-
     // Load scripts sequentially (modules depend on main library)
-    // Load main library first
+    // Load main library first - NO PRELOAD to avoid unnecessary resource hints
+    const [mainScript, ...moduleScripts] = scripts;
     await loadScript(mainScript);
     // Check for Highcharts readiness instead of fixed delay (more efficient)
     let retries = 10;
@@ -318,6 +310,7 @@ export async function loadHighcharts() {
       retries -= 1;
     }
     // Then load modules in parallel for faster loading
+    // Note: exporting modules are disabled in chart configs, but keeping for consistency
     await Promise.all(moduleScripts.map((src) => loadScript(src)));
     // Verify Highcharts is available
     if (typeof window.Highcharts === 'undefined') {

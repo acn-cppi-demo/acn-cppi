@@ -342,9 +342,31 @@ export default function decorate(block) {
     block.innerHTML = html;
   }
 
-  // Initialize chart (async)
-  initializePerformanceChart(chartId, performanceData).catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error('Chart initialization failed:', error);
-  });
+  // Use Intersection Observer to lazy load chart only when it's about to enter viewport
+  const chartContainer = block.querySelector(`#${chartId}`);
+  if (chartContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Initialize chart when it's about to become visible
+          initializePerformanceChart(chartId, performanceData).catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Chart initialization failed:', error);
+          });
+          // Stop observing once chart is initialized
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '50px', // Start loading 50px before chart enters viewport
+    });
+
+    observer.observe(chartContainer);
+  } else {
+    // Fallback: Initialize immediately if IntersectionObserver is not supported
+    initializePerformanceChart(chartId, performanceData).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('Chart initialization failed:', error);
+    });
+  }
 }

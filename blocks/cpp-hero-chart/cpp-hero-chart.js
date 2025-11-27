@@ -883,17 +883,42 @@ export default function decorate(block) {
     });
   });
 
-  // Initialize Highcharts with provided data or dummy line chart (async)
-  initializeChart(chartId, cppHeroChartData).then(() => {
-    // Load initial period data (default selected period) after chart is initialized
-    // Use setTimeout to ensure chart is fully initialized before updating
-    setTimeout(() => {
-      updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
-    }, 100);
-  }).catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error('Chart initialization failed:', error);
-  });
+  // Use Intersection Observer to lazy load chart only when it's about to enter viewport
+  const chartContainer = block.querySelector(`#${chartId}`);
+  if (chartContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Initialize chart when it's about to become visible
+          initializeChart(chartId, cppHeroChartData).then(() => {
+            // Load initial period data (default selected period) after chart is initialized
+            setTimeout(() => {
+              updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
+            }, 100);
+          }).catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Chart initialization failed:', error);
+          });
+          // Stop observing once chart is initialized
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '50px', // Start loading 50px before chart enters viewport
+    });
+
+    observer.observe(chartContainer);
+  } else {
+    // Fallback: Initialize immediately if IntersectionObserver is not supported
+    initializeChart(chartId, cppHeroChartData).then(() => {
+      setTimeout(() => {
+        updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
+      }, 100);
+    }).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('Chart initialization failed:', error);
+    });
+  }
 
   // Log overallData for debugging
   if (cppHeroChartData.overallData) {

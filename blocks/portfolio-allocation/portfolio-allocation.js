@@ -610,30 +610,67 @@ export default function decorate(block) {
     card.removeAttribute('role'); // Remove radio role
   });
 
-  // Initialize chart (async)
-  initializePortfolioChart(chartId, portfolioData).then(() => {
-    // Set up hover event handlers after chart is created
-    setTimeout(() => {
-      const chart = window[`highchart_${chartId}`];
-      if (chart && chart.series && chart.series[0]) {
-        chart.series[0].points.forEach((point) => {
-          // On hover: highlight this segment, dim others
-          point.on('mouseOver', () => {
-            updateChartHighlight(chartId, point.name);
-          });
+  // Use Intersection Observer to lazy load chart only when it's about to enter viewport
+  const chartContainer = block.querySelector(`#${chartId}`);
+  if (chartContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Initialize chart when it's about to become visible
+          initializePortfolioChart(chartId, portfolioData).then(() => {
+            // Set up hover event handlers after chart is created
+            setTimeout(() => {
+              const chart = window[`highchart_${chartId}`];
+              if (chart && chart.series && chart.series[0]) {
+                chart.series[0].points.forEach((point) => {
+                  // On hover: highlight this segment, dim others
+                  point.on('mouseOver', () => {
+                    updateChartHighlight(chartId, point.name);
+                  });
 
-          // On mouse out: restore all segments to full opacity
-          point.on('mouseOut', () => {
-            updateChartHighlight(chartId, null);
-          });
-        });
-      }
+                  // On mouse out: restore all segments to full opacity
+                  point.on('mouseOut', () => {
+                    updateChartHighlight(chartId, null);
+                  });
+                });
+              }
 
-      // Initialize chart with all segments visible
-      updateChartHighlight(chartId, null);
-    }, 100);
-  }).catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error('Chart initialization failed:', error);
-  });
+              // Initialize chart with all segments visible
+              updateChartHighlight(chartId, null);
+            }, 100);
+          }).catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('Chart initialization failed:', error);
+          });
+          // Stop observing once chart is initialized
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '50px', // Start loading 50px before chart enters viewport
+    });
+
+    observer.observe(chartContainer);
+  } else {
+    // Fallback: Initialize immediately if IntersectionObserver is not supported
+    initializePortfolioChart(chartId, portfolioData).then(() => {
+      setTimeout(() => {
+        const chart = window[`highchart_${chartId}`];
+        if (chart && chart.series && chart.series[0]) {
+          chart.series[0].points.forEach((point) => {
+            point.on('mouseOver', () => {
+              updateChartHighlight(chartId, point.name);
+            });
+            point.on('mouseOut', () => {
+              updateChartHighlight(chartId, null);
+            });
+          });
+        }
+        updateChartHighlight(chartId, null);
+      }, 100);
+    }).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('Chart initialization failed:', error);
+    });
+  }
 }
