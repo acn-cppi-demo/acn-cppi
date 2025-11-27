@@ -50,9 +50,6 @@
   box-sizing: border-box;
 }
 
-*, *::before, *::after {
-  box-sizing: inherit;
-}
 
 /* fallback fonts */
 @font-face {
