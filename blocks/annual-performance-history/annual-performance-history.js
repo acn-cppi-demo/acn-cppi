@@ -342,31 +342,30 @@ export default function decorate(block) {
     block.innerHTML = html;
   }
 
-  // Use Intersection Observer to lazy load chart only when it's about to enter viewport
-  const chartContainer = block.querySelector(`#${chartId}`);
-  if (chartContainer && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Initialize chart when it's about to become visible
-          initializePerformanceChart(chartId, performanceData).catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error('Chart initialization failed:', error);
-          });
-          // Stop observing once chart is initialized
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      rootMargin: '50px', // Start loading 50px before chart enters viewport
-    });
-
-    observer.observe(chartContainer);
-  } else {
-    // Fallback: Initialize immediately if IntersectionObserver is not supported
+  // Lazy load chart initialization function
+  const lazyInitChart = () => {
     initializePerformanceChart(chartId, performanceData).catch((error) => {
       // eslint-disable-next-line no-console
       console.error('Chart initialization failed:', error);
     });
+  };
+
+  // Use IntersectionObserver to load chart only when visible
+  const chartContainer = block.querySelector('.annual-performance-history-chart-container');
+  if (chartContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          lazyInitChart();
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: '100px' });
+    observer.observe(chartContainer);
+  } else if ('requestIdleCallback' in window) {
+    // Fallback - defer to idle time
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
+  } else {
+    setTimeout(lazyInitChart, 100);
   }
 }

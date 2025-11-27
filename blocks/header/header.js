@@ -634,10 +634,11 @@ function toggleMegamenu(megamenu, show, menuIcon = null) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // load nav as fragment
+  // load nav as fragment with sessionStorage caching enabled
+  // Cache persists for browser tab session and clears when tab is closed
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
+  const fragment = await loadFragment(navPath, true); // Enable caching for header
 
   // decorate nav DOM
   block.textContent = '';
@@ -869,6 +870,28 @@ export default async function decorate(block) {
         if (e.code === 'Enter' || e.code === 'Space') {
           e.preventDefault();
           toggleMegamenu(megamenu, undefined, menuIcon);
+        }
+      });
+    }
+
+    // Add click handler to search icon to open chatbot
+    const searchIcon = navTools?.querySelector('.icon-search');
+    if (searchIcon) {
+      searchIcon.style.cursor = 'pointer';
+      searchIcon.setAttribute('role', 'button');
+      searchIcon.setAttribute('tabindex', '0');
+      searchIcon.setAttribute('aria-label', 'Open search');
+      searchIcon.addEventListener('click', () => {
+        if (typeof window.openChatbotOverlay === 'function') {
+          window.openChatbotOverlay();
+        }
+      });
+      searchIcon.addEventListener('keydown', (e) => {
+        if (e.code === 'Enter' || e.code === 'Space') {
+          e.preventDefault();
+          if (typeof window.openChatbotOverlay === 'function') {
+            window.openChatbotOverlay();
+          }
         }
       });
     }

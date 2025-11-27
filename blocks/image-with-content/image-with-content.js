@@ -124,13 +124,13 @@ export default function decorate(block) {
       <div class="image-with-content-content">
         <div class="image-with-content-content-inner">
           ${contentData.date ? `
-            <div class="image-with-content-date" role="text" aria-label="Published date: ${contentData.date}">
+            <div class="image-with-content-date" aria-label="Published date: ${contentData.date}">
               ${calendarIcon}
               <time datetime="${contentData.date}">${contentData.date}</time>
             </div>
           ` : ''}
           ${contentData.title ? `<div class="image-with-content-title" id="${titleId}">${contentData.title}</div>` : ''}
-          ${contentData.description ? `<div class="image-with-content-description" id="${descriptionId}" role="text">${contentData.description}</div>` : ''}
+          ${contentData.description ? `<div class="image-with-content-description" id="${descriptionId}">${contentData.description}</div>` : ''}
           ${contentData.link && contentData.link.href ? `
             <div class="image-with-content-link">
               <a href="${contentData.link.href}"
