@@ -12,6 +12,8 @@
     "build:json:models": "merge-json-cli -i \"models/_component-models.json\" -o \"component-models.json\"",
     "build:json:definitions": "merge-json-cli -i \"models/_component-definition.json\" -o \"component-definition.json\"",
     "build:json:filters": "merge-json-cli -i \"models/_component-filters.json\" -o \"component-filters.json\"",
+    "postinstall": "npm run copy:highcharts",
+    "copy:highcharts": "mkdir -p scripts/lib/highcharts/modules && cp node_modules/highcharts/highcharts.js scripts/lib/highcharts/ && cp node_modules/highcharts/modules/accessibility.js scripts/lib/highcharts/modules/ && cp node_modules/highcharts/modules/exporting.js scripts/lib/highcharts/modules/ && cp node_modules/highcharts/modules/export-data.js scripts/lib/highcharts/modules/",
     "prepare": "husky"
   },
   "repository": {
@@ -38,6 +40,7 @@
     "stylelint-config-standard": "38.0.0"
   },
   "dependencies": {
-    "@adobe/aem-cli": "^16.16.1"
+    "@adobe/aem-cli": "^16.16.1",
+    "highcharts": "^12.4.0"
   }
 }
