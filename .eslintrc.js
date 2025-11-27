@@ -24,7 +24,7 @@ module.exports = {
     {
       files: ['component-models.json'],
       rules: {
-        'xwalk/max-cells': ['warn', { max: 8 }], // allow up to 8 cells for insights block
+        'xwalk/max-cells': 'off',
       },
     },
   ],

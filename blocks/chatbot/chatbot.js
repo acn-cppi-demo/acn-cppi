@@ -83,17 +83,17 @@ function getIcon(name) {
 }
 
 function formatTime(date) {
-  return date.toLocaleTimeString('en-US', { 
-    hour: 'numeric', 
+  return date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
     minute: '2-digit',
-    hour12: true 
+    hour12: true,
   });
 }
 
 // Convert markdown to clean HTML for chat display
 function formatMarkdownToHTML(text) {
   if (!text) return '';
-  
+
   let html = text
     // Remove ```markdown and ``` code blocks
     .replace(/```markdown\s*/gi, '')
@@ -111,26 +111,26 @@ function formatMarkdownToHTML(text) {
     // Convert *italic* to <em>
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     // Convert bullet points (- item or * item) to styled list items
-    .replace(/^[\-\*]\s+(.+)$/gm, '<span class="response-list-item">$1</span>')
+    .replace(/^[-*]\s+(.+)$/gm, '<span class="response-list-item">$1</span>')
     // Convert numbered lists (1. item, 2. item)
     .replace(/^\d+\.\s+(.+)$/gm, '<span class="response-list-item numbered">$1</span>')
     // Clean up extra whitespace/newlines
     .replace(/\n{3,}/g, '\n\n')
     .trim();
-  
+
   // Convert remaining newlines to <br>
   html = html.replace(/\n/g, '<br>');
-  
+
   // Clean up double <br> after headings
   html = html.replace(/(<\/strong>)<br><br>/g, '$1<br>');
-  
+
   return html;
 }
 
 function createMessageHTML(content, isUser, timestamp, sources = null) {
   const timeStr = formatTime(timestamp);
   const sourcesId = `sources-${Date.now()}`;
-  
+
   if (isUser) {
     return `
       <div class="chat-message user-message">
@@ -141,19 +141,19 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
       </div>
     `;
   }
-  
+
   // Format markdown to HTML for bot responses
   const formattedContent = formatMarkdownToHTML(content);
-  
+
   let sourcesHTML = '';
   if (sources && sources.length > 0) {
-    const sourceLinks = sources.map(src => `
+    const sourceLinks = sources.map((src) => `
       <a href="${src.url || '#'}" class="source-link" target="_blank">
         ${getIcon('link')}
         <span>${src.url || src.doc_id || 'Source'}</span>
       </a>
     `).join('');
-    
+
     sourcesHTML = `
       <div class="sources-container" id="${sourcesId}">
         <button class="sources-toggle" data-target="${sourcesId}">
@@ -166,7 +166,7 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
       </div>
     `;
   }
-  
+
   return `
     <div class="chat-message bot-message">
       <div class="message-bubble bot-bubble">
@@ -319,10 +319,10 @@ export default function decorate(block) {
         const container = btn.closest('.sources-container');
         const sourcesList = container.querySelector('.sources-list');
         const chevron = btn.querySelector('.chevron-icon');
-        
+
         sourcesList.classList.toggle('collapsed');
-        chevron.innerHTML = sourcesList.classList.contains('collapsed') 
-          ? getIcon('chevronDown') 
+        chevron.innerHTML = sourcesList.classList.contains('collapsed')
+          ? getIcon('chevronDown')
           : getIcon('chevronUp');
       });
     });

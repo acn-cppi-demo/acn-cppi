@@ -104,7 +104,7 @@ body.appear {
   z-index: 10000;
   text-decoration: none;
   font-weight: 700;
-  border-radius: 0 0 4px 0;
+  border-radius: 0 0 4px;
 }
 
 .skip-link:focus {

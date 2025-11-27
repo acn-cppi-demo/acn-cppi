@@ -596,12 +596,9 @@ export default function decorate(block) {
       });
     }, { rootMargin: '100px' });
     observer.observe(chartContainer);
+  } else if ('requestIdleCallback' in window) {
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
   } else {
-    // Fallback - defer to idle time
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(lazyInitChart, { timeout: 2000 });
-    } else {
-      setTimeout(lazyInitChart, 100);
-    }
+    setTimeout(lazyInitChart, 100);
   }
 }

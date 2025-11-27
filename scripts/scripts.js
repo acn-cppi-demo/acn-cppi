@@ -92,20 +92,20 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
-  
+
   // Add skip link for accessibility (WCAG 2.1)
   const skipLink = document.createElement('a');
   skipLink.className = 'skip-link';
   skipLink.href = '#main-content';
   skipLink.textContent = 'Skip to main content';
   document.body.insertBefore(skipLink, document.body.firstChild);
-  
+
   const main = doc.querySelector('main');
   if (main) {
     // Add id for skip link target
     main.setAttribute('id', 'main-content');
     main.setAttribute('tabindex', '-1');
-    
+
     decorateMain(main);
     document.body.classList.add('appear');
     await loadSection(main.querySelector('.section'), waitForFirstImage);

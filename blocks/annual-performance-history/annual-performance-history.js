@@ -362,12 +362,10 @@ export default function decorate(block) {
       });
     }, { rootMargin: '100px' });
     observer.observe(chartContainer);
-  } else {
+  } else if ('requestIdleCallback' in window) {
     // Fallback - defer to idle time
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(lazyInitChart, { timeout: 2000 });
-    } else {
-      setTimeout(lazyInitChart, 100);
-    }
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
+  } else {
+    setTimeout(lazyInitChart, 100);
   }
 }

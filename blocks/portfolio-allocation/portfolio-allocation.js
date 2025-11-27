@@ -620,12 +620,12 @@ export default function decorate(block) {
           chart.series[0].points.forEach((point) => {
             // On hover: highlight this segment, dim others
             point.events = point.events || {};
-            point.events.mouseOver = function() {
+            point.events.mouseOver = function onMouseOver() {
               updateChartHighlight(chartId, this.name);
             };
 
             // On mouse out: restore all segments to full opacity
-            point.events.mouseOut = function() {
+            point.events.mouseOut = function onMouseOut() {
               updateChartHighlight(chartId, null);
             };
 
@@ -663,12 +663,10 @@ export default function decorate(block) {
       });
     }, { rootMargin: '100px' });
     observer.observe(chartContainer);
-  } else {
+  } else if ('requestIdleCallback' in window) {
     // Fallback - defer to idle time
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(lazyInitChart, { timeout: 2000 });
-    } else {
-      setTimeout(lazyInitChart, 100);
-    }
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
+  } else {
+    setTimeout(lazyInitChart, 100);
   }
 }
