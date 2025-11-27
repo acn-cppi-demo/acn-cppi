@@ -342,9 +342,32 @@ export default function decorate(block) {
     block.innerHTML = html;
   }
 
-  // Initialize chart (async)
-  initializePerformanceChart(chartId, performanceData).catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error('Chart initialization failed:', error);
-  });
+  // Lazy load chart initialization function
+  const lazyInitChart = () => {
+    initializePerformanceChart(chartId, performanceData).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('Chart initialization failed:', error);
+    });
+  };
+
+  // Use IntersectionObserver to load chart only when visible
+  const chartContainer = block.querySelector('.annual-performance-history-chart-container');
+  if (chartContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          lazyInitChart();
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: '100px' });
+    observer.observe(chartContainer);
+  } else {
+    // Fallback - defer to idle time
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(lazyInitChart, { timeout: 2000 });
+    } else {
+      setTimeout(lazyInitChart, 100);
+    }
+  }
 }

@@ -869,15 +869,26 @@ export default function decorate(block) {
     });
   });
 
-  // Initialize Highcharts with provided data or dummy line chart (async)
-  initializeChart(chartId, cppHeroChartData).then(() => {
-    // Load initial period data (default selected period) after chart is initialized
-    // Use setTimeout to ensure chart is fully initialized before updating
-    setTimeout(() => {
-      updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
-    }, 100);
-  }).catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error('Chart initialization failed:', error);
-  });
+  // Lazy load Highcharts - defer until after initial paint for better LCP
+  const lazyInitChart = () => {
+    initializeChart(chartId, cppHeroChartData).then(() => {
+      // Load initial period data (default selected period) after chart is initialized
+      // Use setTimeout to ensure chart is fully initialized before updating
+      setTimeout(() => {
+        updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
+      }, 100);
+    }).catch((error) => {
+      // eslint-disable-next-line no-console
+      console.error('Chart initialization failed:', error);
+    });
+  };
+
+  // Use requestIdleCallback to defer chart loading until browser is idle
+  // This allows LCP to complete before loading heavy Highcharts library
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
+  } else {
+    // Fallback for Safari - defer to next frame after paint
+    setTimeout(lazyInitChart, 100);
+  }
 }
