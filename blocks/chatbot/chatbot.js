@@ -90,38 +90,60 @@ function formatTime(date) {
   });
 }
 
-// Clean up markdown formatting from API response
-function cleanMarkdown(text) {
+// Convert markdown to clean HTML for chat display
+function formatMarkdownToHTML(text) {
   if (!text) return '';
   
-  return text
+  let html = text
     // Remove ```markdown and ``` code blocks
     .replace(/```markdown\s*/gi, '')
     .replace(/```\s*/g, '')
-    // Convert [1], [2], etc. citation markers to superscript style or remove
+    // Remove citation markers [1], [2], etc.
     .replace(/\[(\d+)\]/g, '')
+    // Convert ### headings to styled bold text with spacing
+    .replace(/^###\s+(.+)$/gm, '<strong class="response-heading">$1</strong>')
+    // Convert ## headings to larger styled bold text
+    .replace(/^##\s+(.+)$/gm, '<strong class="response-heading-lg">$1</strong>')
+    // Convert # headings to largest styled bold text
+    .replace(/^#\s+(.+)$/gm, '<strong class="response-heading-xl">$1</strong>')
+    // Convert **bold** to <strong>
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Convert *italic* to <em>
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Convert bullet points (- item or * item) to styled list items
+    .replace(/^[\-\*]\s+(.+)$/gm, '<span class="response-list-item">$1</span>')
+    // Convert numbered lists (1. item, 2. item)
+    .replace(/^\d+\.\s+(.+)$/gm, '<span class="response-list-item numbered">$1</span>')
     // Clean up extra whitespace/newlines
     .replace(/\n{3,}/g, '\n\n')
     .trim();
+  
+  // Convert remaining newlines to <br>
+  html = html.replace(/\n/g, '<br>');
+  
+  // Clean up double <br> after headings
+  html = html.replace(/(<\/strong>)<br><br>/g, '$1<br>');
+  
+  return html;
 }
 
 function createMessageHTML(content, isUser, timestamp, sources = null) {
   const timeStr = formatTime(timestamp);
   const sourcesId = `sources-${Date.now()}`;
   
-  // Clean markdown from bot responses
-  const cleanContent = isUser ? content : cleanMarkdown(content);
-  
   if (isUser) {
     return `
       <div class="chat-message user-message">
         <div class="message-bubble user-bubble">
-          <p class="message-text">${cleanContent}</p>
+          <p class="message-text">${content}</p>
           <span class="message-time">${timeStr}</span>
         </div>
       </div>
     `;
   }
+  
+  // Format markdown to HTML for bot responses
+  const formattedContent = formatMarkdownToHTML(content);
   
   let sourcesHTML = '';
   if (sources && sources.length > 0) {
@@ -145,13 +167,10 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
     `;
   }
   
-  // Convert newlines to <br> for proper display
-  const formattedContent = cleanContent.replace(/\n/g, '<br>');
-  
   return `
     <div class="chat-message bot-message">
       <div class="message-bubble bot-bubble">
-        <p class="message-text">${formattedContent}</p>
+        <div class="message-text">${formattedContent}</div>
         <span class="message-time">${timeStr}</span>
         ${sourcesHTML}
       </div>
@@ -160,9 +179,6 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
 }
 
 export default function decorate(block) {
-  const fields = block.model?.fields || {};
-  const label = fields.title?.value || 'Need help?';
-
   // Generate popular searches HTML
   const popularSearchesHTML = popularSearches.map((search) => `
     <button class="chatbot-search-suggestion" data-query="${search}">
@@ -181,12 +197,6 @@ export default function decorate(block) {
   `).join('');
 
   block.innerHTML = `
-    <!-- Floating Widget Button -->
-    <div class="chatbot-pill">
-      <span>${label}</span>
-      <span class="pill-icon">${getIcon('hub')}</span>
-    </div>
-
     <!-- Full Page Overlay -->
     <div class="chatbot-overlay hidden">
       <!-- Header -->
@@ -256,7 +266,6 @@ export default function decorate(block) {
   `;
 
   // DOM Elements
-  const widget = block.querySelector('.chatbot-pill');
   const overlay = block.querySelector('.chatbot-overlay');
   const closeBtn = block.querySelector('.chatbot-close-btn');
   const searchView = block.querySelector('.chatbot-search-view');
@@ -267,18 +276,19 @@ export default function decorate(block) {
   const chatBody = block.querySelector('#chatBody');
   const searchSuggestions = block.querySelectorAll('.chatbot-search-suggestion');
 
-  // Open overlay
-  widget.addEventListener('click', () => {
+  // Function to open the chatbot overlay (exposed globally for header search icon)
+  function openChatbot() {
     overlay.classList.remove('hidden');
-    widget.classList.add('hidden');
     document.body.style.overflow = 'hidden';
     chatInput.focus();
-  });
+  }
+
+  // Expose openChatbot globally so header search can trigger it
+  window.openChatbotOverlay = openChatbot;
 
   // Close overlay
   closeBtn.addEventListener('click', () => {
     overlay.classList.add('hidden');
-    widget.classList.remove('hidden');
     document.body.style.overflow = '';
     // Reset to search view
     searchView.classList.remove('hidden');
