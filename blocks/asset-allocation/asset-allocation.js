@@ -554,67 +554,51 @@ export default function decorate(block) {
     item.setAttribute('tabindex', '-1'); // Not keyboard focusable but accessible to screen readers
   });
 
-  // Use Intersection Observer to lazy load chart only when it's about to enter viewport
-  const chartContainer = block.querySelector(`#${chartId}`);
-  if (chartContainer && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Initialize chart when it's about to become visible
-          initializeAssetChart(chartId, { chartData }).then(() => {
-            // Set up hover event handlers after chart is created
-            setTimeout(() => {
-              const chart = window[`highchart_${chartId}`];
-              if (chart && chart.series && chart.series[0]) {
-                chart.series[0].points.forEach((point) => {
-                  // On hover: highlight this segment, dim others
-                  point.on('mouseOver', () => {
-                    updateChartHighlight(chartId, point.name);
-                  });
-
-                  // On mouse out: restore all segments to full opacity
-                  point.on('mouseOut', () => {
-                    updateChartHighlight(chartId, null);
-                  });
-                });
-              }
-
-              // Initialize chart with all segments visible
-              updateChartHighlight(chartId, null);
-            }, 100);
-          }).catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error('Chart initialization failed:', error);
-          });
-          // Stop observing once chart is initialized
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      rootMargin: '50px', // Start loading 50px before chart enters viewport
-    });
-
-    observer.observe(chartContainer);
-  } else {
-    // Fallback: Initialize immediately if IntersectionObserver is not supported
+  // Lazy load chart initialization function
+  const lazyInitChart = () => {
     initializeAssetChart(chartId, { chartData }).then(() => {
+      // Set up hover event handlers after chart is created
       setTimeout(() => {
         const chart = window[`highchart_${chartId}`];
         if (chart && chart.series && chart.series[0]) {
           chart.series[0].points.forEach((point) => {
-            point.on('mouseOver', () => {
-              updateChartHighlight(chartId, point.name);
-            });
-            point.on('mouseOut', () => {
-              updateChartHighlight(chartId, null);
-            });
+            // Add event listeners using addEventListener for pie slice elements
+            const sliceElement = point.graphic?.element;
+            if (sliceElement) {
+              sliceElement.addEventListener('mouseenter', () => {
+                updateChartHighlight(chartId, point.name);
+              });
+              sliceElement.addEventListener('mouseleave', () => {
+                updateChartHighlight(chartId, null);
+              });
+            }
           });
         }
+
+        // Initialize chart with all segments visible
         updateChartHighlight(chartId, null);
       }, 100);
     }).catch((error) => {
       // eslint-disable-next-line no-console
       console.error('Chart initialization failed:', error);
     });
+  };
+
+  // Use IntersectionObserver to load chart only when visible
+  const chartContainer = block.querySelector('.asset-allocation-chart-container');
+  if (chartContainer && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          lazyInitChart();
+          observer.disconnect();
+        }
+      });
+    }, { rootMargin: '100px' });
+    observer.observe(chartContainer);
+  } else if ('requestIdleCallback' in window) {
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
+  } else {
+    setTimeout(lazyInitChart, 100);
   }
 }

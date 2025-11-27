@@ -145,26 +145,17 @@ function updateChart(data, period) {
   // Get the chart instance directly from the data object using destructuring
   const { chartInstance } = data;
 
-  // eslint-disable-next-line no-console
-  console.log('Attempting to update chart for period:', period);
-  // eslint-disable-next-line no-console
-  console.log('Chart instance available:', !!chartInstance);
-
   if (chartInstance && typeof chartInstance.series !== 'undefined' && chartInstance.series.length > 0) {
     // Update the chart series data with animation
     try {
       chartInstance.series[0].setData(periodData.chartData, true);
-      // eslint-disable-next-line no-console
-      console.log('Chart updated successfully for period:', period);
-      // eslint-disable-next-line no-console
-      console.log('New chart data:', periodData.chartData);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error updating chart:', error);
     }
   } else {
     // eslint-disable-next-line no-console
-    console.warn('Chart instance not found or not ready. Chart:', chartInstance, 'Series:', chartInstance?.series);
+    console.warn('Chart instance not found or not ready');
   }
 
   // Update value and badge in the DOM
@@ -191,9 +182,6 @@ function handlePeriodChange(period, block, data) {
 
   // Trigger chart update
   updateChart(data, period);
-
-  // eslint-disable-next-line no-console
-  console.log('Period changed to:', period);
 }
 
 /**
@@ -382,8 +370,6 @@ async function initializeChart(chartId, data) {
     // Store chart instance for later updates - BOTH in window and in data object
     window[`highchart_${chartId}`] = chart;
     data.chartInstance = chart;
-    // eslint-disable-next-line no-console
-    console.log('Chart initialized and stored:', chartId);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to create Highchart:', error);
@@ -754,7 +740,7 @@ export default function decorate(block) {
   const periodTabsHtml = cppHeroChartData.periods
     .map((period) => {
       const isActive = period === cppHeroChartData.selectedPeriod ? 'active' : '';
-      return `<button class="period-tab ${isActive}" data-period="${period}" aria-pressed="${period === cppHeroChartData.selectedPeriod}">${period}</button>`;
+      return `<button class="period-tab ${isActive}" role="tab" data-period="${period}" aria-pressed="${period === cppHeroChartData.selectedPeriod}">${period}</button>`;
     })
     .join('');
 
@@ -883,34 +869,11 @@ export default function decorate(block) {
     });
   });
 
-  // Use Intersection Observer to lazy load chart only when it's about to enter viewport
-  const chartContainer = block.querySelector(`#${chartId}`);
-  if (chartContainer && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Initialize chart when it's about to become visible
-          initializeChart(chartId, cppHeroChartData).then(() => {
-            // Load initial period data (default selected period) after chart is initialized
-            setTimeout(() => {
-              updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
-            }, 100);
-          }).catch((error) => {
-            // eslint-disable-next-line no-console
-            console.error('Chart initialization failed:', error);
-          });
-          // Stop observing once chart is initialized
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {
-      rootMargin: '50px', // Start loading 50px before chart enters viewport
-    });
-
-    observer.observe(chartContainer);
-  } else {
-    // Fallback: Initialize immediately if IntersectionObserver is not supported
+  // Lazy load Highcharts - defer until after initial paint for better LCP
+  const lazyInitChart = () => {
     initializeChart(chartId, cppHeroChartData).then(() => {
+      // Load initial period data (default selected period) after chart is initialized
+      // Use setTimeout to ensure chart is fully initialized before updating
       setTimeout(() => {
         updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
       }, 100);
@@ -918,11 +881,14 @@ export default function decorate(block) {
       // eslint-disable-next-line no-console
       console.error('Chart initialization failed:', error);
     });
-  }
+  };
 
-  // Log overallData for debugging
-  if (cppHeroChartData.overallData) {
-    // eslint-disable-next-line no-console
-    console.log('Overall Data extracted:', cppHeroChartData.overallData);
+  // Use requestIdleCallback to defer chart loading until browser is idle
+  // This allows LCP to complete before loading heavy Highcharts library
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(lazyInitChart, { timeout: 2000 });
+  } else {
+    // Fallback for Safari - defer to next frame after paint
+    setTimeout(lazyInitChart, 100);
   }
 }

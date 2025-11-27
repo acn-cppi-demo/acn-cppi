@@ -874,6 +874,28 @@ export default async function decorate(block) {
       });
     }
 
+    // Add click handler to search icon to open chatbot
+    const searchIcon = navTools?.querySelector('.icon-search');
+    if (searchIcon) {
+      searchIcon.style.cursor = 'pointer';
+      searchIcon.setAttribute('role', 'button');
+      searchIcon.setAttribute('tabindex', '0');
+      searchIcon.setAttribute('aria-label', 'Open search');
+      searchIcon.addEventListener('click', () => {
+        if (typeof window.openChatbotOverlay === 'function') {
+          window.openChatbotOverlay();
+        }
+      });
+      searchIcon.addEventListener('keydown', (e) => {
+        if (e.code === 'Enter' || e.code === 'Space') {
+          e.preventDefault();
+          if (typeof window.openChatbotOverlay === 'function') {
+            window.openChatbotOverlay();
+          }
+        }
+      });
+    }
+
     // Close megamenu on escape
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Escape' && megamenu.getAttribute('aria-hidden') === 'false') {

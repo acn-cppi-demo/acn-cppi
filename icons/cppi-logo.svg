@@ -1,0 +1,13 @@
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="12" cy="20" r="10" fill="#0273CF" opacity="0.1"/>
+  
+  <!-- CPPI Text -->
+  <text x="24" y="26" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#0273CF">CPPI</text>
+  
+  <!-- CPP Investments text below -->
+  <text x="24" y="36" font-family="Arial, sans-serif" font-size="9" fill="#666666">Investments</text>
+  
+  <!-- Accent line -->
+  <line x1="0" y1="38" x2="120" y2="38" stroke="#0273CF" stroke-width="1" opacity="0.3"/>
+</svg>
