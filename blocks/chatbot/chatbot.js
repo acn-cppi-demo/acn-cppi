@@ -43,15 +43,13 @@ export default function decorate(block) {
   const sendBtn = block.querySelector('#chatSend');
   const chatBody = block.querySelector('#chatBody');
 
-  let welcomeShown = false; 
+  let welcomeShown = false;
 
   widget.addEventListener('click', () => {
     modal.classList.remove('hidden');
     widget.classList.add('hidden');
 
-   
     if (!welcomeShown) {
-
       function formatTime() {
         const now = new Date();
         return now.toLocaleTimeString([], {
@@ -59,8 +57,7 @@ export default function decorate(block) {
           minute: '2-digit',
         });
       }
-    
-   
+
       const welcomeMessage = `
     <div class="msg bot welcome-msg">
       <div>
@@ -80,11 +77,10 @@ export default function decorate(block) {
     </div>
   `;
 
-  chatBody.innerHTML += welcomeMessage;
-  welcomeShown = true;
-      
+      chatBody.innerHTML += welcomeMessage;
+      welcomeShown = true;
     }
-  });    
+  });
 
   close.addEventListener('click', () => {
     modal.classList.add('hidden');
@@ -99,7 +95,6 @@ export default function decorate(block) {
     chatInput.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'message_sent',
@@ -124,7 +119,6 @@ export default function decorate(block) {
       chatBody.innerHTML += `<div class="msg bot">${reply}</div>`;
       chatBody.scrollTop = chatBody.scrollHeight;
 
-     
       const citation = data?.response_data?.references?.[0]?.url
         || data?.response_data?.references?.[0]?.doc_id
         || null;
@@ -139,8 +133,8 @@ export default function decorate(block) {
       chatBody.innerHTML += '<div class="msg bot">Sorry, something went wrong.</div>';
     }
   }
-  chatBody.addEventListener("click", (e) => {
-    if (e.target.classList.contains("suggestion-btn")) {
+  chatBody.addEventListener('click', (e) => {
+    if (e.target.classList.contains('suggestion-btn')) {
       const text = e.target.dataset.msg;
       chatInput.value = text;
       sendMessage();
