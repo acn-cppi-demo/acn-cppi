@@ -151,7 +151,7 @@ function cleanupButtonClasses(footer) {
 export default async function decorate(block) {
   const footerMeta = getMetadata('footer');
   const footerPath = footerMeta ? new URL(footerMeta, window.location).pathname : '/footer';
-  const fragment = await loadFragment(footerPath);
+  const fragment = await loadFragment(footerPath, true); // Enable caching for footer
 
   // Clear existing content
   block.textContent = '';
