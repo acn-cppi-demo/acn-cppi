@@ -284,6 +284,7 @@ export async function loadHighcharts() {
   }
 
   // Use local Highcharts files from node_modules (copied to scripts/lib)
+  // Files are already minified for optimal performance
   const baseUrl = `${window.hlx.codeBasePath}/scripts/lib/highcharts`;
   const scripts = [
     `${baseUrl}/highcharts.js`,
@@ -293,15 +294,31 @@ export async function loadHighcharts() {
   ];
 
   try {
+    // Preload Highcharts for faster chart initialization
+    // Preload only the main library (modules will load after)
+    const [mainScript, ...moduleScripts] = scripts;
+    if ('link' in document.createElement('link')) {
+      const preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.as = 'script';
+      preloadLink.href = mainScript;
+      document.head.appendChild(preloadLink);
+    }
+
     // Load scripts sequentially (modules depend on main library)
     // Load main library first
-    await loadScript(scripts[0]);
-    // Small delay to ensure Highcharts is initialized
-    await new Promise((resolve) => {
-      setTimeout(resolve, 50);
-    });
-    // Then load modules in parallel
-    await Promise.all(scripts.slice(1).map((src) => loadScript(src)));
+    await loadScript(mainScript);
+    // Check for Highcharts readiness instead of fixed delay (more efficient)
+    let retries = 10;
+    while (typeof window.Highcharts === 'undefined' && retries > 0) {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+      retries -= 1;
+    }
+    // Then load modules in parallel for faster loading
+    await Promise.all(moduleScripts.map((src) => loadScript(src)));
     // Verify Highcharts is available
     if (typeof window.Highcharts === 'undefined') {
       throw new Error('Highcharts library failed to initialize');
