@@ -693,6 +693,13 @@ export default async function decorate(block) {
       brandLink.style.pointerEvents = 'auto';
       brandLink.style.cursor = 'pointer';
     }
+
+    // Optimize header logo images with high fetch priority (above the fold)
+    const brandImages = navBrand.querySelectorAll('img, picture img');
+    brandImages.forEach((img) => {
+      img.setAttribute('loading', 'eager');
+      img.setAttribute('fetchpriority', 'high');
+    });
   }
 
   // Handle tools section - clean up unwanted button classes and containers
