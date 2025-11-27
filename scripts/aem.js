@@ -259,6 +259,7 @@ async function loadScript(src, attrs) {
     if (!document.querySelector(`head > script[src="${src}"]`)) {
       const script = document.createElement('script');
       script.src = src;
+      script.async = true; // Ensure async loading for better performance
       if (attrs) {
         // eslint-disable-next-line no-restricted-syntax, guard-for-in
         for (const attr in attrs) {
@@ -275,7 +276,9 @@ async function loadScript(src, attrs) {
 }
 
 /**
- * Loads Highcharts library and required modules dynamically
+ * Loads Highcharts library and required modules dynamically from local files
+ * Only loads when charts are actually needed (lazy loading)
+ * Uses async script loading to avoid blocking page rendering
  * @returns {Promise} Resolves when Highcharts is loaded
  */
 export async function loadHighcharts() {
@@ -283,7 +286,10 @@ export async function loadHighcharts() {
     return Promise.resolve();
   }
 
-  const baseUrl = 'https://code.highcharts.com';
+  // Use local Highcharts files from node_modules (copied to scripts/lib)
+  // Files are already minified for optimal performance
+  // Note: Exporting modules are loaded even though disabled - required for module structure
+  const baseUrl = `${window.hlx.codeBasePath}/scripts/lib/highcharts`;
   const scripts = [
     `${baseUrl}/highcharts.js`,
     `${baseUrl}/modules/accessibility.js`,
@@ -293,14 +299,26 @@ export async function loadHighcharts() {
 
   try {
     // Load scripts sequentially (modules depend on main library)
-    // Load main library first
-    await loadScript(scripts[0]);
-    // Small delay to ensure Highcharts is initialized
-    await new Promise((resolve) => {
-      setTimeout(resolve, 50);
-    });
-    // Then load modules in parallel
-    await Promise.all(scripts.slice(1).map((src) => loadScript(src)));
+    // All scripts loaded with async=true to prevent blocking
+    const [mainScript, ...moduleScripts] = scripts;
+
+    // Load main library first - async loading ensures non-blocking
+    await loadScript(mainScript, { async: true });
+
+    // Check for Highcharts readiness instead of fixed delay (more efficient)
+    let retries = 10;
+    while (typeof window.Highcharts === 'undefined' && retries > 0) {
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise((resolve) => {
+        setTimeout(resolve, 10);
+      });
+      retries -= 1;
+    }
+
+    // Then load modules in parallel for faster loading (all async)
+    // Note: exporting modules are disabled in chart configs, but keeping for consistency
+    await Promise.all(moduleScripts.map((src) => loadScript(src, { async: true })));
+
     // Verify Highcharts is available
     if (typeof window.Highcharts === 'undefined') {
       throw new Error('Highcharts library failed to initialize');
@@ -333,6 +351,7 @@ function getMetadata(name, doc = document) {
  * @param {string} [alt] The image alternative text
  * @param {boolean} [eager] Set loading attribute to eager
  * @param {Array} [breakpoints] Breakpoints and corresponding params (eg. width)
+ * @param {string} [fetchPriority] Set fetchpriority attribute (high, low, auto)
  * @returns {Element} The picture element
  */
 function createOptimizedPicture(
@@ -340,6 +359,7 @@ function createOptimizedPicture(
   alt = '',
   eager = false,
   breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
+  fetchPriority = null,
 ) {
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
@@ -366,10 +386,11 @@ function createOptimizedPicture(
       const img = document.createElement('img');
       img.setAttribute('loading', eager ? 'eager' : 'lazy');
       img.setAttribute('alt', alt);
-      // Set width/height to prevent CLS (using smallest breakpoint for aspect ratio)
-      img.setAttribute('width', br.width);
-      img.setAttribute('height', br.width); // 1:1 aspect ratio by default
-      if (eager) {
+      // Set fetchpriority for critical images (LCP candidates)
+      if (fetchPriority && ['high', 'low', 'auto'].includes(fetchPriority)) {
+        img.setAttribute('fetchpriority', fetchPriority);
+      } else if (eager) {
+        // Default to high priority for eager-loaded images (likely LCP)
         img.setAttribute('fetchpriority', 'high');
       }
       picture.appendChild(img);

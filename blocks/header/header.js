@@ -634,10 +634,11 @@ function toggleMegamenu(megamenu, show, menuIcon = null) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // load nav as fragment
+  // load nav as fragment with sessionStorage caching enabled
+  // Cache persists for browser tab session and clears when tab is closed
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath);
+  const fragment = await loadFragment(navPath, true); // Enable caching for header
 
   // decorate nav DOM
   block.textContent = '';
@@ -693,6 +694,13 @@ export default async function decorate(block) {
       brandLink.style.pointerEvents = 'auto';
       brandLink.style.cursor = 'pointer';
     }
+
+    // Optimize header logo images with high fetch priority (above the fold)
+    const brandImages = navBrand.querySelectorAll('img, picture img');
+    brandImages.forEach((img) => {
+      img.setAttribute('loading', 'eager');
+      img.setAttribute('fetchpriority', 'high');
+    });
   }
 
   // Handle tools section - clean up unwanted button classes and containers
