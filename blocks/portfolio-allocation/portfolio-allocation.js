@@ -618,14 +618,26 @@ export default function decorate(block) {
       if (chart && chart.series && chart.series[0]) {
         chart.series[0].points.forEach((point) => {
           // On hover: highlight this segment, dim others
-          point.on('mouseOver', () => {
-            updateChartHighlight(chartId, point.name);
-          });
+          point.events = point.events || {};
+          point.events.mouseOver = function() {
+            updateChartHighlight(chartId, this.name);
+          };
 
           // On mouse out: restore all segments to full opacity
-          point.on('mouseOut', () => {
+          point.events.mouseOut = function() {
             updateChartHighlight(chartId, null);
-          });
+          };
+
+          // Add event listeners using addEventListener for pie slice elements
+          const sliceElement = point.graphic?.element;
+          if (sliceElement) {
+            sliceElement.addEventListener('mouseenter', () => {
+              updateChartHighlight(chartId, point.name);
+            });
+            sliceElement.addEventListener('mouseleave', () => {
+              updateChartHighlight(chartId, null);
+            });
+          }
         });
       }
 

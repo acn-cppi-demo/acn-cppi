@@ -45,6 +45,13 @@
 
   /* nav height */
   --nav-height: 80px;
+  
+  /* box-sizing */
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 
 /* fallback fonts */
@@ -84,6 +91,26 @@ body {
 
 body.appear {
   display: block;
+}
+
+/* Skip Link for Accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--cppi-blue);
+  color: white;
+  padding: 8px 16px;
+  z-index: 10000;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #FFD54A;
+  outline-offset: 2px;
 }
 
 header {

@@ -366,6 +366,12 @@ function createOptimizedPicture(
       const img = document.createElement('img');
       img.setAttribute('loading', eager ? 'eager' : 'lazy');
       img.setAttribute('alt', alt);
+      // Set width/height to prevent CLS (using smallest breakpoint for aspect ratio)
+      img.setAttribute('width', br.width);
+      img.setAttribute('height', br.width); // 1:1 aspect ratio by default
+      if (eager) {
+        img.setAttribute('fetchpriority', 'high');
+      }
       picture.appendChild(img);
       img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
     }
@@ -682,6 +688,7 @@ async function waitForFirstImage(section) {
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
       lcpCandidate.setAttribute('loading', 'eager');
+      lcpCandidate.setAttribute('fetchpriority', 'high');
       lcpCandidate.addEventListener('load', resolve);
       lcpCandidate.addEventListener('error', resolve);
     } else {

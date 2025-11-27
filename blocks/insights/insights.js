@@ -66,9 +66,18 @@ export default function decorate(block) {
       const linkText = linkDiv.textContent.trim();
 
       if (labelText && linkText) {
+        // Only create valid href if linkText is a proper URL or path
+        let href = '#';
+        if (linkText && linkText !== '/') {
+          href = linkText.startsWith('http') ? linkText : `https://${linkText}`;
+          // Validate the URL has a proper domain
+          if (href === 'https://' || href === 'https:///') {
+            href = '#';
+          }
+        }
         buttonPairs.push({
           text: labelText,
-          href: linkText.startsWith('http') ? linkText : `https://${linkText}`,
+          href,
         });
         currentIndex += 2;
       } else {
@@ -123,9 +132,9 @@ export default function decorate(block) {
   const html = `
     <div class="insights-wrapper" role="region" aria-labelledby="${titleId}">
       <div class="insights-main">
-        ${insightsData.badge ? `<div class="insights-badge" role="text" aria-label="Badge: ${insightsData.badge}">${insightsData.badge}</div>` : ''}
+        ${insightsData.badge ? `<div class="insights-badge" aria-label="Badge: ${insightsData.badge}">${insightsData.badge}</div>` : ''}
         ${insightsData.title ? `<div class="insights-title" id="${titleId}">${insightsData.title}</div>` : ''}
-        ${descriptionHtml ? `<div class="insights-description" id="${descriptionId}" role="text">${descriptionHtml}</div>` : ''}
+        ${descriptionHtml ? `<div class="insights-description" id="${descriptionId}">${descriptionHtml}</div>` : ''}
         <nav class="insights-buttons" aria-label="Action buttons">
           ${insightsData.buttons.map((button, index) => {
     const buttonClass = index === 0 ? 'button-primary' : 'button-secondary';

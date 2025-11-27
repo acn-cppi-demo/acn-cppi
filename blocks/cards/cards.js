@@ -9,7 +9,6 @@ export default function decorate(block) {
   const totalCards = block.children.length;
   [...block.children].forEach((row, index) => {
     const li = document.createElement('li');
-    li.setAttribute('role', 'article');
     li.setAttribute('aria-label', `Card ${index + 1} of ${totalCards}`);
     moveInstrumentation(row, li);
     while (row.firstElementChild) li.append(row.firstElementChild);

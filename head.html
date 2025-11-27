@@ -1,22 +1,86 @@
+<!-- Critical Resource Preloads -->
+<link rel="preload" href="/styles/styles.css" as="style">
+<link rel="preload" href="/scripts/aem.js" as="script" crossorigin>
+<link rel="preload" href="/styles/fonts.css" as="style">
+
 <!-- Resource Hints for Performance -->
 <link rel="dns-prefetch" href="https://www.googletagmanager.com"/>
 <link rel="dns-prefetch" href="https://code.highcharts.com"/>
+<link rel="dns-prefetch" href="https://www.google-analytics.com"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<!-- Google Tag Manager - Async (already optimized) -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WMZ6CQRX');</script>
-<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="description" content="CPPI - Comprehensive Portfolio Protection and Investment Strategy">
+<meta name="theme-color" content="#0273CF">
+<meta name="color-scheme" content="light">
 
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <!-- Optimized Font Loading with font-display swap -->
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet"></noscript>
-<!-- Highcharts will be loaded dynamically when needed - removed from head for performance -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+
+<!-- Critical Styles Inline for Faster FCP -->
+<style>
+  :root {
+    --background-color: white;
+    --text-color: #2C3D50;
+    --cppi-blue: #0273CF;
+  }
+  
+  body {
+    margin: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    display: none;
+  }
+  
+  body.appear {
+    display: block;
+  }
+  
+  /* Prevent layout shift from scrollbar */
+  html {
+    scrollbar-gutter: stable;
+  }
+  
+  /* Skip Link */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--cppi-blue);
+    color: white;
+    padding: 8px 16px;
+    z-index: 10000;
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 0 0 4px 0;
+  }
+  
+  .skip-link:focus {
+    top: 0;
+  }
+</style>
+
+<!-- Core Scripts -->
 <script src="/scripts/aem.js" type="module"></script>
 <script src="/scripts/scripts.js" type="module"></script>
 <link rel="stylesheet" href="/styles/styles.css"/>
+
+<!-- Google Tag Manager - Deferred for Performance -->
+<script>
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-WMZ6CQRX');
+  }, 2000);
+});
+</script>

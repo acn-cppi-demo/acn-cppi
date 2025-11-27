@@ -145,26 +145,17 @@ function updateChart(data, period) {
   // Get the chart instance directly from the data object using destructuring
   const { chartInstance } = data;
 
-  // eslint-disable-next-line no-console
-  console.log('Attempting to update chart for period:', period);
-  // eslint-disable-next-line no-console
-  console.log('Chart instance available:', !!chartInstance);
-
   if (chartInstance && typeof chartInstance.series !== 'undefined' && chartInstance.series.length > 0) {
     // Update the chart series data with animation
     try {
       chartInstance.series[0].setData(periodData.chartData, true);
-      // eslint-disable-next-line no-console
-      console.log('Chart updated successfully for period:', period);
-      // eslint-disable-next-line no-console
-      console.log('New chart data:', periodData.chartData);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error updating chart:', error);
     }
   } else {
     // eslint-disable-next-line no-console
-    console.warn('Chart instance not found or not ready. Chart:', chartInstance, 'Series:', chartInstance?.series);
+    console.warn('Chart instance not found or not ready');
   }
 
   // Update value and badge in the DOM
@@ -191,9 +182,6 @@ function handlePeriodChange(period, block, data) {
 
   // Trigger chart update
   updateChart(data, period);
-
-  // eslint-disable-next-line no-console
-  console.log('Period changed to:', period);
 }
 
 /**
@@ -382,8 +370,6 @@ async function initializeChart(chartId, data) {
     // Store chart instance for later updates - BOTH in window and in data object
     window[`highchart_${chartId}`] = chart;
     data.chartInstance = chart;
-    // eslint-disable-next-line no-console
-    console.log('Chart initialized and stored:', chartId);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to create Highchart:', error);
@@ -754,7 +740,7 @@ export default function decorate(block) {
   const periodTabsHtml = cppHeroChartData.periods
     .map((period) => {
       const isActive = period === cppHeroChartData.selectedPeriod ? 'active' : '';
-      return `<button class="period-tab ${isActive}" data-period="${period}" aria-pressed="${period === cppHeroChartData.selectedPeriod}">${period}</button>`;
+      return `<button class="period-tab ${isActive}" role="tab" data-period="${period}" aria-pressed="${period === cppHeroChartData.selectedPeriod}">${period}</button>`;
     })
     .join('');
 
@@ -894,10 +880,4 @@ export default function decorate(block) {
     // eslint-disable-next-line no-console
     console.error('Chart initialization failed:', error);
   });
-
-  // Log overallData for debugging
-  if (cppHeroChartData.overallData) {
-    // eslint-disable-next-line no-console
-    console.log('Overall Data extracted:', cppHeroChartData.overallData);
-  }
 }
