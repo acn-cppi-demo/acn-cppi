@@ -275,7 +275,7 @@ async function loadScript(src, attrs) {
 }
 
 /**
- * Loads Highcharts library and required modules dynamically
+ * Loads Highcharts library and required modules dynamically from local files
  * @returns {Promise} Resolves when Highcharts is loaded
  */
 export async function loadHighcharts() {
@@ -283,7 +283,8 @@ export async function loadHighcharts() {
     return Promise.resolve();
   }
 
-  const baseUrl = 'https://code.highcharts.com';
+  // Use local Highcharts files from node_modules (copied to scripts/lib)
+  const baseUrl = `${window.hlx.codeBasePath}/scripts/lib/highcharts`;
   const scripts = [
     `${baseUrl}/highcharts.js`,
     `${baseUrl}/modules/accessibility.js`,
