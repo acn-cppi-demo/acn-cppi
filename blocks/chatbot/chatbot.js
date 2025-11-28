@@ -32,8 +32,8 @@ const topPages = [
 
 function getIcon(name) {
   const icons = {
-    search: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    search: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M19.5423 20.577L13.2616 14.296C12.7616 14.7088 12.1866 15.0319 11.5366 15.2653C10.8866 15.4986 10.2141 15.6153 9.5193 15.6153C7.81014 15.6153 6.36364 15.0235 5.1798 13.84C3.99597 12.6565 3.40405 11.2103 3.40405 9.50152C3.40405 7.79285 3.9958 6.34618 5.1793 5.16152C6.3628 3.97702 7.80897 3.38477 9.5178 3.38477C11.2265 3.38477 12.6731 3.97668 13.8578 5.16051C15.0423 6.34435 15.6346 7.79085 15.6346 9.50002C15.6346 10.2142 15.5147 10.8963 15.2751 11.5463C15.0352 12.1963 14.7153 12.7616 14.3153 13.2423L20.5961 19.523L19.5423 20.577ZM9.5193 14.1155C10.8078 14.1155 11.8991 13.6683 12.7933 12.774C13.6876 11.8798 14.1348 10.7885 14.1348 9.50002C14.1348 8.21152 13.6876 7.12018 12.7933 6.22601C11.8991 5.33168 10.8078 4.88452 9.5193 4.88452C8.2308 4.88452 7.13947 5.33168 6.2453 6.22601C5.35097 7.12018 4.9038 8.21152 4.9038 9.50002C4.9038 10.7885 5.35097 11.8798 6.2453 12.774C7.13947 13.6683 8.2308 14.1155 9.5193 14.1155Z" fill="#0273CF"/>
     </svg>`,
     close: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -148,19 +148,19 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
   let sourcesHTML = '';
   if (sources && sources.length > 0) {
     const sourceLinks = sources.map((src) => `
-      <a href="${src.url || '#'}" class="source-link" target="_blank">
-        ${getIcon('link')}
+      <a href="${src.url || '#'}" class="source-link" target="_blank" rel="noopener noreferrer">
+        <span aria-hidden="true">${getIcon('link')}</span>
         <span>${src.url || src.doc_id || 'Source'}</span>
       </a>
     `).join('');
 
     sourcesHTML = `
       <div class="sources-container" id="${sourcesId}">
-        <button class="sources-toggle" data-target="${sourcesId}">
-          <span>Sources</span>
-          <span class="chevron-icon">${getIcon('chevronDown')}</span>
+        <button type="button" class="sources-toggle" data-target="${sourcesId}" aria-expanded="false" aria-controls="${sourcesId}-list">
+          <span>Sources (${sources.length})</span>
+          <span class="chevron-icon" aria-hidden="true">${getIcon('chevronDown')}</span>
         </button>
-        <div class="sources-list collapsed">
+        <div class="sources-list collapsed" id="${sourcesId}-list">
           ${sourceLinks}
         </div>
       </div>
@@ -179,20 +179,18 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
 }
 
 export default function decorate(block) {
-  // Generate popular searches HTML
+  // Generate popular searches HTML - use buttons for keyboard accessibility
   const popularSearchesHTML = popularSearches.map((search) => `
-    <div class="chatbot-search-suggestion" data-query="${search}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-        <path d="M19.5423 20.577L13.2616 14.296C12.7616 14.7088 12.1866 15.0319 11.5366 15.2653C10.8866 15.4986 10.2141 15.6153 9.5193 15.6153C7.81014 15.6153 6.36364 15.0235 5.1798 13.84C3.99597 12.6565 3.40405 11.2103 3.40405 9.50152C3.40405 7.79285 3.9958 6.34618 5.1793 5.16152C6.3628 3.97702 7.80897 3.38477 9.5178 3.38477C11.2265 3.38477 12.6731 3.97668 13.8578 5.16051C15.0423 6.34435 15.6346 7.79085 15.6346 9.50002C15.6346 10.2142 15.5147 10.8963 15.2751 11.5463C15.0352 12.1963 14.7153 12.7616 14.3153 13.2423L20.5961 19.523L19.5423 20.577ZM9.5193 14.1155C10.8078 14.1155 11.8991 13.6683 12.7933 12.774C13.6876 11.8798 14.1348 10.7885 14.1348 9.50002C14.1348 8.21152 13.6876 7.12018 12.7933 6.22601C11.8991 5.33168 10.8078 4.88452 9.5193 4.88452C8.2308 4.88452 7.13947 5.33168 6.2453 6.22601C5.35097 7.12018 4.9038 8.21152 4.9038 9.50002C4.9038 10.7885 5.35097 11.8798 6.2453 12.774C7.13947 13.6683 8.2308 14.1155 9.5193 14.1155Z" fill="#0273CF"/>
-      </svg>
+    <button type="button" class="chatbot-search-suggestion" data-query="${search}">
+      <span class="search-icon" aria-hidden="true">${getIcon('search')}</span>
       <span>${search}</span>
-    </div>
+    </button>
   `).join('');
 
   // Generate top pages HTML
   const topPagesHTML = topPages.map((page) => `
     <a href="#" class="chatbot-top-page-card">
-      <div class="top-page-icon">${getIcon(page.icon)}</div>
+      <div class="top-page-icon" aria-hidden="true">${getIcon(page.icon)}</div>
       <h4>${page.title}</h4>
       <p>${page.description}</p>
     </a>
@@ -200,18 +198,18 @@ export default function decorate(block) {
 
   block.innerHTML = `
     <!-- Full Page Overlay -->
-    <div class="chatbot-overlay hidden">
+    <div class="chatbot-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="chatbot-dialog-title">
       <!-- Header -->
       <div class="chatbot-overlay-header">
         <div class="chatbot-logo">
           <img src="/icons/cppi-logo.svg" alt="CPPI Logo" onerror="this.parentElement.innerHTML='<span class=\\'logo-text\\'>CPP Investments</span>'" />
         </div>
-        <span class="chatbot-close-btn" role="button" tabindex="0" aria-label="Close menu" style="cursor: pointer;" data-original-content="&lt;img data-icon-name=&quot;menu&quot; src=&quot;/icons/menu.svg&quot; alt=&quot;&quot; loading=&quot;lazy&quot; width=&quot;16&quot; height=&quot;16&quot;&gt;">
-            <span class="menu-close-text">Close</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <button type="button" class="chatbot-close-btn" aria-label="Close chat dialog">
+            <span class="menu-close-text" aria-hidden="true">Close</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                 <path d="M1.05375 13.3075L0 12.2538L5.6 6.65375L0 1.05375L1.05375 0L6.65375 5.6L12.2537 0L13.3075 1.05375L7.7075 6.65375L13.3075 12.2538L12.2537 13.3075L6.65375 7.7075L1.05375 13.3075Z" fill="#0273CF"></path>
             </svg>
-        </span>        
+        </button>        
       </div>
 
       <div class="chatbot-divider"></div>
@@ -226,16 +224,19 @@ export default function decorate(block) {
             <span>Chat with Fundy</span>
           </div>
           
-          <h1 class="chatbot-heading">How can we help you today?</h1>
+          <h1 class="chatbot-heading" id="chatbot-dialog-title">How can we help you today?</h1>
           <p class="chatbot-subheading">Chat with Fundy, our virtual assistant to learn more about CPP Investments, ask questions, and discover more about our fund</p>
           
           <div class="chatbot-search-wrapper">
+            <label for="chatInput" class="visually-hidden">Ask a question about CPP Investments</label>
             <input 
               type="text" 
               id="chatInput" 
               class="chatbot-search-input" 
               placeholder='Ask me about things like "Investment Strategy" or "Q3 Performance"...'
+              aria-describedby="chatbot-search-hint"
             />
+            <span id="chatbot-search-hint" class="visually-hidden">Press Enter to send your question</span>
           </div>
 
           <div class="chatbot-popular-searches">
@@ -256,16 +257,18 @@ export default function decorate(block) {
         <!-- Chat Conversation View (hidden initially) -->
         <div class="chatbot-chat-view hidden">
           <div class="chatbot-badge">
-            <span class="badge-icon">${getIcon('hub')}</span>
+            <span class="badge-icon" aria-hidden="true">${getIcon('hub')}</span>
             <span>Chat with Fundy</span>
           </div>
           
-          <div class="chat-body" id="chatBody"></div>
+          <div class="chat-body" id="chatBody" role="log" aria-live="polite" aria-label="Chat conversation"></div>
           
-          <div class="chat-input-wrapper">
-            <input id="chatInputConversation" placeholder="Ask a question" />
-            <button id="chatSend">${getIcon('send')}</button>
-          </div>
+            <div class="chat-input-wrapper">
+              <label for="chatInputConversation" class="visually-hidden">Type your message</label>
+              <input id="chatInputConversation" placeholder="Ask a question" aria-describedby="chat-input-hint" />
+              <span id="chat-input-hint" class="visually-hidden">Press Enter or click send to submit</span>
+              <button id="chatSend" type="button" aria-label="Send message"><span aria-hidden="true">${getIcon('send')}</span></button>
+            </div>
         </div>
       </div>
     </div>
@@ -282,8 +285,12 @@ export default function decorate(block) {
   const chatBody = block.querySelector('#chatBody');
   const searchSuggestions = block.querySelectorAll('.chatbot-search-suggestion');
 
+  // Store the element that had focus before opening
+  let previouslyFocusedElement = null;
+
   // Function to open the chatbot overlay (exposed globally for header search icon)
   function openChatbot() {
+    previouslyFocusedElement = document.activeElement;
     overlay.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     chatInput.focus();
@@ -292,7 +299,7 @@ export default function decorate(block) {
   // Expose openChatbot globally so header search can trigger it
   window.openChatbotOverlay = openChatbot;
 
-  // Close overlay
+  // Close overlay and restore focus
   closeBtn.addEventListener('click', () => {
     overlay.classList.add('hidden');
     document.body.style.overflow = '';
@@ -301,12 +308,39 @@ export default function decorate(block) {
     chatView.classList.add('hidden');
     // Clear chat
     chatBody.innerHTML = '';
+    // Restore focus to previously focused element
+    if (previouslyFocusedElement && previouslyFocusedElement.focus) {
+      previouslyFocusedElement.focus();
+    }
   });
 
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !overlay.classList.contains('hidden')) {
       closeBtn.click();
+    }
+  });
+
+  // Focus trap for modal accessibility
+  overlay.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || overlay.classList.contains('hidden')) return;
+
+    const focusableElements = overlay.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    if (e.shiftKey) {
+      // Shift + Tab: if on first element, wrap to last
+      if (document.activeElement === firstFocusable) {
+        e.preventDefault();
+        lastFocusable.focus();
+      }
+    } else if (document.activeElement === lastFocusable) {
+      // Tab: if on last element, wrap to first
+      e.preventDefault();
+      firstFocusable.focus();
     }
   });
 
@@ -317,7 +351,7 @@ export default function decorate(block) {
     chatInputConversation.focus();
   }
 
-  // Toggle sources dropdown
+  // Toggle sources dropdown with accessibility
   function setupSourcesToggle() {
     document.querySelectorAll('.sources-toggle').forEach((btn) => {
       btn.addEventListener('click', (e) => {
@@ -325,8 +359,10 @@ export default function decorate(block) {
         const container = btn.closest('.sources-container');
         const sourcesList = container.querySelector('.sources-list');
         const chevron = btn.querySelector('.chevron-icon');
+        const isExpanded = !sourcesList.classList.contains('collapsed');
 
         sourcesList.classList.toggle('collapsed');
+        btn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
         chevron.innerHTML = sourcesList.classList.contains('collapsed')
           ? getIcon('chevronDown')
           : getIcon('chevronUp');
@@ -344,24 +380,24 @@ export default function decorate(block) {
     const userTimestamp = new Date();
 
     // Add user message
-    chatBody.innerHTML += createMessageHTML(msg, true, userTimestamp);
+    chatBody.insertAdjacentHTML('beforeend', createMessageHTML(msg, true, userTimestamp));
     chatInput.value = '';
     chatInputConversation.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
-    // Add loading indicator with "Fundy is thinking..."
+    // Add loading indicator with "Fundy is thinking..." - accessible status
     const loadingId = `loading-${Date.now()}`;
-    chatBody.innerHTML += `
-      <div class="chat-message bot-message" id="${loadingId}">
-        <div class="thinking-indicator">
-          <span class="thinking-icon">${getIcon('hub')}</span>
-          <span class="thinking-text">Fundy is thinking</span>
-          <span class="thinking-dots">
-            <span>.</span><span>.</span><span>.</span>
-          </span>
-        </div>
-      </div>
-    `;
+    chatBody.insertAdjacentHTML('beforeend', `
+          <div class="chat-message bot-message" id="${loadingId}" role="status" aria-label="Fundy is thinking">
+            <div class="thinking-indicator">
+              <span class="thinking-icon" aria-hidden="true">${getIcon('hub')}</span>
+              <span class="thinking-text">Fundy is thinking</span>
+              <span class="thinking-dots" aria-hidden="true">
+                <span>.</span><span>.</span><span>.</span>
+              </span>
+            </div>
+          </div>
+        `);
     chatBody.scrollTop = chatBody.scrollHeight;
 
     // Fire dataLayer event: user message
@@ -397,7 +433,7 @@ export default function decorate(block) {
       const sources = data?.response_data?.references || [];
 
       const botTimestamp = new Date();
-      chatBody.innerHTML += createMessageHTML(reply, false, botTimestamp, sources);
+      chatBody.insertAdjacentHTML('beforeend', createMessageHTML(reply, false, botTimestamp, sources));
       chatBody.scrollTop = chatBody.scrollHeight;
 
       // Setup sources toggle after adding to DOM
@@ -419,7 +455,7 @@ export default function decorate(block) {
       if (loadingEl) loadingEl.remove();
 
       const botTimestamp = new Date();
-      chatBody.innerHTML += createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp);
+      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp));
       chatBody.scrollTop = chatBody.scrollHeight;
     }
   }
