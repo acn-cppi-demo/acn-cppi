@@ -284,6 +284,18 @@
           {
             "name": "timewatch",
             "value": "timewatch"
+          },
+          {
+            "name": "global_book",
+            "value": "global_book"
+          },
+          {
+            "name": "finance",
+            "value": "finance"
+          },
+          {
+            "name": "query_stats",
+            "value": "query_stats"
           }
         ]
       },
