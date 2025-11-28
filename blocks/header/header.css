@@ -296,12 +296,17 @@ header nav .nav-tools .default-content-wrapper > *:not(:last-child)::after {
 /* Search icon styling */
 header nav .nav-tools .icon-search,
 header nav .nav-tools .custom-search-icon {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+}
+
+.icon-menu {
+    width: 18px;
+    height: 12px;
 }
 
 header nav .nav-tools .icon-search svg,
@@ -379,7 +384,7 @@ header .nav-wrapper .megamenu .megamenu-quick-links-title {
 /* stylelint-disable-next-line no-descending-specificity */
 header .nav-wrapper .megamenu .megamenu-quick-links-list a {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     line-height: 1.5;
     text-decoration: none;
     display: inline-flex;
