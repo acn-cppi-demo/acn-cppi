@@ -288,13 +288,11 @@ export async function loadHighcharts() {
 
   // Use local Highcharts files from node_modules (copied to scripts/lib)
   // Files are already minified for optimal performance
-  // Note: Exporting modules are loaded even though disabled - required for module structure
+  // Only loading core + accessibility (exporting disabled in charts, so modules removed)
   const baseUrl = `${window.hlx.codeBasePath}/scripts/lib/highcharts`;
   const scripts = [
     `${baseUrl}/highcharts.js`,
     `${baseUrl}/modules/accessibility.js`,
-    `${baseUrl}/modules/exporting.js`,
-    `${baseUrl}/modules/export-data.js`,
   ];
 
   try {
