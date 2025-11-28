@@ -843,8 +843,6 @@ export default async function decorate(block) {
       });
     }
 
-
-
     // Close megamenu on escape
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Escape' && megamenu.getAttribute('aria-hidden') === 'false') {
@@ -899,9 +897,11 @@ export default async function decorate(block) {
               window.openChatbotOverlay();
             }
           } else {
+            // eslint-disable-next-line no-console
             console.error('Chatbot module loaded but openChatbotOverlay not found and no default export to decorate');
           }
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.error('Failed to load chatbot module', e);
         }
       }

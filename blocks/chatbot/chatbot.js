@@ -185,7 +185,7 @@ export default async function decorate(block) {
   // Fetch the nav fragment to reuse the logo
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  let logoHTML = `<img src="/icons/cppi-logo.svg" alt="CPPI Logo" onerror="this.parentElement.innerHTML='<span class=\\'logo-text\\'>CPP Investments</span>'" />`;
+  let logoHTML = '<img src="/icons/cppi-logo.svg" alt="CPPI Logo" onerror="this.parentElement.innerHTML=\'<span class=\\\'logo-text\\\'>CPP Investments</span>\'" />';
 
   try {
     // Use cache=true to leverage the fragment already loaded by the header
