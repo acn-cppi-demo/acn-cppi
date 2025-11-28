@@ -236,6 +236,8 @@ button,
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  box-shadow: 4px 4px 20px 0 #0000001A;
+
 }
 
 .button-primary:hover,
