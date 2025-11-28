@@ -573,12 +573,30 @@ function decorateSections(main) {
           styles.forEach((style) => section.classList.add(style));
         } else if (key === 'backgroundimage' || key === 'backgroundImage') {
           // Apply background image to section
-          const bgImage = meta[key];
+          let bgImage = meta[key];
           if (bgImage) {
+            // Ensure background images use full resolution (not compressed to 750px)
+            try {
+              const bgUrl = new URL(bgImage, window.location.href);
+              // If it's an AEM image service URL, ensure we get full resolution
+              if (bgUrl.searchParams.has('width')) {
+                // Remove width parameter to get original size, or set to a larger value
+                bgUrl.searchParams.delete('width');
+                // Optionally set a larger width for high-DPI displays
+                // bgUrl.searchParams.set('width', '2000');
+              }
+              bgImage = bgUrl.toString();
+            } catch (e) {
+              // If URL parsing fails, use original URL
+              // eslint-disable-next-line no-console
+              console.warn('Failed to parse background image URL:', e);
+            }
             section.style.backgroundImage = `url('${bgImage}')`;
             section.style.backgroundSize = 'cover';
             section.style.backgroundPosition = 'center';
             section.style.backgroundRepeat = 'no-repeat';
+            // Add class to identify sections with background images
+            section.classList.add('has-background-image');
           }
         } else {
           section.dataset[toCamelCase(key)] = meta[key];

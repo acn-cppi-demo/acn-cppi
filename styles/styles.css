@@ -355,6 +355,11 @@ main .section.highlight {
     main .section.highlight {
         padding: 24px 0;
     }
+
+    /* Hide background images on mobile */
+    .section.has-background-image {
+        background-image: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%) !important;
+    }
 }
 
 .insights-badge , .badge-secondary, .badge-primary {
