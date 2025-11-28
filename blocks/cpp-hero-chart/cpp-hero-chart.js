@@ -5,31 +5,37 @@
 function getPeriodMockData() {
   return {
     '3M': {
-      chartData: [34.2, 45.8, 52.3, 48.9, 61.2, 58.7, 65.4, 72.1, 68.9, 75.3, 82.1, 88.5],
-      value: '$45.32B',
-      badge: '+12.5%',
+      chartData: [
+        731.7, 740.5, 748.2, 753.1, 759.4, 765.8,
+        770.2, 774.1, 775.8, 776.5, 777.0, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+$45.8B',
       overallData: {
-        netIncreaseLabel: 'Net Increase',
-        netIncreaseValue: '$5.2B',
-        netReturnLabel: 'Net Return',
-        netReturnValue: '+8.4%',
-        netReturnType: 'Nominal',
+        netIncreaseLabel: 'Growth (3M)',
+        netIncreaseValue: '+$45.8B',
+        netReturnLabel: 'Period',
+        netReturnValue: 'July - Sept 2025',
+        netReturnType: 'Start: $731.7B',
       },
     },
     '6M': {
-      chartData: [29.9, 39.5, 48.4, 52.2, 61.0, 55.6, 68.5, 72.5, 76.4, 84.1, 92.5, 95.4],
-      value: '$52.48B',
-      badge: '+18.7%',
+      chartData: [
+        714.0, 725.3, 735.8, 743.5, 752.1, 760.4,
+        766.8, 771.5, 774.2, 775.9, 776.7, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+$63.1B',
       overallData: {
-        netIncreaseLabel: 'Net Increase',
-        netIncreaseValue: '$8.5B',
-        netReturnLabel: 'Net Return',
-        netReturnValue: '+14.2%',
-        netReturnType: 'Nominal',
+        netIncreaseLabel: 'Growth (6M)',
+        netIncreaseValue: '+$63.1B',
+        netReturnLabel: 'Period',
+        netReturnValue: 'April - Sept 2025',
+        netReturnType: 'Start: $714.0B',
       },
     },
     '1Y': {
-      chartData: [25.5, 35.8, 42.3, 38.9, 51.2, 48.7, 55.4, 62.1, 58.9, 65.3, 72.1, 78.5],
+      chartData: [515, 540, 560, 550, 590, 570, 600, 630, 620, 650, 680, 720],
       value: '$64.92B',
       badge: '+28.3%',
       overallData: {
@@ -41,27 +47,33 @@ function getPeriodMockData() {
       },
     },
     '2Y': {
-      chartData: [20.1, 28.4, 35.6, 32.2, 42.5, 40.1, 48.9, 55.3, 52.8, 61.2, 68.9, 75.2],
-      value: '$78.56B',
-      badge: '+35.8%',
+      chartData: [
+        570.0, 590.5, 610.8, 630.2, 650.1, 668.5,
+        688.4, 708.2, 728.5, 750.1, 764.2, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+$207.5B',
       overallData: {
-        netIncreaseLabel: 'Net Increase',
-        netIncreaseValue: '$21.8B',
-        netReturnLabel: 'Net Return',
-        netReturnValue: '+38.2%',
-        netReturnType: 'Nominal',
+        netIncreaseLabel: 'Growth (2Y)',
+        netIncreaseValue: '+$207.5B',
+        netReturnLabel: 'Period',
+        netReturnValue: 'March 2023 - Sept 2025',
+        netReturnType: 'Start: $570.0B',
       },
     },
     '5Y': {
-      chartData: [15.2, 22.8, 28.4, 25.6, 35.9, 32.1, 42.3, 50.6, 48.2, 58.9, 68.4, 85.6],
-      value: '$125.34B',
-      badge: '+52.4%',
+      chartData: [
+        409.6, 450.2, 490.8, 525.3, 560.1, 600.5,
+        640.2, 680.8, 715.3, 745.2, 761.8, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+$367.9B',
       overallData: {
-        netIncreaseLabel: 'Net Increase',
-        netIncreaseValue: '$45.2B',
-        netReturnLabel: 'Net Return',
-        netReturnValue: '+56.8%',
-        netReturnType: 'Nominal',
+        netIncreaseLabel: 'Growth (5Y)',
+        netIncreaseValue: '+$367.9B',
+        netReturnLabel: 'Period',
+        netReturnValue: 'March 2020 - Sept 2025',
+        netReturnType: 'Start: $409.6B',
       },
     },
   };
@@ -228,10 +240,23 @@ function getDummyLineChartConfig() {
     },
     yAxis: {
       title: { text: null },
-      labels: { enabled: false },
-      gridLineWidth: 0,
+      labels: {
+        enabled: true,
+        style: {
+          color: '#6F7176',
+          fontSize: '12px',
+        },
+        formatter() {
+          return `${this.value}B`;
+        },
+      },
+      gridLineWidth: 1,
+      gridLineColor: '#E3E4E5',
       lineWidth: 0,
       tickLength: 0,
+      min: 500,
+      max: 800,
+      tickInterval: 100,
     },
     plotOptions: {
       area: {
@@ -245,8 +270,8 @@ function getDummyLineChartConfig() {
             y2: 1,
           },
           stops: [
-            [0, 'rgba(255, 255, 255, 0.2)'],
-            [1, 'rgba(255, 255, 255, 0)'],
+            [0, 'rgba(2, 115, 207, 0.8)'],
+            [1, 'rgba(2, 115, 207, 0)'],
           ],
         },
       },
@@ -254,15 +279,15 @@ function getDummyLineChartConfig() {
         dataLabels: { enabled: false },
         enableMouseTracking: false,
         marker: { enabled: false },
-        color: 'var(--CPPI-White, #FFFFFF)',
+        color: '#0273CF',
         lineWidth: 2,
       },
     },
     series: [
       {
         name: 'Value',
-        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 295.6, 354.4],
-        color: 'var(--CPPI-White, #FFFFFF)',
+        data: [520, 550, 580, 600, 620, 650, 640, 670, 690, 720, 750, 780],
+        color: '#0273CF',
         lineWidth: 2,
       },
     ],
@@ -326,6 +351,7 @@ async function initializeChart(chartId, data) {
   }
 
   // Merge with default Highcharts configuration
+  const defaultConfig = getDummyLineChartConfig();
   const config = {
     credits: {
       enabled: false,
@@ -350,7 +376,13 @@ async function initializeChart(chartId, data) {
         beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
       },
     },
+    ...defaultConfig,
     ...chartOptions,
+    // Ensure yAxis settings are always applied
+    yAxis: {
+      ...defaultConfig.yAxis,
+      ...(chartOptions.yAxis || {}),
+    },
   };
 
   // Ensure chart height is set (but don't override the chart type from chartOptions)
