@@ -411,6 +411,24 @@ header .nav-wrapper .megamenu .megamenu-desktop {
   display: none;
 }
 
+header  .megamenu .megamenu-heading-button h1,
+header  .megamenu .megamenu-heading-button h2,
+header  .megamenu .megamenu-heading-button h3,
+header  .megamenu .megamenu-heading-button h4,
+header  .megamenu .megamenu-heading-button h5,
+header  .megamenu .megamenu-heading-button h6 {
+    color: #2C3D50;
+}
+  
+header  .megamenu .megamenu-heading-button:hover h1,
+header  .megamenu .megamenu-heading-button:hover h2,
+header  .megamenu .megamenu-heading-button:hover h3,
+header  .megamenu .megamenu-heading-button:hover h4,
+header  .megamenu .megamenu-heading-button:hover h5,
+header  .megamenu .megamenu-heading-button:hover h6 {
+    color: var(--cppi-blue, #0273cf);
+}
+
 @media (width >= 900px) {
   header .nav-wrapper .megamenu .megamenu-desktop {
     display: block;
@@ -476,7 +494,6 @@ header .nav-wrapper .megamenu .megamenu-desktop {
 
   header .nav-wrapper .megamenu .megamenu-heading-button h2 {
     margin: 0;
-    color: var(--cppi-blue, #0273cf);
   }
 
   header .nav-wrapper .megamenu .megamenu-heading-button:hover,
@@ -641,7 +658,6 @@ header .nav-wrapper .megamenu .megamenu-accordion-summary {
   font-size: 24px;
   font-weight: 600;
   line-height: 1.4;
-  color: var(--cppi-blue, #F5F7FA);
   cursor: pointer;
   list-style: none;
   position: relative;
@@ -677,6 +693,7 @@ header .nav-wrapper .megamenu .megamenu-accordion-item[open] .megamenu-accordion
 header .nav-wrapper .megamenu .megamenu-accordion-summary:hover,
 header .nav-wrapper .megamenu .megamenu-accordion-item[open] .megamenu-accordion-summary {
   background-color: rgb(2 115 207 / 10%);
+  color: var(--cppi-blue, #0273CF);
 }
 
 /* Accordion Body */
