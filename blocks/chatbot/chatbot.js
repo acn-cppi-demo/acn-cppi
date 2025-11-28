@@ -1,3 +1,6 @@
+import { getMetadata } from '../../scripts/aem.js';
+import { loadFragment } from '../fragment/fragment.js';
+
 const popularSearches = [
   'CPP facts and history',
   'Investment holdings breakdown',
@@ -150,7 +153,7 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
     const sourceLinks = sources.map((src) => `
       <a href="${src.url || '#'}" class="source-link" target="_blank" rel="noopener noreferrer">
         <span aria-hidden="true">${getIcon('link')}</span>
-        <span>${src.url || src.doc_id || 'Source'}</span>
+        <span>${src.title || src.url || 'Source'}</span>
       </a>
     `).join('');
 
@@ -178,7 +181,33 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
   `;
 }
 
-export default function decorate(block) {
+export default async function decorate(block) {
+  // Fetch the nav fragment to reuse the logo
+  const navMeta = getMetadata('nav');
+  const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  let logoHTML = '<img src="/icons/cppi-logo.svg" alt="CPPI Logo" onerror="this.parentElement.innerHTML=\'<span class=\\\'logo-text\\\'>CPP Investments</span>\'" />';
+
+  try {
+    // Use cache=true to leverage the fragment already loaded by the header
+    const fragment = await loadFragment(navPath, true);
+    if (fragment) {
+      // The first section of the nav fragment contains the brand/logo
+      const brandSection = fragment.firstElementChild;
+      if (brandSection) {
+        const pic = brandSection.querySelector('picture');
+        const img = brandSection.querySelector('img');
+        if (pic) {
+          logoHTML = pic.outerHTML;
+        } else if (img) {
+          logoHTML = img.outerHTML;
+        }
+      }
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.warn('Could not load nav fragment for chatbot logo:', error);
+  }
+
   // Generate popular searches HTML - use buttons for keyboard accessibility
   const popularSearchesHTML = popularSearches.map((search) => `
     <button type="button" class="chatbot-search-suggestion" data-query="${search}">
@@ -201,15 +230,20 @@ export default function decorate(block) {
     <div class="chatbot-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="chatbot-dialog-title">
       <!-- Header -->
       <div class="chatbot-overlay-header">
-        <div class="chatbot-logo">
-          <img src="/icons/cppi-logo.svg" alt="CPPI Logo" onerror="this.parentElement.innerHTML='<span class=\\'logo-text\\'>CPP Investments</span>'" />
-        </div>
-        <button type="button" class="chatbot-close-btn" aria-label="Close chat dialog">
-            <span class="menu-close-text" aria-hidden="true">Close</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                <path d="M1.05375 13.3075L0 12.2538L5.6 6.65375L0 1.05375L1.05375 0L6.65375 5.6L12.2537 0L13.3075 1.05375L7.7075 6.65375L13.3075 12.2538L12.2537 13.3075L6.65375 7.7075L1.05375 13.3075Z" fill="#0273CF"></path>
-            </svg>
-        </button>        
+        <div class="chatbot-overlay-header-content">
+          <div class="chatbot-logo">
+          <a href="/" aria-label="Home" style="pointer-events: auto; cursor: pointer;">
+            ${logoHTML}
+          </a>
+
+          </div>
+          <div type="button" class="chatbot-close-btn" aria-label="Close chat dialog">
+              <span class="menu-close-text" aria-hidden="true">Close</span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M1.05375 13.3075L0 12.2538L5.6 6.65375L0 1.05375L1.05375 0L6.65375 5.6L12.2537 0L13.3075 1.05375L7.7075 6.65375L13.3075 12.2538L12.2537 13.3075L6.65375 7.7075L1.05375 13.3075Z" fill="#0273CF"></path>
+              </svg>
+          </div>       
+        </div> 
       </div>
 
       <div class="chatbot-divider"></div>
@@ -440,7 +474,7 @@ export default function decorate(block) {
       setupSourcesToggle();
 
       // Extract citation for dataLayer
-      const citation = sources?.[0]?.url || sources?.[0]?.doc_id || null;
+      const citation = sources?.[0]?.title || sources?.[0]?.url || null;
 
       // Fire dataLayer event: bot response citation
       if (citation) {

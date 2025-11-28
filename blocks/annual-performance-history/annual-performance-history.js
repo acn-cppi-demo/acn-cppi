@@ -205,6 +205,7 @@ export default function decorate(block) {
   const performanceData = {
     title: null,
     chartData: null,
+    footnote: null,
   };
 
   // Helper: get text content from the block's child by index
@@ -221,6 +222,9 @@ export default function decorate(block) {
 
   // Extract chart data (second child) - JSON string - single source of truth
   const chartDataText = getTextFromChild(1);
+
+  // Extract footnote (third child)
+  const footnoteText = getTextFromChild(2);
 
   // Try to get data from data-aue-prop attributes (AEM editor)
   const propElements = block.querySelectorAll('[data-aue-prop]');
@@ -240,15 +244,23 @@ export default function decorate(block) {
         performanceData.title = value;
       } else if (propName === 'chartData') {
         performanceData.chartData = value;
+      } else if (propName === 'footnote') {
+        performanceData.footnote = value;
       }
     });
-  } else if (chartDataText) {
+  } else {
     // Fallback: parse from block children
-    try {
-      performanceData.chartData = chartDataText;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to extract chart data:', error);
+    if (chartDataText) {
+      try {
+        performanceData.chartData = chartDataText;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to extract chart data:', error);
+      }
+    }
+
+    if (footnoteText) {
+      performanceData.footnote = footnoteText;
     }
   }
 
@@ -320,6 +332,7 @@ export default function decorate(block) {
     <div class="annual-performance-history-legend annual-performance-history-legend-mobile">
       ${legendItems}
     </div>
+    ${performanceData.footnote ? `<div class="annual-performance-history-footnote">${performanceData.footnote}</div>` : ''}
   `;
 
   // If parent already has wrapper, add content directly to block and update parent attributes
