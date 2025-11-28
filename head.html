@@ -4,137 +4,130 @@
 <meta name="theme-color" content="#0273CF">
 <meta name="color-scheme" content="light">
 
-<!-- Critical Resource Hints - Early connection -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- Critical Resource Hints - Establish connections early -->
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="dns-prefetch" href="https://www.googletagmanager.com"/>
 
-<!-- Critical CSS Preload -->
-<link rel="preload" href="/styles/styles.css" as="style">
-
-<!-- Critical Styles Inline for Faster LCP -->
+<!-- ALL Critical Styles Inline for Sub-2s LCP -->
 <style>
-  :root {
-    --background-color: white;
-    --text-color: #2C3D50;
-    --cppi-blue: #0273CF;
-    --body-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', sans-serif;
-  }
-  
+  /* Critical Reset & Variables */
+  :root{--background-color:white;--text-color:#2C3D50;--cppi-blue:#0273CF;--cppi-navy:#2C3D50;--body-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Open Sans',sans-serif;--nav-height:80px}
   *,*::before,*::after{box-sizing:border-box}
-  
-  html {
-    scrollbar-gutter: stable;
-  }
-  
-  body {
-    margin: 0;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: var(--body-font-family);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.6;
-    display: none;
-  }
-  
-  body.appear {
-    display: block;
-  }
+  html{scrollbar-gutter:stable}
+  body{margin:0;background-color:var(--background-color);color:var(--text-color);font-family:var(--body-font-family);font-size:14px;font-weight:400;line-height:1.6;display:none}
+  body.appear{display:block}
+  header{height:var(--nav-height)}
   
   /* Skip Link */
-  .skip-link {
-    position: absolute;
-    top: -40px;
-    left: 0;
-    background: var(--cppi-blue);
-    color: white;
-    padding: 8px 16px;
-    z-index: 10000;
-    text-decoration: none;
-    font-weight: 700;
-    border-radius: 0 0 4px 0;
-  }
+  .skip-link{position:absolute;top:-40px;left:0;background:var(--cppi-blue);color:white;padding:8px 16px;z-index:10000;text-decoration:none;font-weight:700;border-radius:0 0 4px 0}
+  .skip-link:focus{top:0}
   
-  .skip-link:focus {
-    top: 0;
-  }
+  /* Section Wrapper */
+  main>.section>div{max-width:1280px;margin:auto;padding:0 24px}
+  main>.section:first-of-type{margin-top:0}
+  @media(min-width:900px){main>.section>div{padding:0 80px}}
   
-  /* Critical Hero Section - Above the fold */
-  main .section:first-child {
-    min-height: 400px;
-  }
+  /* Typography */
+  h1,h2,h3,h4,h5,h6{margin-top:16px;margin-bottom:16px;font-family:var(--body-font-family);font-weight:600;line-height:1.25}
+  h1{font-size:48px}h2{font-size:36px}h3{font-size:24px}h4,h5,h6{font-size:16px}
+  p{font-size:14px;font-weight:400}
+  p,dl,ol,ul,pre,blockquote{margin:0}
   
-  .cpp-hero-chart-container {
-    background: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%);
-    color: #fff;
-    padding-block: 40px 80px;
-    width: 100%;
-  }
+  /* Links & Buttons */
+  a:any-link{color:var(--cppi-blue);text-decoration:none;font-weight:700}
+  a:hover{color:#1d3ecf;text-decoration:underline}
+  a.button:any-link,button,.button{display:inline-block;max-width:100%;border:1px solid #0273CF;border-radius:2.4em;padding:12px 16px;font-family:var(--body-font-family);font-size:14px;font-weight:700;line-height:1.25;text-align:center;text-decoration:none;background-color:#0273CF;color:white;cursor:pointer;white-space:nowrap}
+  a.button.secondary,button.secondary,.button-secondary{background:#fff!important;color:#0273CF!important;border:1px solid #0273CF!important}
   
-  .cpp-hero-chart-title {
-    margin-top: 0;
-    margin-bottom: 0;
-    font-weight: 600;
-    line-height: 1.2;
-    font-size: 36px;
-  }
+  /* Images */
+  main img{max-width:100%;width:auto;height:auto}
+  .icon{display:inline-block;height:24px;width:24px}
   
-  .cpp-hero-chart-description {
-    margin-top: 24px;
-    margin-bottom: 24px;
-    font-size: 14px;
-    line-height: 1.6;
-  }
+  /* Critical Hero Section - cpp-hero-chart block */
+  .cpp-hero-chart-container{background:linear-gradient(123.25deg,#0052A5 0%,#0273CF 100%);color:#fff;padding-block:40px 80px;width:100%}
+  .cpp-hero-chart-header{margin-bottom:48px}
+  .cpp-hero-chart-main{max-width:596px}
+  .cpp-hero-chart-title{margin-top:0;margin-bottom:0;font-weight:600;line-height:1.2}
+  .cpp-hero-chart-description{margin-top:24px;margin-bottom:24px;font-size:14px;line-height:1.6}
+  .cpp-hero-chart-main .button{display:inline-block;padding:12px 24px;margin-top:8px;white-space:nowrap}
+  .cpp-hero-chart-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;padding:20px 0 0}
+  .cpp-hero-chart-graph-info{display:flex;align-items:center;gap:8px}
+  .graph-text{font-size:16px;line-height:1.4;white-space:nowrap}
+  .cpp-hero-chart-periods{display:flex;gap:8px;border:1px solid rgba(255,255,255,0.5);border-radius:8px;padding:4px}
+  .period-tab{background:transparent;color:rgba(255,255,255,0.8);padding:0;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600;width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin:0;border:none}
+  .period-tab.active{background:#fff!important;color:#0273CF!important}
+  .cpp-hero-chart-value-section{display:flex;align-items:center;gap:16px;margin-bottom:40px}
+  .cpp-hero-chart-value{font-size:42px;font-weight:600;line-height:1.2}
+  .cpp-hero-chart-badge{background:rgba(0,201,80,0.4);color:#fff;padding:8px 16px;border-radius:30px;font-size:12px;font-weight:600;white-space:nowrap;display:flex;align-items:center;gap:8px}
+  .cpp-hero-chart{width:100%;min-height:170px;border-radius:8px;box-sizing:border-box;padding-bottom:20px;flex:1 1 auto}
+  .cpp-hero-chart-content-wrapper{display:flex;gap:40px;align-items:stretch;flex-wrap:wrap}
+  .cpp-hero-chart-panel{border:1px solid #FFF;border-radius:8px;background:linear-gradient(90deg,rgba(255,255,255,0.05) 0%,rgba(255,255,255,0.1) 100%);box-shadow:4px 4px 20px 0 rgba(0,0,0,0.05);padding:20px;box-sizing:border-box;display:flex;width:100%;max-width:840px;flex-direction:column;align-self:stretch}
+  .cpp-hero-chart-overall-data{background:#2C2C2C;border-radius:8px;padding:40px;box-sizing:border-box;flex:1;color:#fff}
+  .cpp-hero-chart-overall-label{font-size:14px;line-height:1.6;color:rgba(255,255,255,0.8);margin-bottom:8px}
+  .cpp-hero-chart-overall-value{font-size:48px;font-weight:600;line-height:1.2;margin:0;color:#fff}
+  .cpp-hero-chart-overall-return-value{font-size:24px;font-weight:600;line-height:1.2;color:#fff;margin-top:8px}
+  .cpp-hero-chart-overall-type{font-size:14px;line-height:1.6;color:rgba(255,255,255,0.8);margin-top:4px}
+  .cpp-hero-chart-separator{border:none;border-top:1px solid rgba(255,255,255,0.2);margin:16px 0;width:100%}
+  .cpp-hero-chart-overall-button-container a{color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+  .cpp-hero-chart-learnmore-wrapper{margin:0 0 14px 12px}
+  .cpp-hero-chart-learnmore{display:inline-flex;align-items:center;gap:8px;color:#FFF!important;font-weight:700;text-decoration:none}
   
-  .cpp-hero-chart-value {
-    font-size: 42px;
-    font-weight: 600;
-    line-height: 1.2;
+  /* Mobile Hero Responsive */
+  @media(max-width:768px){
+    .cpp-hero-chart-container{padding-block:32px}
+    .cpp-hero-chart-title{font-size:32px}
+    .cpp-hero-chart-description{font-size:16px}
+    .cpp-hero-chart-content-wrapper{flex-direction:column}
+    .cpp-hero-chart-panel{flex:0 0 100%;width:100%}
+    .cpp-hero-chart-overall-data{flex:0 0 100%;width:100%}
+    .cpp-hero-chart-controls{flex-direction:column;gap:24px;align-items:stretch;padding:16px 0}
+    .cpp-hero-chart-graph-info{justify-content:flex-start}
+    .cpp-hero-chart-periods{justify-content:space-between;flex-wrap:wrap}
+    .cpp-hero-chart-value{font-size:32px}
+    .cpp-hero-chart-overall-value{font-size:36px}
+    h1{font-size:36px}h2{font-size:28px}
   }
-  
-  .cpp-hero-chart-panel {
-    border: 1px solid #FFF;
-    border-radius: 8px;
-    background: linear-gradient(90deg, rgb(255 255 255 / 5%) 0%, rgb(255 255 255 / 10%) 100%);
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    max-width: 840px;
-    flex-direction: column;
-  }
-  
-  .default-content-wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px;
-  }
-  
-  @media (max-width: 768px) {
-    .cpp-hero-chart-container {
-      padding-block: 32px;
-    }
-    .cpp-hero-chart-title {
-      font-size: 24px;
-    }
-    .cpp-hero-chart-value {
-      font-size: 32px;
-    }
+  @media(max-width:480px){
+    .cpp-hero-chart-title{font-size:24px}
+    .cpp-hero-chart-value-section{flex-direction:column;align-items:flex-start}
+    .cpp-hero-chart-overall-data{padding:24px}
+    .cpp-hero-chart-overall-value{font-size:32px}
+    .cpp-hero-chart-overall-return-value{font-size:20px}
+    .period-tab{padding:6px 12px;font-size:12px}
+    .graph-text{font-size:12px}
+    h1{font-size:32px}h2{font-size:24px}
   }
 </style>
 
-<!-- Main Stylesheet -->
-<link rel="stylesheet" href="/styles/styles.css"/>
+<!-- Defer non-critical CSS -->
+<link rel="preload" href="/styles/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/styles/styles.css"></noscript>
 
-<!-- Core Scripts - Module for async parsing -->
-<script src="/scripts/aem.js" type="module"></script>
-<script src="/scripts/scripts.js" type="module"></script>
+<!-- Core Scripts - High priority for faster execution -->
+<script src="/scripts/aem.js" type="module" fetchpriority="high"></script>
+<script src="/scripts/scripts.js" type="module" fetchpriority="high"></script>
 
-<!-- Optimized Font Loading - Non-blocking -->
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
+<!-- Font Loading - Defer until after LCP -->
+<script>
+// Load fonts after LCP with low priority
+if ('requestIdleCallback' in window) {
+  requestIdleCallback(function() {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap';
+    document.head.appendChild(link);
+  }, {timeout: 2000});
+} else {
+  setTimeout(function() {
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap';
+    document.head.appendChild(link);
+  }, 100);
+}
+</script>
 
-<!-- Google Tag Manager - Deferred for Performance -->
+<!-- Google Tag Manager - Deferred 4s for Performance -->
 <script>
 window.addEventListener('load', function() {
   setTimeout(function() {
@@ -143,6 +136,6 @@ window.addEventListener('load', function() {
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-WMZ6CQRX');
-  }, 3000);
+  }, 4000);
 });
 </script>

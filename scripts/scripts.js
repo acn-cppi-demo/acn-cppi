@@ -107,14 +107,26 @@ async function loadEager(doc) {
     main.setAttribute('tabindex', '-1');
 
     decorateMain(main);
+    // Show body immediately for faster LCP
     document.body.classList.add('appear');
-    await loadSection(main.querySelector('.section'), waitForFirstImage);
+    
+    // Load first section without waiting for images to unblock LCP
+    const firstSection = main.querySelector('.section');
+    if (firstSection) {
+      // Start loading section but don't wait for images
+      loadSection(firstSection, false);
+    }
   }
 
+  // Defer font loading to after LCP
   try {
-    /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
     if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
-      loadFonts();
+      // Use requestIdleCallback to load fonts after main thread is free
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => loadFonts(), { timeout: 2000 });
+      } else {
+        setTimeout(loadFonts, 100);
+      }
     }
   } catch (e) {
     // do nothing
