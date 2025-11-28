@@ -93,7 +93,6 @@
 }
 
 @media (width < 900px) {
-
     .fund-overview-layout {
         flex-direction: column;
         gap: 24px;
