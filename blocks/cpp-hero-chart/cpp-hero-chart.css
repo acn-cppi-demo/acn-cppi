@@ -291,11 +291,13 @@
     color: #FFFF !important;
     font-weight: 700;
     text-decoration: none;
+    transition: opacity 0.2s ease;
 }
 
 /* ADA-compliant focus indicator for Learn More link */
 .cpp-hero-chart-learnmore:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    opacity: 0.8;
 }
 
 .cpp-hero-chart-learnmore:focus-visible {
@@ -306,6 +308,17 @@
 
 .cpp-hero-chart-learnmore:focus:not(:focus-visible) {
     outline: none;
+}
+
+.cpp-hero-chart-learnmore svg,
+.cpp-hero-chart-learnmore img {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.cpp-hero-chart-learnmore:hover svg,
+.cpp-hero-chart-learnmore:hover img {
+    transform: translateX(4px);
 }
 
 .cpp-hero-chart-learnmore-arrow {

@@ -78,6 +78,18 @@ footer .footer.block {
   opacity: 0.8;
 }
 
+.footer-cta-button svg,
+.footer-cta-button img {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.footer-cta-button:hover svg,
+.footer-cta-button:hover img {
+  text-decoration: none !important;
+  transform: translateX(4px);
+}
+
 /* Center Divider */
 .footer-divider {
   width: 2px;

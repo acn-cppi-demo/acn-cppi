@@ -551,29 +551,6 @@ function buildMegamenu(megamenuData) {
 }
 
 /**
- * Opens the first megamenu panel by default (desktop only)
- * @param {Element} megamenu The megamenu element
- */
-function openFirstMegamenuPanel(megamenu) {
-  if (!megamenu || !isDesktop.matches) return;
-
-  const desktopMegamenu = megamenu.querySelector('.megamenu-desktop');
-  if (!desktopMegamenu) return;
-
-  // Check if any panel is already active
-  const hasActivePanel = desktopMegamenu.querySelector('.megamenu-heading-item.active');
-  if (hasActivePanel) return;
-
-  // Open the first panel
-  const firstHeadingItem = desktopMegamenu.querySelector('.megamenu-heading-item');
-  const firstPanel = desktopMegamenu.querySelector('.megamenu-sublinks-panel[data-menu-index="0"]');
-  if (firstHeadingItem && firstPanel) {
-    firstPanel.style.display = 'block';
-    firstHeadingItem.classList.add('active');
-  }
-}
-
-/**
  * Updates menu icon and text based on megamenu state
  * @param {Element} menuIcon The menu icon element
  * @param {Boolean} isOpen Whether megamenu is open
@@ -621,11 +598,6 @@ function toggleMegamenu(megamenu, show, menuIcon = null) {
   // Update menu icon if provided
   if (menuIcon) {
     updateMenuIcon(menuIcon, shouldShow);
-  }
-
-  // Open first panel by default when megamenu is shown (desktop only)
-  if (shouldShow) {
-    openFirstMegamenuPanel(megamenu);
   }
 }
 
@@ -841,9 +813,6 @@ export default async function decorate(block) {
   // Add megamenu after nav
   if (megamenu) {
     navWrapper.appendChild(megamenu);
-
-    // Open first megamenu panel by default on page load (desktop only)
-    openFirstMegamenuPanel(megamenu);
 
     // Mobile accordion: close other accordions when one is opened
     const mobileAccordionItems = megamenu.querySelectorAll('.megamenu-accordion-item');
