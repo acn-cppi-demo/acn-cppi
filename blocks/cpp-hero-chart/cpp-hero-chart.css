@@ -453,3 +453,10 @@
 g.highcharts-exporting-group {
     display: none;
 }
+
+.portfolio-allocation-wrapper {
+    position: relative;
+    margin-bottom: -175px !important;
+    z-index: 1;
+    background-color: transparent;
+}
