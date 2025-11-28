@@ -162,6 +162,12 @@
         "name": "chartData",
         "label": "Chart Data (JSON - Single source for chart and legend with categories and series)",
         "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "footnote",
+        "label": "Footnote",
+        "valueType": "string"
       }
     ]
   },
@@ -278,6 +284,18 @@
           {
             "name": "timewatch",
             "value": "timewatch"
+          },
+          {
+            "name": "global_book",
+            "value": "global_book"
+          },
+          {
+            "name": "finance",
+            "value": "finance"
+          },
+          {
+            "name": "query_stats",
+            "value": "query_stats"
           }
         ]
       },
@@ -305,6 +323,13 @@
   {
     "id": "chatbot",
     "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "logo",
+        "label": "Logo Image",
+        "multi": false
+      },
       {
         "component": "text",
         "valueType": "string",

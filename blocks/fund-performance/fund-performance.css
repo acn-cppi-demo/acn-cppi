@@ -1,7 +1,3 @@
-.fund-performance-container {
-    padding-block: 80px;
-}
-
 .fund-overview-layout {
   display: flex;
   gap: 80px;
@@ -97,10 +93,6 @@
 }
 
 @media (width < 900px) {
-    .fund-performance-container {
-        padding-block: 24px;
-    }
-
     .fund-overview-layout {
         flex-direction: column;
         gap: 24px;
