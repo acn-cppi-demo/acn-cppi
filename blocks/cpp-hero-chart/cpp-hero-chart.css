@@ -114,7 +114,7 @@
     background: #fff !important;
     color: #0273CF !important;
     border-color: #fff !important;
-    
+
     /* keep active transition short and immediate (no delay) */
     transition-duration: 120ms;
 }
@@ -413,4 +413,16 @@
 
 g.highcharts-exporting-group {
     display: none;
+}
+
+.cpp-hero-chart-live-region {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }

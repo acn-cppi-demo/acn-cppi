@@ -119,6 +119,30 @@ function updatePeriodValues(data, period, periodData) {
       }
     }
   }
+
+  // Update live region for screen readers (only after initialization)
+  if (data.isInitialized) {
+    const liveRegion = block.querySelector('.cpp-hero-chart-live-region');
+    if (liveRegion) {
+      const value = periodData.value || '';
+      const badge = periodData.badge ? `Change: ${periodData.badge}` : '';
+
+      let overallInfo = '';
+      if (periodData.overallData) {
+        const {
+          netIncreaseLabel, netIncreaseValue, netReturnLabel, netReturnValue,
+        } = periodData.overallData;
+        if (netIncreaseLabel && netIncreaseValue) {
+          overallInfo += `. ${netIncreaseLabel}: ${netIncreaseValue}`;
+        }
+        if (netReturnLabel && netReturnValue) {
+          overallInfo += `. ${netReturnLabel}: ${netReturnValue}`;
+        }
+      }
+
+      liveRegion.textContent = `Chart updated for ${period}. Value: ${value}. ${badge}${overallInfo}.`;
+    }
+  }
 }
 
 /**
@@ -404,6 +428,7 @@ export default function decorate(block) {
     blockElement: null,
     chartInstanceId: null,
     chartInstance: null,
+    isInitialized: false,
   };
 
   // Helper: plain text from HTML string
@@ -811,15 +836,15 @@ export default function decorate(block) {
       </div>
     `;
   }
-
   // Build main HTML structure
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
   const html = `
-    <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
-      <!-- Header Section -->
-      <div class="cpp-hero-chart-header">
-        <div class="cpp-hero-chart-main">
-          ${cppHeroChartData.title ? `<h2 class="cpp-hero-chart-title" id="${titleId}">${titleText}</h2>` : ''}
+        <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
+          <div class="cpp-hero-chart-live-region" aria-live="polite"></div>
+          <!-- Header Section -->
+          <div class="cpp-hero-chart-header">
+            <div class="cpp-hero-chart-main">
+              ${cppHeroChartData.title ? `<h2 class="cpp-hero-chart-title" id="${titleId}">${titleText}</h2>` : ''}
           ${cppHeroChartData.description ? `<p class="cpp-hero-chart-description" id="${descriptionId}">${descriptionText}</p>` : ''}
           ${buttonHtml}
         </div>
@@ -876,6 +901,7 @@ export default function decorate(block) {
       // Use setTimeout to ensure chart is fully initialized before updating
       setTimeout(() => {
         updateChart(cppHeroChartData, cppHeroChartData.selectedPeriod);
+        cppHeroChartData.isInitialized = true;
       }, 100);
     }).catch((error) => {
       // eslint-disable-next-line no-console
