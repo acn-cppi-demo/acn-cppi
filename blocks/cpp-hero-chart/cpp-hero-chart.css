@@ -3,6 +3,9 @@
     color: #fff;
     padding-block: 40px 80px;
     width: 100%;
+    position: relative;
+    margin-top: -20px;
+    z-index: 1;
 }
 
 /* Header Section */
