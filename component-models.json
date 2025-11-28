@@ -330,6 +330,11 @@
     "id": "cpp-hero-chart",
     "fields": [
       {
+        "component": "reference",
+        "name": "hero_image",
+        "label": "Hero Image"
+      },
+      {
         "component": "richtext",
         "name": "title",
         "label": "Title",
