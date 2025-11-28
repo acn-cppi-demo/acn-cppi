@@ -3,6 +3,19 @@
   display: none !important;
 }
 
+/* Visually hidden but accessible to screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Full page overlay */
 .chatbot-overlay {
   position: fixed;
@@ -38,7 +51,21 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
 
+.chatbot-close-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.chatbot-close-btn:focus-visible {
+  outline: 3px solid var(--cppi-blue, #0273cf);
+  outline-offset: 2px;
 }
 
 /* Divider */
@@ -131,7 +158,7 @@
 }
 
 .chatbot-search-input::placeholder {
-  color: #9ca3af;
+  color: #6b7280; /* Improved contrast ratio from #9ca3af */
 }
 
 .chatbot-search-input:focus {
@@ -179,6 +206,12 @@
 .chatbot-search-suggestion:hover {
   background: #f3f4f6;
   border-color: var(--cppi-blue, #0273cf);
+}
+
+.chatbot-search-suggestion:focus-visible {
+  outline: 3px solid var(--cppi-blue, #0273cf);
+  outline-offset: 2px;
+  background: #f3f4f6;
 }
 
 .chatbot-search-suggestion .search-icon {
@@ -452,6 +485,11 @@
   background: #f9fafb;
 }
 
+.sources-toggle:focus-visible {
+  outline: 3px solid var(--cppi-blue, #0273cf);
+  outline-offset: 2px;
+}
+
 .sources-toggle .chevron-icon {
   display: flex;
   align-items: center;
@@ -617,7 +655,7 @@
 }
 
 .chat-input-wrapper input::placeholder {
-  color: #9ca3af;
+  color: #6b7280; /* Improved contrast ratio from #9ca3af */
 }
 
 .chat-input-wrapper button {
