@@ -426,18 +426,35 @@ export default function decorate(block) {
   }
 
   // Helper: extract picture/img info from the block's child by index
+  // Handles both <picture> elements and standalone <img> tags (for reference components)
   function getPictureFromChild(idx) {
     const child = block.children[idx];
     if (!child) return null;
+
+    // First try to find a picture element
     const pic = child.querySelector('picture');
-    if (!pic) return null;
-    const img = pic.querySelector('img');
-    if (!img) return null;
-    return {
-      src: img.getAttribute('src') || '',
-      alt: img.getAttribute('alt') || '',
-      srcset: img.getAttribute('srcset') || '',
-    };
+    if (pic) {
+      const img = pic.querySelector('img');
+      if (img) {
+        return {
+          src: img.getAttribute('src') || img.src || '',
+          alt: img.getAttribute('alt') || '',
+          srcset: img.getAttribute('srcset') || '',
+        };
+      }
+    }
+
+    // If no picture, try to find a standalone img tag (for reference components)
+    const img = child.querySelector('img');
+    if (img) {
+      return {
+        src: img.getAttribute('src') || img.src || '',
+        alt: img.getAttribute('alt') || '',
+        srcset: img.getAttribute('srcset') || '',
+      };
+    }
+
+    return null;
   }
 
   // Helper: extract overall data from HTML element or string

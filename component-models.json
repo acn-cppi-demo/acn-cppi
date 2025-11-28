@@ -332,7 +332,9 @@
       {
         "component": "reference",
         "name": "hero_image",
-        "label": "Hero Image"
+        "label": "Hero Image",
+        "valueType": "string",
+        "multi": false
       },
       {
         "component": "richtext",
