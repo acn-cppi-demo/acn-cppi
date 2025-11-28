@@ -57,13 +57,13 @@ export default function decorate(block) {
     if (hasHref) {
       buttonHtml = `
         <nav class="cpp-hero-investment-buttons" aria-label="Hero actions">
-          <a href="${heroData.button.href}" class="button button-primary">${heroData.button.text}</a>
+          <a href="${heroData.button.href}" class="button button-secondary">${heroData.button.text}</a>
         </nav>
       `;
     } else {
       buttonHtml = `
         <nav class="cpp-hero-investment-buttons" aria-label="Hero actions">
-          <button type="button" class="button button-primary" disabled aria-disabled="true">${heroData.button.text}</button>
+          <button type="button" class="button button-secondary" disabled aria-disabled="true">${heroData.button.text}</button>
         </nav>
       `;
     }
