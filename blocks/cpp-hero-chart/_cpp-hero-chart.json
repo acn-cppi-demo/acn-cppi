@@ -21,13 +21,6 @@
       "id": "cpp-hero-chart",
       "fields": [
         {
-          "component": "reference",
-          "name": "hero_image",
-          "label": "Hero Image",
-          "valueType": "string",
-          "multi": false
-        },
-        {
           "component": "richtext",
           "name": "title",
           "label": "Title",

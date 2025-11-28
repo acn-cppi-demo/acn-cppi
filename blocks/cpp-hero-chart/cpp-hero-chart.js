@@ -387,8 +387,6 @@ export default function decorate(block) {
   // back to parsing the sequential child <div> structure that AEM publishes
   // on the live site (no data attributes).
   const cppHeroChartData = {
-    heroImage: null,
-    heroImageSrc: null,
     title: null,
     description: null,
     buttonLabel: null,
@@ -426,35 +424,18 @@ export default function decorate(block) {
   }
 
   // Helper: extract picture/img info from the block's child by index
-  // Handles both <picture> elements and standalone <img> tags (for reference components)
   function getPictureFromChild(idx) {
     const child = block.children[idx];
     if (!child) return null;
-
-    // First try to find a picture element
     const pic = child.querySelector('picture');
-    if (pic) {
-      const img = pic.querySelector('img');
-      if (img) {
-        return {
-          src: img.getAttribute('src') || img.src || '',
-          alt: img.getAttribute('alt') || '',
-          srcset: img.getAttribute('srcset') || '',
-        };
-      }
-    }
-
-    // If no picture, try to find a standalone img tag (for reference components)
-    const img = child.querySelector('img');
-    if (img) {
-      return {
-        src: img.getAttribute('src') || img.src || '',
-        alt: img.getAttribute('alt') || '',
-        srcset: img.getAttribute('srcset') || '',
-      };
-    }
-
-    return null;
+    if (!pic) return null;
+    const img = pic.querySelector('img');
+    if (!img) return null;
+    return {
+      src: img.getAttribute('src') || '',
+      alt: img.getAttribute('alt') || '',
+      srcset: img.getAttribute('srcset') || '',
+    };
   }
 
   // Helper: extract overall data from HTML element or string
@@ -594,50 +575,31 @@ export default function decorate(block) {
     return overallData;
   }
 
-  // Check for hero image at index 0 (before title)
-  const heroPic = getPictureFromChild(0);
-  let titleIndex = 0;
-  let descriptionIndex = 1;
-  let buttonLabelIndex = 2;
-  let buttonLinkIndex = 3;
-  let graphImageIndex = 4;
-
-  if (heroPic) {
-    cppHeroChartData.heroImage = heroPic.src;
-    cppHeroChartData.heroImageSrc = heroPic.src;
-    // If hero image exists, shift all subsequent indices by 1
-    titleIndex = 1;
-    descriptionIndex = 2;
-    buttonLabelIndex = 3;
-    buttonLinkIndex = 4;
-    graphImageIndex = 5;
-  }
-
-  cppHeroChartData.title = getTextFromChild(titleIndex) || null;
-  cppHeroChartData.description = getTextFromChild(descriptionIndex) || null;
-  cppHeroChartData.buttonLabel = getTextFromChild(buttonLabelIndex) || null;
+  cppHeroChartData.title = getTextFromChild(0) || null;
+  cppHeroChartData.description = getTextFromChild(1) || null;
+  cppHeroChartData.buttonLabel = getTextFromChild(2) || null;
   // Try to find an <a> inside the CTA child for href; otherwise, use child text
-  const ctaChild = block.children[buttonLabelIndex];
+  const ctaChild = block.children[2];
   if (ctaChild) {
     const a = ctaChild.querySelector('a[href]');
     if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
-    else cppHeroChartData.buttonLink = getTextFromChild(buttonLinkIndex) || null;
+    else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
   }
-  // Check for picture at graphImageIndex, if present use it and adjust subsequent indices
-  const pic = getPictureFromChild(graphImageIndex);
-  let graphTextIndex = graphImageIndex;
-  let valueIndex = graphImageIndex + 1;
-  let badgeIndex = graphImageIndex + 2;
-  let periodIndex = graphImageIndex + 3;
+  // Check for picture at index 4, if present use it and adjust subsequent indices
+  const pic = getPictureFromChild(4);
+  let graphTextIndex = 4;
+  let valueIndex = 5;
+  let badgeIndex = 6;
+  let periodIndex = 7;
 
   if (pic) {
     cppHeroChartData.graphImage = pic.src;
     cppHeroChartData.graphImageAlt = pic.alt;
     // If picture exists, shift indices by 1
-    graphTextIndex = graphImageIndex + 1;
-    valueIndex = graphImageIndex + 2;
-    badgeIndex = graphImageIndex + 3;
-    periodIndex = graphImageIndex + 4;
+    graphTextIndex = 5;
+    valueIndex = 6;
+    badgeIndex = 7;
+    periodIndex = 8;
   }
 
   cppHeroChartData.graphText = getTextFromChild(graphTextIndex) || null;
@@ -891,27 +853,6 @@ export default function decorate(block) {
 
   // Replace block content with new HTML
   block.innerHTML = html;
-
-  // Apply hero image background to the container if hero image exists
-  if (cppHeroChartData.heroImageSrc) {
-    const wrapper = block.querySelector('.cpp-hero-chart-wrapper');
-    if (wrapper) {
-      wrapper.style.backgroundImage = `url('${cppHeroChartData.heroImageSrc}')`;
-      wrapper.style.backgroundSize = 'cover';
-      wrapper.style.backgroundPosition = 'center';
-      wrapper.style.backgroundRepeat = 'no-repeat';
-    }
-    // Also apply to container if it exists
-    if (block.classList.contains('cpp-hero-chart-container') || block.closest('.cpp-hero-chart-container')) {
-      const container = block.classList.contains('cpp-hero-chart-container') ? block : block.closest('.cpp-hero-chart-container');
-      if (container) {
-        container.style.backgroundImage = `url('${cppHeroChartData.heroImageSrc}')`;
-        container.style.backgroundSize = 'cover';
-        container.style.backgroundPosition = 'center';
-        container.style.backgroundRepeat = 'no-repeat';
-      }
-    }
-  }
 
   // Initialize period tab event listeners
   const periodTabs = block.querySelectorAll('.period-tab');

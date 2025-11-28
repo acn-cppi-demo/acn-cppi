@@ -3,30 +3,6 @@
     color: #fff;
     padding-block: 40px 80px;
     width: 100%;
-    position: relative;
-}
-
-/* Hero image background support */
-.cpp-hero-chart-wrapper[style*="background-image"] {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-}
-
-/* Overlay gradient on top of hero image to maintain readability */
-.cpp-hero-chart-wrapper[style*="background-image"]::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(123.25deg, rgb(0 82 165 / 85%) 0%, rgb(2 115 207 / 85%) 100%);
-    z-index: 0;
-}
-
-/* Ensure content is above the overlay */
-.cpp-hero-chart-wrapper[style*="background-image"] > * {
-    position: relative;
-    z-index: 1;
 }
 
 /* Header Section */
