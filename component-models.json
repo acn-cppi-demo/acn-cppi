@@ -306,6 +306,13 @@
     "id": "chatbot",
     "fields": [
       {
+        "component": "reference",
+        "valueType": "string",
+        "name": "logo",
+        "label": "Logo Image",
+        "multi": false
+      },
+      {
         "component": "text",
         "valueType": "string",
         "name": "title",
