@@ -571,6 +571,15 @@ function decorateSections(main) {
             .filter((style) => style)
             .map((style) => toClassName(style.trim()));
           styles.forEach((style) => section.classList.add(style));
+        } else if (key === 'backgroundimage' || key === 'backgroundImage') {
+          // Apply background image to section
+          const bgImage = meta[key];
+          if (bgImage) {
+            section.style.backgroundImage = `url('${bgImage}')`;
+            section.style.backgroundSize = 'cover';
+            section.style.backgroundPosition = 'center';
+            section.style.backgroundRepeat = 'no-repeat';
+          }
         } else {
           section.dataset[toCamelCase(key)] = meta[key];
         }

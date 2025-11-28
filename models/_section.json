@@ -35,6 +35,13 @@
               "value": "highlight"
             }
           ]
+        },
+        {
+          "component": "reference",
+          "name": "backgroundImage",
+          "label": "Background Image",
+          "valueType": "string",
+          "multi": false
         }
       ]
     }
