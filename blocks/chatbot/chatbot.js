@@ -263,12 +263,12 @@ export default function decorate(block) {
           
           <div class="chat-body" id="chatBody" role="log" aria-live="polite" aria-label="Chat conversation"></div>
           
-          <div class="chat-input-wrapper">
-            <label for="chatInputConversation" class="visually-hidden">Type your message</label>
-            <input id="chatInputConversation" placeholder="Ask a question" aria-describedby="chat-input-hint" />
-            <span id="chat-input-hint" class="visually-hidden">Press Enter or click send to submit</span>
-            <button id="chatSend" type="button" aria-label="Send message">${getIcon('send')}</button>
-          </div>
+            <div class="chat-input-wrapper">
+              <label for="chatInputConversation" class="visually-hidden">Type your message</label>
+              <input id="chatInputConversation" placeholder="Ask a question" aria-describedby="chat-input-hint" />
+              <span id="chat-input-hint" class="visually-hidden">Press Enter or click send to submit</span>
+              <button id="chatSend" type="button" aria-label="Send message"><span aria-hidden="true">${getIcon('send')}</span></button>
+            </div>
         </div>
       </div>
     </div>
@@ -380,24 +380,24 @@ export default function decorate(block) {
     const userTimestamp = new Date();
 
     // Add user message
-    chatBody.innerHTML += createMessageHTML(msg, true, userTimestamp);
+    chatBody.insertAdjacentHTML('beforeend', createMessageHTML(msg, true, userTimestamp));
     chatInput.value = '';
     chatInputConversation.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
 
     // Add loading indicator with "Fundy is thinking..." - accessible status
     const loadingId = `loading-${Date.now()}`;
-    chatBody.innerHTML += `
-      <div class="chat-message bot-message" id="${loadingId}" role="status" aria-label="Fundy is thinking">
-        <div class="thinking-indicator">
-          <span class="thinking-icon" aria-hidden="true">${getIcon('hub')}</span>
-          <span class="thinking-text">Fundy is thinking</span>
-          <span class="thinking-dots" aria-hidden="true">
-            <span>.</span><span>.</span><span>.</span>
-          </span>
-        </div>
-      </div>
-    `;
+    chatBody.insertAdjacentHTML('beforeend', `
+          <div class="chat-message bot-message" id="${loadingId}" role="status" aria-label="Fundy is thinking">
+            <div class="thinking-indicator">
+              <span class="thinking-icon" aria-hidden="true">${getIcon('hub')}</span>
+              <span class="thinking-text">Fundy is thinking</span>
+              <span class="thinking-dots" aria-hidden="true">
+                <span>.</span><span>.</span><span>.</span>
+              </span>
+            </div>
+          </div>
+        `);
     chatBody.scrollTop = chatBody.scrollHeight;
 
     // Fire dataLayer event: user message
@@ -433,7 +433,7 @@ export default function decorate(block) {
       const sources = data?.response_data?.references || [];
 
       const botTimestamp = new Date();
-      chatBody.innerHTML += createMessageHTML(reply, false, botTimestamp, sources);
+      chatBody.insertAdjacentHTML('beforeend', createMessageHTML(reply, false, botTimestamp, sources));
       chatBody.scrollTop = chatBody.scrollHeight;
 
       // Setup sources toggle after adding to DOM
@@ -455,7 +455,7 @@ export default function decorate(block) {
       if (loadingEl) loadingEl.remove();
 
       const botTimestamp = new Date();
-      chatBody.innerHTML += createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp);
+      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp));
       chatBody.scrollTop = chatBody.scrollHeight;
     }
   }
