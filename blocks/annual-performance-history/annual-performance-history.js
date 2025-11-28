@@ -334,8 +334,8 @@ export default function decorate(block) {
             ${legendItems}
           </div>
         </div>
-        ${performanceData.footnote ? `<div class="annual-performance-history-footnote">${performanceData.footnote}</div>` : ''
-  `;
+        ${performanceData.footnote ? `<div class="annual-performance-history-footnote">${performanceData.footnote}</div>` : ''}
+      `;
 
   // If parent already has wrapper, add content directly to block and update parent attributes
   if (parentHasWrapper) {
