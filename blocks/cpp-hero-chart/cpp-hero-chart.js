@@ -409,12 +409,12 @@ export default function decorate(block) {
   };
 
   // Helper: plain text from HTML string
-  const getPlainText = (htmlString) => {
-    if (!htmlString) return '';
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
-    return tempDiv.textContent.trim();
-  };
+  // const getPlainText = (htmlString) => {
+  //   if (!htmlString) return '';
+  //   const tempDiv = document.createElement('div');
+  //   tempDiv.innerHTML = htmlString;
+  //   return tempDiv.textContent.trim();
+  // };
 
   // Helper: get text content from the block's child by index
   function getTextFromChild(idx) {
@@ -730,28 +730,13 @@ export default function decorate(block) {
   }
 
   // Generate unique IDs for accessibility
+  const chartId = `cpp-hero-chart-${Date.now()}`;
   const titleId = `cpp-hero-chart-title-${Date.now()}`;
   const descriptionId = `cpp-hero-chart-description-${Date.now()}`;
-  const chartId = `cpp-hero-chart-${Date.now()}`;
 
   // Store references in data object for later use
   cppHeroChartData.blockElement = block;
   cppHeroChartData.chartInstanceId = chartId;
-
-  // Plain text versions for rendered template
-  const titleText = getPlainText(cppHeroChartData.title);
-  const descriptionText = getPlainText(cppHeroChartData.description);
-
-  // Build button HTML
-  let buttonHtml = '';
-  if (cppHeroChartData.buttonLabel) {
-    const hasHref = cppHeroChartData.buttonLink && cppHeroChartData.buttonLink !== '#';
-    if (hasHref) {
-      buttonHtml = `<a href="${cppHeroChartData.buttonLink}" class="button button-secondary">${cppHeroChartData.buttonLabel}</a>`;
-    } else {
-      buttonHtml = `<button type="button" class="button button-secondary" disabled aria-disabled="true">${cppHeroChartData.buttonLabel}</button>`;
-    }
-  }
 
   // Build period tabs HTML
   const periodTabsHtml = cppHeroChartData.periods
@@ -831,18 +816,8 @@ export default function decorate(block) {
 
   // Build main HTML structure
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
-  const bgImageStyle = cppHeroChartData.backgroundImage ? ` style="background-image: url('${cppHeroChartData.backgroundImage}');"` : '';
   const html = `
     <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
-      <!-- Header Section -->
-      <div class="cpp-hero-chart-header"${bgImageStyle}>
-        <div class="cpp-hero-chart-main">
-          ${cppHeroChartData.title ? `<h2 class="cpp-hero-chart-title" id="${titleId}">${titleText}</h2>` : ''}
-          ${cppHeroChartData.description ? `<p class="cpp-hero-chart-description" id="${descriptionId}">${descriptionText}</p>` : ''}
-          ${buttonHtml}
-        </div>
-      </div>
-
       <!-- Main Content Area: Chart Panel (Left) and Overall Data Panel (Right) -->
       <div class="cpp-hero-chart-content-wrapper">
         <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
