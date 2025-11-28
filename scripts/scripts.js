@@ -6,7 +6,6 @@ import {
   decorateSections,
   decorateBlocks,
   decorateTemplateAndTheme,
-  waitForFirstImage,
   loadSection,
   loadSections,
   loadCSS,
@@ -109,7 +108,7 @@ async function loadEager(doc) {
     decorateMain(main);
     // Show body immediately for faster LCP
     document.body.classList.add('appear');
-    
+
     // Load first section without waiting for images to unblock LCP
     const firstSection = main.querySelector('.section');
     if (firstSection) {
