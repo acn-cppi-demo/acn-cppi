@@ -162,6 +162,12 @@
         "name": "chartData",
         "label": "Chart Data (JSON - Single source for chart and legend with categories and series)",
         "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "footnote",
+        "label": "Footnote",
+        "valueType": "string"
       }
     ]
   },

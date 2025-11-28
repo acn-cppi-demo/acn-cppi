@@ -488,22 +488,24 @@ export default function decorate(block) {
 
   // Build inner content HTML
   const innerContent = `
-    <div class="annual-performance-history-header">
-      <div class="annual-performance-history-title-wrapper">
-        <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
-      </div>
-      <div class="annual-performance-history-legend annual-performance-history-legend-desktop">
-        ${legendItems}
-      </div>
-    </div>
-    <div class="annual-performance-history-chart-container">
-      <div class="annual-performance-history-chart" id="${chartId}"></div>
-    </div>
-    <div class="annual-performance-history-legend annual-performance-history-legend-mobile">
-      ${legendItems}
-    </div>
-    ${performanceData.footnote ? `<div class="annual-performance-history-footnote">${performanceData.footnote}</div>` : ''}
-  `;
+        <div class="annual-performance-history-content">
+          <div class="annual-performance-history-header">
+            <div class="annual-performance-history-title-wrapper">
+              <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
+            </div>
+            <div class="annual-performance-history-legend annual-performance-history-legend-desktop">
+              ${legendItems}
+            </div>
+          </div>
+          <div class="annual-performance-history-chart-container">
+            <div class="annual-performance-history-chart" id="${chartId}"></div>
+          </div>
+          <div class="annual-performance-history-legend annual-performance-history-legend-mobile">
+            ${legendItems}
+          </div>
+        </div>
+        ${performanceData.footnote ? `<div class="annual-performance-history-footnote">${performanceData.footnote}</div>` : ''}
+      `;
 
   // If parent already has wrapper, add content directly to block and update parent attributes
   if (parentHasWrapper) {

@@ -31,14 +31,11 @@
 .chatbot-overlay-header {
     display: flex;
     align-items: center;
-    padding: 0 80px;
     background: #fff;
     border-bottom: 1px solid #E3E4E5;
     box-sizing: border-box;
     width: 100%;
     height: calc(var(--nav-height, 80px) + 1px);
-    margin: auto;
-    max-width: 1440px;
     flex: 0 0 auto;
 }
 
@@ -47,6 +44,9 @@
     box-sizing: border-box;
     justify-content: space-between;
     align-items: center;
+    margin: auto;
+    max-width: 1440px;
+    padding: 0 80px;
     width: 100%;
 }
 
