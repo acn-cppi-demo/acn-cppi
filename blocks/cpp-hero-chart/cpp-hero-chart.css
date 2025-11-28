@@ -8,10 +8,25 @@
 /* Header Section */
 .cpp-hero-chart-header {
     margin-bottom: 48px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 20px 0;
+    position: relative;
+}
+
+.cpp-hero-chart-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 30%);
+    pointer-events: none;
 }
 
 .cpp-hero-chart-main {
     max-width: 596px;
+    position: relative;
+    z-index: 1;
 }
 
 .cpp-hero-chart-title {

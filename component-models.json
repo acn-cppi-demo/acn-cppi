@@ -354,6 +354,19 @@
         "valueType": "string"
       },
       {
+        "component": "reference",
+        "name": "backgroundImage",
+        "label": "Background Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "backgroundImageAlt",
+        "label": "Background Image Alt Text",
+        "valueType": "string"
+      },
+      {
         "component": "text",
         "name": "graph_title",
         "label": "Graph Title",

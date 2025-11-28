@@ -391,6 +391,8 @@ export default function decorate(block) {
     description: null,
     buttonLabel: null,
     buttonLink: null,
+    backgroundImage: null,
+    backgroundImageAlt: null,
     graphImage: null,
     graphImageAlt: null,
     graphText: null,
@@ -585,21 +587,36 @@ export default function decorate(block) {
     if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
     else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
   }
-  // Check for picture at index 4, if present use it and adjust subsequent indices
-  const pic = getPictureFromChild(4);
-  let graphTextIndex = 4;
-  let valueIndex = 5;
-  let badgeIndex = 6;
-  let periodIndex = 7;
+  // Check for background image at index 3
+  const bgPic = getPictureFromChild(3);
+  let graphImageIndex = 4;
+  let graphTextIndex = 5;
+  let valueIndex = 6;
+  let badgeIndex = 7;
+  let periodIndex = 8;
+
+  if (bgPic) {
+    cppHeroChartData.backgroundImage = bgPic.src;
+    cppHeroChartData.backgroundImageAlt = bgPic.alt;
+    // If background image exists, shift indices by 1
+    graphImageIndex = 5;
+    graphTextIndex = 6;
+    valueIndex = 7;
+    badgeIndex = 8;
+    periodIndex = 9;
+  }
+
+  // Check for picture at the adjusted index, if present use it and adjust subsequent indices
+  const pic = getPictureFromChild(graphImageIndex);
 
   if (pic) {
     cppHeroChartData.graphImage = pic.src;
     cppHeroChartData.graphImageAlt = pic.alt;
     // If picture exists, shift indices by 1
-    graphTextIndex = 5;
-    valueIndex = 6;
-    badgeIndex = 7;
-    periodIndex = 8;
+    graphTextIndex += 1;
+    valueIndex += 1;
+    badgeIndex += 1;
+    periodIndex += 1;
   }
 
   cppHeroChartData.graphText = getTextFromChild(graphTextIndex) || null;
@@ -814,10 +831,11 @@ export default function decorate(block) {
 
   // Build main HTML structure
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
+  const bgImageStyle = cppHeroChartData.backgroundImage ? ` style="background-image: url('${cppHeroChartData.backgroundImage}');"` : '';
   const html = `
     <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
       <!-- Header Section -->
-      <div class="cpp-hero-chart-header">
+      <div class="cpp-hero-chart-header"${bgImageStyle}>
         <div class="cpp-hero-chart-main">
           ${cppHeroChartData.title ? `<h2 class="cpp-hero-chart-title" id="${titleId}">${titleText}</h2>` : ''}
           ${cppHeroChartData.description ? `<p class="cpp-hero-chart-description" id="${descriptionId}">${descriptionText}</p>` : ''}
