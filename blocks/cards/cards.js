@@ -172,6 +172,21 @@ export default function decorate(block) {
       }
     }
 
+    // Handle Icon Background Color
+    if (iconDiv && cardBody) {
+      const firstP = cardBody.querySelector('p:first-of-type');
+      if (firstP) {
+        const color = firstP.textContent.trim().toLowerCase();
+        const validColors = ['cppi-blue', 'light-grey'];
+
+        if (validColors.includes(color)) {
+          iconDiv.classList.add(color);
+          // Remove the color paragraph from body
+          firstP.remove();
+        }
+      }
+    }
+
     // Handle link based on last two p tags
     if (cardBody) {
       // Find all paragraphs in the card body
