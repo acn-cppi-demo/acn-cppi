@@ -316,6 +316,10 @@ a.link-primary:hover img {
 
 /* sections */
 
+.section:not(.chatbot-container) {
+    padding-block: 80px;
+}
+
 main > .section > div {
   max-width: 1280px;
   margin: auto;
@@ -337,13 +341,24 @@ main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
   margin: 0;
-  padding: 80px 0;
+  
+}
+
+@media screen and (width <= 768px) {
+    .section:not(.chatbot-container) {
+        padding-block: 24px;
+    }
 }
 
 @media (width <= 768px) {
     main .section.light,
     main .section.highlight {
         padding: 24px 0;
+    }
+
+    /* Hide background images on mobile */
+    .section.has-background-image {
+        background-image: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%) !important;
     }
 }
 

@@ -361,13 +361,27 @@ export default function decorate(block) {
   function getTextFromChild(idx) {
     const child = block.children[idx];
     if (!child) return '';
+
+    // Check for <pre><code> or <code> first (common for code blocks)
+    const code = child.querySelector('pre code, code');
+    if (code) return code.textContent.trim();
+
+    // Fallback to <p> tag
     const p = child.querySelector('p');
     if (p) return p.textContent.trim();
+
+    // Last resort: get all text content
     return child.textContent.trim();
   }
 
   // Extract data from children (fallback for AEM published markup)
   assetData.title = getTextFromChild(0) || null;
+
+  // Extract chart data (second child) - JSON array
+  const chartDataText = getTextFromChild(1);
+  if (chartDataText) {
+    assetData.chartData = chartDataText;
+  }
 
   // Try to get data from data-aue-prop attributes
   const propElements = block.querySelectorAll('[data-aue-prop]');
@@ -430,7 +444,51 @@ export default function decorate(block) {
   let chartData = mockChartData;
   try {
     if (assetData.chartData && typeof assetData.chartData === 'string' && assetData.chartData.trim()) {
-      const parsed = JSON.parse(assetData.chartData);
+      let parsed;
+      try {
+        // Try parsing directly first (in case it's already valid JSON)
+        parsed = JSON.parse(assetData.chartData);
+      } catch (parseError) {
+        // If direct parse fails, clean up the JSON string
+        let cleanJson = assetData.chartData.trim();
+
+        // Remove HTML entities and decode them
+        cleanJson = cleanJson.replace(/&nbsp;/g, ' ');
+        cleanJson = cleanJson.replace(/&quot;/g, '"');
+        cleanJson = cleanJson.replace(/&#34;/g, '"');
+        cleanJson = cleanJson.replace(/&#39;/g, "'");
+        cleanJson = cleanJson.replace(/&apos;/g, "'");
+        cleanJson = cleanJson.replace(/<br\s*\/?>/gi, ' ');
+        cleanJson = cleanJson.replace(/<pre[^>]*>/gi, '');
+        cleanJson = cleanJson.replace(/<\/pre>/gi, '');
+        cleanJson = cleanJson.replace(/<code[^>]*>/gi, '');
+        cleanJson = cleanJson.replace(/<\/code>/gi, '');
+
+        // Normalize line breaks
+        cleanJson = cleanJson.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+        // Remove single-line comments
+        cleanJson = cleanJson.replace(/\/\/[^\n]*/g, '');
+
+        // Normalize whitespace
+        cleanJson = cleanJson.replace(/\n/g, ' ');
+        cleanJson = cleanJson.replace(/\s+/g, ' ');
+        cleanJson = cleanJson.trim();
+
+        // Quote unquoted property names (if needed)
+        // Only quote if property names aren't already quoted
+        const hasQuotedProps = /[{,]\s*"[a-zA-Z_$][a-zA-Z0-9_$]*"\s*:/.test(cleanJson);
+        if (!hasQuotedProps) {
+          // Add quotes around unquoted property names
+          cleanJson = cleanJson.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+        }
+
+        // Remove trailing commas
+        cleanJson = cleanJson.replace(/,(\s*[}\]])/g, '$1');
+
+        parsed = JSON.parse(cleanJson);
+      }
+
       if (Array.isArray(parsed)) {
         chartData = parsed;
       }
@@ -439,7 +497,7 @@ export default function decorate(block) {
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data:', error);
+    console.error('Failed to parse chart data:', error, 'Raw data:', assetData.chartData);
   }
 
   // Store parsed chartData back for chart initialization (single source of truth)
@@ -448,8 +506,8 @@ export default function decorate(block) {
   // Generate asset classes list from chartData (single source of truth)
   // Format: { name, percentage, color, description }
   const assetClasses = chartData.map((item) => {
-    // Format percentage from y value (e.g., 35 -> "35.0%")
-    const percentage = typeof item.y === 'number' ? `${item.y.toFixed(1)}%` : '00.0%';
+    // Use display_text if available, otherwise format percentage from y value (e.g., 35 -> "35.0%")
+    const percentage = item.display_text || (typeof item.y === 'number' ? `${item.y.toFixed(1)}%` : '00.0%');
     return {
       name: item.name || '',
       percentage,

@@ -843,32 +843,77 @@ export default async function decorate(block) {
       });
     }
 
-    // Add click handler to search icon to open chatbot
-    const searchIcon = navTools?.querySelector('.icon-search');
-    if (searchIcon) {
-      searchIcon.style.cursor = 'pointer';
-      searchIcon.setAttribute('role', 'button');
-      searchIcon.setAttribute('tabindex', '0');
-      searchIcon.setAttribute('aria-label', 'Open search');
-      searchIcon.addEventListener('click', () => {
-        if (typeof window.openChatbotOverlay === 'function') {
-          window.openChatbotOverlay();
-        }
-      });
-      searchIcon.addEventListener('keydown', (e) => {
-        if (e.code === 'Enter' || e.code === 'Space') {
-          e.preventDefault();
-          if (typeof window.openChatbotOverlay === 'function') {
-            window.openChatbotOverlay();
-          }
-        }
-      });
-    }
-
     // Close megamenu on escape
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Escape' && megamenu.getAttribute('aria-hidden') === 'false') {
         toggleMegamenu(megamenu, false, menuIcon);
+      }
+    });
+  }
+
+  // Add click handler to search icon to open chatbot
+  const searchIcon = navTools?.querySelector('.icon-search');
+  if (searchIcon) {
+    searchIcon.style.cursor = 'pointer';
+    searchIcon.setAttribute('role', 'button');
+    searchIcon.setAttribute('tabindex', '0');
+    searchIcon.setAttribute('aria-label', 'Open search');
+
+    const triggerChatbot = async () => {
+      if (typeof window.openChatbotOverlay === 'function') {
+        window.openChatbotOverlay();
+      } else {
+        // Dynamically load chatbot if not present
+        try {
+          // Load chatbot CSS
+          const cssPromise = new Promise((resolve, reject) => {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = '/blocks/chatbot/chatbot.css';
+            link.onload = resolve;
+            link.onerror = reject;
+            document.head.appendChild(link);
+          });
+
+          // Load chatbot JS
+          const module = await import('../chatbot/chatbot.js');
+          await cssPromise;
+
+          // Check if the function is now available on window
+          if (typeof window.openChatbotOverlay === 'function') {
+            window.openChatbotOverlay();
+          } else if (module.default) {
+            // If the module exports a decorate function but didn't attach to window,
+            // we might need to create a synthetic block and decorate it.
+            const chatbotBlock = document.createElement('div');
+            chatbotBlock.classList.add('chatbot', 'block');
+            document.body.append(chatbotBlock); // Append to body so it's in DOM
+
+            // Call the decorate function
+            await module.default(chatbotBlock);
+
+            // Now check again
+            if (typeof window.openChatbotOverlay === 'function') {
+              window.openChatbotOverlay();
+            }
+          } else {
+            // eslint-disable-next-line no-console
+            console.error('Chatbot module loaded but openChatbotOverlay not found and no default export to decorate');
+          }
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to load chatbot module', e);
+        }
+      }
+    };
+
+    searchIcon.addEventListener('click', () => {
+      triggerChatbot();
+    });
+    searchIcon.addEventListener('keydown', (e) => {
+      if (e.code === 'Enter' || e.code === 'Space') {
+        e.preventDefault();
+        triggerChatbot();
       }
     });
   }

@@ -52,6 +52,122 @@ async function initializePerformanceChart(chartId, data) {
   // Use the chartData directly from data parameter
   const chartData = (data.chartData && data.chartData.categories) ? data.chartData : mockChartData;
 
+  // Calculate dynamic y-axis min, max, and tickInterval based on data
+  const calculateYAxisConfig = (seriesData, chartDataObj) => {
+    // Check if min and Interval are provided in the JSON data
+    if (chartDataObj && typeof chartDataObj.min === 'number') {
+      const providedMin = chartDataObj.min;
+      const providedInterval = chartDataObj.Interval
+        || chartDataObj.interval
+        || chartDataObj.tickInterval;
+
+      // If max is also provided, use it; otherwise calculate from data
+      let max;
+      if (chartDataObj && typeof chartDataObj.max === 'number') {
+        max = chartDataObj.max;
+      } else {
+        // Calculate max from data
+        const allValues = [];
+        seriesData.forEach((series) => {
+          if (series.data && Array.isArray(series.data)) {
+            series.data.forEach((value) => {
+              if (value !== null && value !== undefined && typeof value === 'number') {
+                allValues.push(value);
+              }
+            });
+          }
+        });
+
+        if (allValues.length > 0) {
+          const dataMax = Math.max(...allValues);
+          const range = dataMax - providedMin;
+          const padding = range * 0.1;
+          max = dataMax + padding;
+
+          // Round max up to nice round number
+          if (Math.abs(max) >= 100) {
+            max = Math.ceil(max / 50) * 50;
+          } else if (Math.abs(max) >= 10) {
+            max = Math.ceil(max / 5) * 5;
+          } else {
+            max = Math.ceil(max);
+          }
+        } else {
+          // Fallback if no data
+          max = providedMin + (providedInterval || 100) * 6;
+        }
+      }
+
+      return {
+        min: providedMin,
+        max,
+        tickInterval: providedInterval || 100,
+      };
+    }
+
+    // Fallback to dynamic calculation if min/Interval not provided
+    // Collect all numeric values from all series (excluding null values)
+    const allValues = [];
+    seriesData.forEach((series) => {
+      if (series.data && Array.isArray(series.data)) {
+        series.data.forEach((value) => {
+          if (value !== null && value !== undefined && typeof value === 'number') {
+            allValues.push(value);
+          }
+        });
+      }
+    });
+
+    if (allValues.length === 0) {
+      // Fallback to default values if no valid data
+      return { min: -7, max: 21, tickInterval: 7 };
+    }
+
+    // Find min and max values
+    const dataMin = Math.min(...allValues);
+    const dataMax = Math.max(...allValues);
+    const range = dataMax - dataMin;
+
+    // Add padding (10% on each side)
+    const padding = range * 0.1;
+    let min = dataMin - padding;
+    let max = dataMax + padding;
+
+    // Round min down and max up to nice round numbers
+    // For large numbers (>= 100), round to nearest 50 or 100
+    // For smaller numbers (< 100), round to nearest 5 or 10
+    if (Math.abs(max) >= 100) {
+      min = Math.floor(min / 50) * 50;
+      max = Math.ceil(max / 50) * 50;
+    } else if (Math.abs(max) >= 10) {
+      min = Math.floor(min / 5) * 5;
+      max = Math.ceil(max / 5) * 5;
+    } else {
+      min = Math.floor(min);
+      max = Math.ceil(max);
+    }
+
+    // Calculate appropriate tick interval based on range
+    // Aim for about 4-8 ticks on the y-axis
+    const targetTicks = 6;
+    let tickInterval = (max - min) / targetTicks;
+
+    // Round tick interval to a nice round number
+    if (tickInterval >= 100) {
+      tickInterval = Math.ceil(tickInterval / 50) * 50;
+    } else if (tickInterval >= 10) {
+      tickInterval = Math.ceil(tickInterval / 10) * 10;
+    } else if (tickInterval >= 5) {
+      tickInterval = Math.ceil(tickInterval / 5) * 5;
+    } else {
+      tickInterval = Math.ceil(tickInterval);
+    }
+
+    return { min, max, tickInterval };
+  };
+
+  const yAxisConfig = calculateYAxisConfig(chartData.series, chartData);
+
   // Determine chart height based on screen size
   const isMobile = window.innerWidth <= 480;
   const chartHeight = isMobile ? 230 : 300;
@@ -110,9 +226,9 @@ async function initializePerformanceChart(chartId, data) {
       title: {
         text: null,
       },
-      min: -7,
-      max: 21,
-      tickInterval: 7,
+      min: yAxisConfig.min,
+      max: yAxisConfig.max,
+      tickInterval: yAxisConfig.tickInterval,
       gridLineWidth: 1,
       gridLineColor: '#E3E4E5',
       lineWidth: 0,
@@ -205,14 +321,24 @@ export default function decorate(block) {
   const performanceData = {
     title: null,
     chartData: null,
+    footnote: null,
   };
 
   // Helper: get text content from the block's child by index
+  // Handles both <p> and <pre><code> tags
   function getTextFromChild(idx) {
     const child = block.children[idx];
     if (!child) return '';
+
+    // Check for <pre><code> or <code> first (common for code blocks)
+    const code = child.querySelector('pre code, code');
+    if (code) return code.textContent.trim();
+
+    // Fallback to <p> tag
     const p = child.querySelector('p');
     if (p) return p.textContent.trim();
+
+    // Last resort: get all text content
     return child.textContent.trim();
   }
 
@@ -221,6 +347,9 @@ export default function decorate(block) {
 
   // Extract chart data (second child) - JSON string - single source of truth
   const chartDataText = getTextFromChild(1);
+
+  // Extract footnote (third child)
+  const footnoteText = getTextFromChild(2);
 
   // Try to get data from data-aue-prop attributes (AEM editor)
   const propElements = block.querySelectorAll('[data-aue-prop]');
@@ -240,15 +369,23 @@ export default function decorate(block) {
         performanceData.title = value;
       } else if (propName === 'chartData') {
         performanceData.chartData = value;
+      } else if (propName === 'footnote') {
+        performanceData.footnote = value;
       }
     });
-  } else if (chartDataText) {
+  } else {
     // Fallback: parse from block children
-    try {
-      performanceData.chartData = chartDataText;
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to extract chart data:', error);
+    if (chartDataText) {
+      try {
+        performanceData.chartData = chartDataText;
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to extract chart data:', error);
+      }
+    }
+
+    if (footnoteText) {
+      performanceData.footnote = footnoteText;
     }
   }
 
@@ -273,7 +410,52 @@ export default function decorate(block) {
   let chartData = mockChartData;
   try {
     if (performanceData.chartData && typeof performanceData.chartData === 'string' && performanceData.chartData.trim()) {
-      const parsed = JSON.parse(performanceData.chartData);
+      let parsed;
+      try {
+        // Try parsing directly first (in case it's already valid JSON)
+        parsed = JSON.parse(performanceData.chartData);
+      } catch (parseError) {
+        // If direct parse fails, clean up the JSON string
+        let cleanJson = performanceData.chartData.trim();
+
+        // Remove HTML entities and decode them
+        cleanJson = cleanJson.replace(/&nbsp;/g, ' ');
+        cleanJson = cleanJson.replace(/&quot;/g, '"');
+        cleanJson = cleanJson.replace(/&#34;/g, '"');
+        cleanJson = cleanJson.replace(/&#39;/g, "'");
+        cleanJson = cleanJson.replace(/&apos;/g, "'");
+        cleanJson = cleanJson.replace(/<br\s*\/?>/gi, ' ');
+        cleanJson = cleanJson.replace(/<pre[^>]*>/gi, '');
+        cleanJson = cleanJson.replace(/<\/pre>/gi, '');
+        cleanJson = cleanJson.replace(/<code[^>]*>/gi, '');
+        cleanJson = cleanJson.replace(/<\/code>/gi, '');
+
+        // Normalize line breaks
+        cleanJson = cleanJson.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+        // Remove single-line comments
+        cleanJson = cleanJson.replace(/\/\/[^\n]*/g, '');
+
+        // Normalize whitespace
+        cleanJson = cleanJson.replace(/\n/g, ' ');
+        cleanJson = cleanJson.replace(/\s+/g, ' ');
+        cleanJson = cleanJson.trim();
+
+        // Quote unquoted property names (if needed)
+        // Only quote if property names aren't already quoted
+        // Check if JSON already has quoted property names
+        const hasQuotedProps = /[{,]\s*"[a-zA-Z_$][a-zA-Z0-9_$]*"\s*:/.test(cleanJson);
+        if (!hasQuotedProps) {
+          // Add quotes around unquoted property names
+          cleanJson = cleanJson.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+        }
+
+        // Remove trailing commas
+        cleanJson = cleanJson.replace(/,(\s*[}\]])/g, '$1');
+
+        parsed = JSON.parse(cleanJson);
+      }
+
       if (parsed.categories && parsed.series) {
         chartData = parsed;
       }
@@ -282,7 +464,7 @@ export default function decorate(block) {
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Failed to parse chart data:', error);
+    console.error('Failed to parse chart data:', error, 'Raw data:', performanceData.chartData);
   }
 
   // Store parsed chartData back for chart initialization
@@ -306,21 +488,24 @@ export default function decorate(block) {
 
   // Build inner content HTML
   const innerContent = `
-    <div class="annual-performance-history-header">
-      <div class="annual-performance-history-title-wrapper">
-        <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
-      </div>
-      <div class="annual-performance-history-legend annual-performance-history-legend-desktop">
-        ${legendItems}
-      </div>
-    </div>
-    <div class="annual-performance-history-chart-container">
-      <div class="annual-performance-history-chart" id="${chartId}"></div>
-    </div>
-    <div class="annual-performance-history-legend annual-performance-history-legend-mobile">
-      ${legendItems}
-    </div>
-  `;
+        <div class="annual-performance-history-content">
+          <div class="annual-performance-history-header">
+            <div class="annual-performance-history-title-wrapper">
+              <h2 class="annual-performance-history-title" id="${titleId}">${performanceData.title}</h2>
+            </div>
+            <div class="annual-performance-history-legend annual-performance-history-legend-desktop">
+              ${legendItems}
+            </div>
+          </div>
+          <div class="annual-performance-history-chart-container">
+            <div class="annual-performance-history-chart" id="${chartId}"></div>
+          </div>
+          <div class="annual-performance-history-legend annual-performance-history-legend-mobile">
+            ${legendItems}
+          </div>
+        </div>
+        ${performanceData.footnote ? `<div class="annual-performance-history-footnote">${performanceData.footnote}</div>` : ''}
+      `;
 
   // If parent already has wrapper, add content directly to block and update parent attributes
   if (parentHasWrapper) {
