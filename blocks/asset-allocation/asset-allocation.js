@@ -506,8 +506,8 @@ export default function decorate(block) {
   // Generate asset classes list from chartData (single source of truth)
   // Format: { name, percentage, color, description }
   const assetClasses = chartData.map((item) => {
-    // Format percentage from y value (e.g., 35 -> "35.0%")
-    const percentage = typeof item.y === 'number' ? `${item.y.toFixed(1)}%` : '00.0%';
+    // Use display_text if available, otherwise format percentage from y value (e.g., 35 -> "35.0%")
+    const percentage = item.display_text || (typeof item.y === 'number' ? `${item.y.toFixed(1)}%` : '00.0%');
     return {
       name: item.name || '',
       percentage,
