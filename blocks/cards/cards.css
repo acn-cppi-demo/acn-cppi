@@ -104,3 +104,7 @@
 .cards .card-icon.light-grey {
   background-color: #F5F7FA;
 }
+
+.cards .card-icon.light-grey svg path {
+  fill: #0273CF;
+}
