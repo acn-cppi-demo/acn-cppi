@@ -210,10 +210,10 @@ export default async function decorate(block) {
 
   // Generate popular searches HTML - use buttons for keyboard accessibility
   const popularSearchesHTML = popularSearches.map((search) => `
-    <button type="button" class="chatbot-search-suggestion" data-query="${search}">
+    <div type="button" class="chatbot-search-suggestion" data-query="${search}">
       <span class="search-icon" aria-hidden="true">${getIcon('search')}</span>
       <span>${search}</span>
-    </button>
+    </div>
   `).join('');
 
   // Generate top pages HTML
@@ -232,21 +232,21 @@ export default async function decorate(block) {
       <div class="chatbot-overlay-header">
         <div class="chatbot-overlay-header-content">
           <div class="chatbot-logo">
-          <a href="/" aria-label="Home" style="pointer-events: auto; cursor: pointer;">
-            ${logoHTML}
-          </a>
+            <a href="/" aria-label="Home" style="pointer-events: auto; cursor: pointer;">
+              ${logoHTML}
+            </a>
 
+            </div>
+              <div class="chatbot-close-btn" role="button" tabindex="0" aria-label="Close chat dialog">
+                  <span class="menu-close-text" aria-hidden="true">Close</span>
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                      <path d="M1.05375 13.3075L0 12.2538L5.6 6.65375L0 1.05375L1.05375 0L6.65375 5.6L12.2537 0L13.3075 1.05375L7.7075 6.65375L13.3075 12.2538L12.2537 13.3075L6.65375 7.7075L1.05375 13.3075Z" fill="#0273CF"></path>
+                  </svg>
+              </div>          
+            </div> 
           </div>
-          <div type="button" class="chatbot-close-btn" aria-label="Close chat dialog">
-              <span class="menu-close-text" aria-hidden="true">Close</span>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                  <path d="M1.05375 13.3075L0 12.2538L5.6 6.65375L0 1.05375L1.05375 0L6.65375 5.6L12.2537 0L13.3075 1.05375L7.7075 6.65375L13.3075 12.2538L12.2537 13.3075L6.65375 7.7075L1.05375 13.3075Z" fill="#0273CF"></path>
-              </svg>
-          </div>       
-        </div> 
-      </div>
 
-      <div class="chatbot-divider"></div>
+          <div class="chatbot-divider"></div>
 
       <div class="chatbot-overlay-content">
         <!-- Initial Search View -->
@@ -334,7 +334,7 @@ export default async function decorate(block) {
   window.openChatbotOverlay = openChatbot;
 
   // Close overlay and restore focus
-  closeBtn.addEventListener('click', () => {
+  function closeChatbot() {
     overlay.classList.add('hidden');
     document.body.style.overflow = '';
     // Reset to search view
@@ -345,6 +345,15 @@ export default async function decorate(block) {
     // Restore focus to previously focused element
     if (previouslyFocusedElement && previouslyFocusedElement.focus) {
       previouslyFocusedElement.focus();
+    }
+  }
+
+  closeBtn.addEventListener('click', closeChatbot);
+
+  closeBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      closeChatbot();
     }
   });
 
@@ -359,9 +368,10 @@ export default async function decorate(block) {
   overlay.addEventListener('keydown', (e) => {
     if (e.key !== 'Tab' || overlay.classList.contains('hidden')) return;
 
-    const focusableElements = overlay.querySelectorAll(
+    const focusableElements = Array.from(overlay.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
+    )).filter((el) => el.offsetParent !== null);
+
     const firstFocusable = focusableElements[0];
     const lastFocusable = focusableElements[focusableElements.length - 1];
 
