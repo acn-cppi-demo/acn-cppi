@@ -300,6 +300,21 @@
         ]
       },
       {
+        "component": "select",
+        "name": "iconBackgroundColor",
+        "label": "Icon Background Color",
+        "options": [
+          {
+            "name": "CPPI Blue",
+            "value": "cppi-blue"
+          },
+          {
+            "name": "Light Grey",
+            "value": "light-grey"
+          }
+        ]
+      },
+      {
         "component": "richtext",
         "name": "text",
         "value": "",

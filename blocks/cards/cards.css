@@ -49,7 +49,7 @@
     background: none;
     padding: 0;
     border: none;
-    color: #6F7176;    
+    color: #6F7176;
 }
 
 .cards-card-body pre code {
@@ -94,4 +94,13 @@
     .cards .cards-card-body .cards-link {
         margin-top: 16px;
     }
+}
+
+/* Icon Background Color Variants */
+.cards .card-icon.cppi-blue {
+  background-color: #0273CF;
+}
+
+.cards .card-icon.light-grey {
+  background-color: #F5F7FA;
 }
