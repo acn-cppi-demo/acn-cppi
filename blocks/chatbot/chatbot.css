@@ -80,6 +80,7 @@
   padding: 8px 12px;
   border-radius: 8px;
   transition: background-color 0.2s ease;
+  box-shadow: none;
 }
 
 .chatbot-close-btn:focus-visible {
