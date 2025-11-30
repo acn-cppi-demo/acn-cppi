@@ -4,6 +4,9 @@ import { loadFragment } from '../fragment/fragment.js';
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
+// Detect touch device
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
@@ -497,33 +500,19 @@ function buildMegamenu(megamenuData) {
       const headingItem = button.closest('.megamenu-heading-item');
       const targetPanel = desktopMegamenu.querySelector(`.megamenu-sublinks-panel[data-menu-index="${menuIndex}"]`);
 
-      // Mouseenter handler on heading
-      headingItem.addEventListener('mouseenter', () => {
-        showPanel(headingItem, targetPanel);
-      });
+      // Track touch interactions to prevent hover interference
+      let touchStartTime = 0;
+      let touchHandled = false;
 
-      // Mouseleave handler on heading - hide after delay
-      headingItem.addEventListener('mouseleave', () => {
-        hoverTimeout = setTimeout(() => {
-          const isHoveringLeftSidebar = leftSidebarEl && leftSidebarEl.matches(':hover');
-          const isHoveringRightContent = rightContentEl && rightContentEl.matches(':hover');
-          if (!isHoveringLeftSidebar && !isHoveringRightContent) {
-            hideAllPanels();
-          }
-        }, 200);
-      });
-
-      // Mouseenter handler on panel - keep it visible
-      if (targetPanel) {
-        targetPanel.addEventListener('mouseenter', () => {
-          if (hoverTimeout) {
-            clearTimeout(hoverTimeout);
-            hoverTimeout = null;
-          }
+      // Only add hover handlers for non-touch devices
+      if (!isTouchDevice) {
+        // Mouseenter handler on heading
+        headingItem.addEventListener('mouseenter', () => {
           showPanel(headingItem, targetPanel);
         });
 
-        targetPanel.addEventListener('mouseleave', () => {
+        // Mouseleave handler on heading - hide after delay
+        headingItem.addEventListener('mouseleave', () => {
           hoverTimeout = setTimeout(() => {
             const isHoveringLeftSidebar = leftSidebarEl && leftSidebarEl.matches(':hover');
             const isHoveringRightContent = rightContentEl && rightContentEl.matches(':hover');
@@ -532,16 +521,78 @@ function buildMegamenu(megamenuData) {
             }
           }, 200);
         });
+
+        // Mouseenter handler on panel - keep it visible
+        if (targetPanel) {
+          targetPanel.addEventListener('mouseenter', () => {
+            if (hoverTimeout) {
+              clearTimeout(hoverTimeout);
+              hoverTimeout = null;
+            }
+            showPanel(headingItem, targetPanel);
+          });
+
+          targetPanel.addEventListener('mouseleave', () => {
+            hoverTimeout = setTimeout(() => {
+              const isHoveringLeftSidebar = leftSidebarEl && leftSidebarEl.matches(':hover');
+              const isHoveringRightContent = rightContentEl && rightContentEl.matches(':hover');
+              if (!isHoveringLeftSidebar && !isHoveringRightContent) {
+                hideAllPanels();
+              }
+            }, 200);
+          });
+        }
       }
 
-      // Click handler for keyboard accessibility
-      button.addEventListener('click', () => {
+      // Touch handlers for touch devices (tablets)
+      if (isTouchDevice) {
+        headingItem.addEventListener('touchstart', () => {
+          touchStartTime = Date.now();
+          touchHandled = false;
+        }, { passive: true });
+
+        button.addEventListener('touchend', (e) => {
+          const touchDuration = Date.now() - touchStartTime;
+          // Only handle if it was a quick tap (not a long press)
+          if (touchDuration < 300) {
+            e.preventDefault();
+            e.stopPropagation();
+            touchHandled = true;
+            // Toggle behavior - tap to open, tap again to close
+            const isActive = headingItem.classList.contains('active');
+            hideAllPanels();
+            if (!isActive && targetPanel) {
+              targetPanel.style.display = 'block';
+              headingItem.classList.add('active');
+            } else {
+              headingItem.classList.remove('active');
+            }
+          }
+        });
+      }
+
+      // Click handler - works for both mouse and touch (as fallback)
+      button.addEventListener('click', (e) => {
+        // On touch devices, if touch was already handled, prevent click
+        if (isTouchDevice && touchHandled) {
+          e.preventDefault();
+          e.stopPropagation();
+          // Reset flag after a short delay
+          setTimeout(() => {
+            touchHandled = false;
+          }, 100);
+          return;
+        }
+
+        // For non-touch devices or if touch wasn't handled, use click
         // Toggle behavior - click to open, click again to close
         const isActive = headingItem.classList.contains('active');
         hideAllPanels();
         if (!isActive && targetPanel) {
           targetPanel.style.display = 'block';
           headingItem.classList.add('active');
+        } else {
+          headingItem.classList.remove('active');
         }
       });
     });
