@@ -943,29 +943,76 @@ export default async function decorate(block) {
       if (e.key !== 'Tab' || megamenu.getAttribute('aria-hidden') === 'true') return;
 
       // Get all focusable elements within the megamenu
-      const focusableElements = Array.from(megamenu.querySelectorAll(
+      const megamenuFocusableElements = Array.from(megamenu.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
 
+      // Include the close button (menuIcon) in the focus trap
+      // Close button should be last in tab order, after all megamenu elements
+      const focusableElements = [...megamenuFocusableElements];
+      if (menuIcon && menuIcon.offsetParent !== null && !menuIcon.closest('.hidden')) {
+        focusableElements.push(menuIcon);
+      }
+
       if (focusableElements.length === 0) return;
+
+      const { activeElement } = document;
+      const isActiveInTrap = focusableElements.includes(activeElement);
+
+      if (!isActiveInTrap) return;
 
       const firstFocusable = focusableElements[0];
       const lastFocusable = focusableElements[focusableElements.length - 1];
 
+      // Close button is the last element, last menu item is second to last
+      const lastMenuElement = focusableElements[focusableElements.length - 2];
+
       if (e.shiftKey) {
-        // Shift + Tab: if on first element, wrap to last
-        if (document.activeElement === firstFocusable) {
+        // Shift + Tab: if on first megamenu element, wrap to close button (last element)
+        if (activeElement === firstFocusable) {
           e.preventDefault();
           lastFocusable.focus();
         }
-      } else if (document.activeElement === lastFocusable) {
-        // Tab: if on last element, wrap to first
+      } else if (activeElement === lastFocusable) {
+        // Tab: if on close button, wrap to first megamenu element
         e.preventDefault();
         firstFocusable.focus();
+      } else if (lastMenuElement && activeElement === lastMenuElement) {
+        // Tab: if on last menu item, move to close button
+        e.preventDefault();
+        lastFocusable.focus();
       }
     };
 
-    megamenu.addEventListener('keydown', focusTrapHandler);
+    // Handle focus leaving megamenu to redirect to close button
+    const focusOutHandler = (e) => {
+      if (megamenu.getAttribute('aria-hidden') === 'true') return;
+
+      const { relatedTarget } = e;
+      const megamenuFocusableElements = Array.from(megamenu.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
+
+      // Check if focus is leaving the megamenu (and not going to close button)
+      const isLeavingMegamenu = megamenu.contains(e.target)
+        && !megamenu.contains(relatedTarget)
+        && relatedTarget !== menuIcon;
+
+      if (isLeavingMegamenu && menuIcon && menuIcon.offsetParent !== null) {
+        // Check if we were on the last menu item (forward tab)
+        const lastMegamenuItem = megamenuFocusableElements[megamenuFocusableElements.length - 1];
+        if (e.target === lastMegamenuItem) {
+          // Redirect to close button
+          setTimeout(() => {
+            menuIcon.focus();
+          }, 0);
+        }
+      }
+    };
+
+    // Attach focus trap and focusout handlers
+    document.addEventListener('keydown', focusTrapHandler);
+    megamenu.addEventListener('focusout', focusOutHandler);
   }
 
   // Add click handler to search icon to open chatbot
