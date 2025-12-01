@@ -114,6 +114,10 @@
             {
               "name": "query_stats",
               "value": "query_stats"
+            },
+            {
+              "name": "bar_chart",
+              "value": "Bar Chart"
             }
           ]
         },
