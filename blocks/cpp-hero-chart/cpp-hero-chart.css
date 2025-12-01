@@ -1,3 +1,16 @@
+/* Screen reader only - visually hidden but accessible */
+.cpp-hero-chart-sr-announcement {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .cpp-hero-chart-wrapper {
     position: relative;
     margin-top: -140px !important;
@@ -132,9 +145,8 @@
 /* Subtle hover affordance; when hover ends the element will transition back
    to its normal state or to the .active state (white) in 120ms. */
 .period-tab:hover {
-    background: rgb(255 255 255 / 10%);
-    color: #fff;
-    border-color: #fff;
+    background: #E3E4E5;
+    color: #2C3D50;
 }
 
 .period-tab.active,
@@ -153,8 +165,8 @@
     outline: 3px solid #FFD54A;
     outline-offset: 2px;
     border-radius: 8px;
-    background: rgb(255 255 255 / 10%) !important;
-    color: #fff !important;
+    background: #E3E4E5 !important;
+    color: #2C3D50 !important;
 }
 
 .period-tab:focus:not(:focus-visible) {
@@ -245,7 +257,7 @@
 
 /* Overall Data Panel (Right Side) */
 .cpp-hero-chart-overall-data {
-    background: #333F48;
+    background: #2C3D50;
     border-radius: 8px;
     padding: 40px;
     box-sizing: border-box;
