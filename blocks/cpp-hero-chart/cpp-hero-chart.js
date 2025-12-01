@@ -282,8 +282,19 @@ function getDummyLineChartConfig() {
       },
       series: {
         dataLabels: { enabled: false },
-        enableMouseTracking: false,
-        marker: { enabled: false },
+        enableMouseTracking: true,
+        marker: {
+          enabled: false,
+          states: {
+            hover: {
+              enabled: true,
+              radius: 6,
+              fillColor: '#0273CF',
+              lineColor: '#fff',
+              lineWidth: 2,
+            },
+          },
+        },
         color: '#0273CF',
         lineWidth: 2,
       },
@@ -300,7 +311,30 @@ function getDummyLineChartConfig() {
       enabled: false,
     },
     legend: { enabled: false },
-    tooltip: { enabled: false },
+    tooltip: {
+      enabled: true,
+      backgroundColor: '#fff',
+      borderColor: '#E3E4E5',
+      borderRadius: 8,
+      shadow: true,
+      style: {
+        color: '#2C3D50',
+        fontSize: '14px',
+      },
+      useHTML: true,
+      formatter() {
+        const months = [
+          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+        ];
+        const monthIndex = this.point.index;
+        const monthName = months[monthIndex % 12];
+        return `<div style="text-align: center; padding: 4px 8px;">
+          <div style="font-size: 16px; font-weight: 600; color: #0273CF;">$${this.y.toFixed(1)}B</div>
+          <div style="font-size: 12px; color: #6F7176;">${monthName} 2025 Fund Value</div>
+        </div>`;
+      },
+    },
   };
 }
 
