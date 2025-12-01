@@ -113,7 +113,7 @@ async function initializeCompositionChart(chartId, data) {
           const { name, y, series } = point;
           return `${series.name} for ${name}: $${y.toFixed(1)}B`;
         },
-        valueDescriptionFormat: '{index}. {point.series.name} for {point.category}: ${point.y}B.',
+        valueDescriptionFormat: '{index}. {point.series.name} for {point.category}: {point.y}B.',
       },
     },
     xAxis: {
@@ -277,15 +277,14 @@ export default function decorate(block) {
         compositionData.chartData = value;
       }
     });
-  } else {
-    // Fallback: parse from block children
-    if (chartDataText) {
-      try {
-        compositionData.chartData = chartDataText;
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to extract chart data:', error);
-      }
+  }
+  // Fallback: parse from block children
+  if (chartDataText && !compositionData.chartData) {
+    try {
+      compositionData.chartData = chartDataText;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to extract chart data:', error);
     }
   }
 

@@ -4,6 +4,14 @@
   border: none;
   box-shadow: none;
   background: transparent;
+
+  /* Chart container styles */
+  width: 100%;
+  min-height: 432px;
+  margin-left: 0;
+  padding-left: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .fund-composition-chart-content {
@@ -34,15 +42,6 @@
   padding-left: 0;
   overflow: auto visible;
   -webkit-overflow-scrolling: touch;
-}
-
-.fund-composition-chart {
-  width: 100%;
-  min-height: 432px;
-  margin-left: 0;
-  padding-left: 0;
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 /* Remove Highcharts default left spacing */
@@ -116,10 +115,6 @@
 
 /* Responsive adjustments */
 @media (width <= 768px) {
-  .fund-composition-chart {
-    padding: 0;
-  }
-
   .fund-composition-chart-content {
     padding: 24px;
   }
