@@ -239,28 +239,12 @@ function getDummyLineChartConfig() {
       type: 'area',
       height: 170,
       backgroundColor: 'transparent',
-      accessibility: {
-        enabled: true,
-        description: 'Line chart showing portfolio value over time. Use arrow keys to navigate between data points.',
-        keyboardNavigation: {
-          enabled: true,
-        },
-      },
     },
     title: {
       text: null,
     },
     accessibility: {
-      enabled: true,
-      point: {
-        descriptionFormatter(point) {
-          return `Value: ${point.y}`;
-        },
-        valueDescriptionFormat: '{index}. {point.y}.',
-      },
-      screenReaderSection: {
-        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
-      },
+      enabled: false,
     },
     xAxis: {
       // show only the axis baseline (no labels or ticks)
@@ -394,20 +378,7 @@ async function initializeChart(chartId, data) {
       align: 'bottom',
     },
     accessibility: {
-      enabled: true,
-      description: data.graphText ? `Chart showing ${data.graphText} over time. Use arrow keys to navigate between data points.` : 'Line chart showing portfolio value over time. Use arrow keys to navigate between data points.',
-      keyboardNavigation: {
-        enabled: true,
-      },
-      point: {
-        descriptionFormatter(point) {
-          return `Value: ${point.y}`;
-        },
-        valueDescriptionFormat: '{index}. {point.y}.',
-      },
-      screenReaderSection: {
-        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
-      },
+      enabled: false,
     },
     ...defaultConfig,
     ...chartOptions,
@@ -811,7 +782,8 @@ export default function decorate(block) {
   const periodTabsHtml = cppHeroChartData.periods
     .map((period) => {
       const isActive = period === cppHeroChartData.selectedPeriod ? 'active' : '';
-      return `<button class="period-tab ${isActive}" role="tab" data-period="${period}" aria-pressed="${period === cppHeroChartData.selectedPeriod}">${period}</button>`;
+      const ariaPressed = period === cppHeroChartData.selectedPeriod;
+      return `<button class="period-tab ${isActive}" data-period="${period}" aria-pressed="${ariaPressed}">${period}</button>`;
     })
     .join('');
 
@@ -909,7 +881,7 @@ export default function decorate(block) {
           <!-- Controls Section (Graph Info + Period Tabs) -->
           <div class="cpp-hero-chart-controls">
             ${graphInfoHtml}
-            <div class="cpp-hero-chart-periods" role="tablist" aria-label="Time period selector">
+            <div class="cpp-hero-chart-periods" role="group" aria-label="Time period selector">
               ${periodTabsHtml}
             </div>
           </div>
@@ -918,7 +890,7 @@ export default function decorate(block) {
           ${valueHtml}
 
           <!-- Chart Container -->
-          <div class="cpp-hero-chart" id="${chartId}"></div>
+          <div class="cpp-hero-chart" id="${chartId}" aria-hidden="true"></div>
           ${learnMoreHtml}
         </div>
 

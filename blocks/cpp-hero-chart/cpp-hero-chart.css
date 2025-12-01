@@ -205,7 +205,8 @@
 }
 
 .cpp-hero-chart-badge {
-    background: #00C95066;
+    background: #1EA7351A;
+    border: 1px solid #1EA735;
     color: #2C3D50;
     padding: 8px 16px;
     border-radius: 30px;
