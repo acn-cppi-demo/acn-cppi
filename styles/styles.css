@@ -92,16 +92,12 @@ body.appear {
 
 /* Skip Link for Accessibility */
 .skip-link {
-  position: absolute;
-  top: -40px;
+  position: absolute !important;
+  top: -100px;
   left: 0;
-  background: var(--cppi-blue);
-  color: white;
-  padding: 8px 16px;
   z-index: 10000;
   text-decoration: none;
   font-weight: 700;
-  border-radius: 0 0 4px;
 }
 
 .skip-link:focus {
@@ -216,7 +212,8 @@ a.button:any-link,
 button, 
 .button,
 .button-primary,
-.button-secondary {
+.button-secondary, 
+a.skip-link {
   box-sizing: border-box;
   display: inline-block;
   max-width: 100%;
@@ -244,7 +241,8 @@ button,
 a.button:hover,
 a.button:focus,
 button:hover,
-button:focus {
+button:focus,
+a.skip-link:hover {
   background-color: #0052A4 !important;
   border: 1px solid #0273CF !important;
   color: #fff !important;
