@@ -1,0 +1,197 @@
+.fund-composition-chart {
+  /* Remove styles from main block */
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.fund-composition-chart-content {
+  padding: 40px;
+  border: 1px solid #E3E4E5;
+  box-shadow: 4px 4px 20px 0 #0000001A;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.fund-composition-chart-header {
+  margin-bottom: 24px;
+}
+
+.fund-composition-chart-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2C3D50;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.fund-composition-chart-container {
+  width: 100%;
+  position: relative;
+  margin-left: 0;
+  padding-left: 0;
+  overflow: auto visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fund-composition-chart {
+  width: 100%;
+  min-height: 432px;
+  margin-left: 0;
+  padding-left: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Remove Highcharts default left spacing */
+.fund-composition-chart .highcharts-container {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.fund-composition-chart .highcharts-root {
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.fund-composition-chart .highcharts-plot-background {
+  left: 0 !important;
+}
+
+.fund-composition-chart-error {
+  padding: 24px;
+  background: rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  font-size: 14px;
+  color: rgb(44 61 80 / 90%);
+  text-align: center;
+}
+
+/* Legend styling - positioned at bottom */
+.fund-composition-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+  justify-content: flex-start;
+}
+
+.fund-composition-chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fund-composition-chart-legend-symbol {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.fund-composition-chart-legend-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #2C3D50;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.4;
+}
+
+/* Hide Highcharts context menu and export buttons */
+.fund-composition-chart .highcharts-exporting-group,
+.fund-composition-chart .highcharts-contextbutton,
+.fund-composition-chart .highcharts-button {
+  display: none !important;
+}
+
+.fund-composition-chart-wrapper {
+  margin-top: 40px !important;
+}
+
+/* Responsive adjustments */
+@media (width <= 768px) {
+  .fund-composition-chart {
+    padding: 0;
+  }
+
+  .fund-composition-chart-content {
+    padding: 24px;
+  }
+
+  .fund-composition-chart-wrapper {
+    padding: 24px 0;
+    margin-top: 24px !important;
+  }
+
+  .fund-composition-chart-header {
+    margin-bottom: 16px;
+  }
+
+  .fund-composition-chart-title {
+    font-size: 18px;
+  }
+
+  .fund-composition-chart {
+    min-height: 350px;
+  }
+
+  .fund-composition-chart-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .fund-composition-chart .highcharts-container {
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .fund-composition-chart-legend {
+    margin-top: 16px;
+    gap: 16px;
+  }
+}
+
+@media (width <= 480px) {
+  .fund-composition-chart-wrapper {
+    padding: 16px 0;
+  }
+
+  .fund-composition-chart-header {
+    margin-bottom: 12px;
+  }
+
+  .fund-composition-chart-title {
+    font-size: 16px;
+  }
+
+  .fund-composition-chart {
+    min-height: 350px;
+  }
+
+  .fund-composition-chart-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+
+  .fund-composition-chart .highcharts-container {
+    min-width: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .fund-composition-chart-legend {
+    margin-top: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+}

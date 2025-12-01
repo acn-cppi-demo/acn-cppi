@@ -519,6 +519,23 @@
     ]
   },
   {
+    "id": "fund-composition-chart",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "chartData",
+        "label": "Chart Data (JSON - Single source for chart and legend with categories, series, min, max, tickInterval)",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "fund-overview",
     "fields": [
       {
