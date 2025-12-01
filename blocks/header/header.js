@@ -413,7 +413,8 @@ function buildMegamenuHTML(megamenuData) {
 
   // Complete megamenu HTML template - easy to modify!
   const megamenuHTML = `
-<div class="megamenu" aria-hidden="true">
+<div class="megamenu" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="megamenu-title">
+  <h2 id="megamenu-title" class="visually-hidden">Navigation Menu</h2>
   <!-- Desktop Megamenu -->
   <div class="megamenu-desktop">
     <div class="megamenu-desktop-content">
@@ -631,6 +632,9 @@ function updateMenuIcon(menuIcon, isOpen) {
   }
 }
 
+// Store the element that had focus before opening megamenu
+let previouslyFocusedMegamenuElement = null;
+
 /**
  * Toggles megamenu visibility
  * @param {Element} megamenu The megamenu element
@@ -644,11 +648,43 @@ function toggleMegamenu(megamenu, show, menuIcon = null) {
   const shouldShow = show !== undefined ? show : isCurrentlyHidden;
 
   megamenu.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+  megamenu.setAttribute('aria-modal', shouldShow ? 'true' : 'false');
   document.body.style.overflowY = shouldShow && !isDesktop.matches ? 'hidden' : '';
 
   // Update menu icon if provided
   if (menuIcon) {
     updateMenuIcon(menuIcon, shouldShow);
+  }
+
+  if (shouldShow) {
+    // Store the element that opened the menu
+    previouslyFocusedMegamenuElement = menuIcon || document.activeElement;
+
+    // Move focus into the megamenu
+    // Try to focus the first focusable element in the megamenu
+    // Use setTimeout to ensure the menu is visible before focusing
+    setTimeout(() => {
+      const focusableElements = Array.from(megamenu.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
+
+      const firstFocusable = focusableElements[0];
+      if (firstFocusable) {
+        firstFocusable.focus();
+      } else {
+        // If no focusable element, focus the megamenu container itself
+        megamenu.setAttribute('tabindex', '-1');
+        megamenu.focus();
+      }
+    }, 0);
+  } else {
+    // Restore focus to the trigger element
+    if (previouslyFocusedMegamenuElement && previouslyFocusedMegamenuElement.focus) {
+      setTimeout(() => {
+        previouslyFocusedMegamenuElement.focus();
+      }, 0);
+    }
+    previouslyFocusedMegamenuElement = null;
   }
 }
 
@@ -895,11 +931,41 @@ export default async function decorate(block) {
     }
 
     // Close megamenu on escape
-    window.addEventListener('keydown', (e) => {
+    const escapeHandler = (e) => {
       if (e.code === 'Escape' && megamenu.getAttribute('aria-hidden') === 'false') {
         toggleMegamenu(megamenu, false, menuIcon);
       }
-    });
+    };
+    window.addEventListener('keydown', escapeHandler);
+
+    // Focus trap for megamenu accessibility
+    const focusTrapHandler = (e) => {
+      if (e.key !== 'Tab' || megamenu.getAttribute('aria-hidden') === 'true') return;
+
+      // Get all focusable elements within the megamenu
+      const focusableElements = Array.from(megamenu.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
+
+      if (focusableElements.length === 0) return;
+
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        // Shift + Tab: if on first element, wrap to last
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else if (document.activeElement === lastFocusable) {
+        // Tab: if on last element, wrap to first
+        e.preventDefault();
+        firstFocusable.focus();
+      }
+    };
+
+    megamenu.addEventListener('keydown', focusTrapHandler);
   }
 
   // Add click handler to search icon to open chatbot
