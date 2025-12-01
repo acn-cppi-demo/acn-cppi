@@ -1,84 +1,93 @@
 /**
  * Mock data for different periods with different chart values
  * Each period has different data points and overall metrics
+ * All periods end at $777.5B (September 30, 2025)
  */
 function getPeriodMockData() {
   return {
     '3M': {
+      // July 2025 ($731.7B) → September 2025 ($777.5B)
       chartData: [
-        731.7, 740.5, 748.2, 753.1, 759.4, 765.8,
-        770.2, 774.1, 775.8, 776.5, 777.0, 777.5,
+        731.7, 738.5, 745.2, 751.8, 758.3, 764.5,
+        769.2, 772.8, 774.9, 776.1, 776.9, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$45.8B',
-      fundDate: 'Fund at July 1, 2025 - September 30, 2025',
-      overallData: {
-        netIncreaseLabel: 'Growth (3M)',
-        netIncreaseValue: '+$45.8B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'July - Sept 2025',
-        netReturnType: 'Start: $731.7B',
-      },
-    },
-    '6M': {
-      chartData: [
-        714.0, 725.3, 735.8, 743.5, 752.1, 760.4,
-        766.8, 771.5, 774.2, 775.9, 776.7, 777.5,
-      ],
-      value: '$777.5B',
-      badge: '+$63.1B',
-      fundDate: 'Fund at April 1, 2025 - September 30, 2025',
-      overallData: {
-        netIncreaseLabel: 'Growth (6M)',
-        netIncreaseValue: '+$63.1B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'April - Sept 2025',
-        netReturnType: 'Start: $714.0B',
-      },
-    },
-    '1Y': {
-      chartData: [515, 540, 560, 550, 590, 570, 600, 630, 620, 650, 680, 720],
-      value: '$64.92B',
-      badge: '+28.3%',
+      badge: '+6.26%',
       fundDate: 'Fund at September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Net Increase',
-        netIncreaseValue: '$15.3B',
+        netIncreaseValue: '+$45.8B',
         netReturnLabel: 'Net Return',
-        netReturnValue: '+23.6%',
+        netReturnValue: '+6.26%',
+        netReturnType: 'Nominal',
+      },
+    },
+    '6M': {
+      // April 2025 ($714B) → September 2025 ($777.5B)
+      chartData: [
+        714.0, 722.8, 731.5, 740.1, 748.6, 756.9,
+        764.2, 769.8, 773.5, 775.6, 776.8, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+8.89%',
+      fundDate: 'Fund at September 30, 2025',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '+$63.5B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+8.89%',
+        netReturnType: 'Nominal',
+      },
+    },
+    '1Y': {
+      // September 2024 ($632.3B) → September 2025 ($777.5B)
+      chartData: [
+        632.3, 648.5, 665.2, 682.4, 699.8, 716.5,
+        732.1, 746.8, 759.4, 769.2, 775.1, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+22.97%',
+      fundDate: 'Fund at September 30, 2025',
+      overallData: {
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '+$145.2B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+22.97%',
         netReturnType: 'Nominal',
       },
     },
     '2Y': {
+      // September 2023 ($570B) → September 2025 ($777.5B)
       chartData: [
-        570.0, 590.5, 610.8, 630.2, 650.1, 668.5,
-        688.4, 708.2, 728.5, 750.1, 764.2, 777.5,
+        570.0, 592.5, 615.8, 639.2, 662.5, 685.1,
+        706.8, 727.2, 746.5, 763.2, 774.1, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$207.5B',
-      fundDate: 'Fund at October 1, 2023 - September 30, 2025',
+      badge: '+36.40%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
-        netIncreaseLabel: 'Growth (2Y)',
+        netIncreaseLabel: 'Net Increase',
         netIncreaseValue: '+$207.5B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'March 2023 - Sept 2025',
-        netReturnType: 'Start: $570.0B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+36.40%',
+        netReturnType: 'Nominal',
       },
     },
     '5Y': {
+      // September 2020 ($409.6B) → September 2025 ($777.5B)
       chartData: [
-        409.6, 450.2, 490.8, 525.3, 560.1, 600.5,
-        640.2, 680.8, 715.3, 745.2, 761.8, 777.5,
+        409.6, 448.2, 489.5, 532.8, 577.1, 621.5,
+        664.2, 704.8, 741.2, 768.5, 777.0, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$367.9B',
-      fundDate: 'Fund at October 1, 2020 - September 30, 2025',
+      badge: '+89.82%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
-        netIncreaseLabel: 'Growth (5Y)',
+        netIncreaseLabel: 'Net Increase',
         netIncreaseValue: '+$367.9B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'March 2020 - Sept 2025',
-        netReturnType: 'Start: $409.6B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+89.82%',
+        netReturnType: 'Nominal',
       },
     },
   };
@@ -132,33 +141,8 @@ function updatePeriodValues(data, period, periodData) {
     fundDateElement.textContent = periodData.fundDate;
   }
 
-  // Update the overall data panel if it exists
-  if (periodData.overallData) {
-    const overallDataSection = block.querySelector('.cpp-hero-chart-overall-data');
-    if (overallDataSection) {
-      const netIncreaseLabel = overallDataSection.querySelector('.cpp-hero-chart-overall-label');
-      const netIncreaseValue = overallDataSection.querySelector('.cpp-hero-chart-overall-value');
-      const netReturnLabel = overallDataSection.querySelectorAll('.cpp-hero-chart-overall-label')[1];
-      const netReturnValue = overallDataSection.querySelector('.cpp-hero-chart-overall-return-value');
-      const netReturnType = overallDataSection.querySelector('.cpp-hero-chart-overall-type');
-
-      if (netIncreaseLabel && periodData.overallData.netIncreaseLabel) {
-        netIncreaseLabel.textContent = periodData.overallData.netIncreaseLabel;
-      }
-      if (netIncreaseValue && periodData.overallData.netIncreaseValue) {
-        netIncreaseValue.textContent = periodData.overallData.netIncreaseValue;
-      }
-      if (netReturnLabel && periodData.overallData.netReturnLabel) {
-        netReturnLabel.textContent = periodData.overallData.netReturnLabel;
-      }
-      if (netReturnValue && periodData.overallData.netReturnValue) {
-        netReturnValue.textContent = periodData.overallData.netReturnValue;
-      }
-      if (netReturnType && periodData.overallData.netReturnType) {
-        netReturnType.textContent = periodData.overallData.netReturnType;
-      }
-    }
-  }
+  // Note: Overall data panel (.cpp-hero-chart-overall-data) is NOT updated dynamically
+  // It only displays the authored value from AEM
 
   // Announce the change to screen readers
   const announcement = `Chart updated to ${period} view. Value: ${periodData.value}, `
@@ -264,6 +248,10 @@ function getDummyLineChartConfig() {
           fontSize: '12px',
         },
         formatter() {
+          // Hide the 400B label
+          if (this.value === 400) {
+            return '';
+          }
           return `${this.value}B`;
         },
       },
@@ -271,7 +259,7 @@ function getDummyLineChartConfig() {
       gridLineColor: '#E3E4E5',
       lineWidth: 0,
       tickLength: 0,
-      min: 500,
+      min: 400,
       max: 800,
       tickInterval: 100,
     },
