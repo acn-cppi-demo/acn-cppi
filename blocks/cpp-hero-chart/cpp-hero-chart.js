@@ -85,6 +85,23 @@ function getPeriodMockData() {
 }
 
 /**
+ * Announce content changes to screen readers
+ * @param {Element} block - The block element
+ * @param {string} message - The message to announce
+ */
+function announceToScreenReader(block, message) {
+  const liveRegion = block.querySelector('.cpp-hero-chart-sr-announcement');
+  if (liveRegion) {
+    // Clear and set the message to trigger announcement
+    liveRegion.textContent = '';
+    // Use setTimeout to ensure the DOM update triggers the announcement
+    setTimeout(() => {
+      liveRegion.textContent = message;
+    }, 100);
+  }
+}
+
+/**
  * Update period-specific values in the DOM
  * @param {Object} data - The chart data object
  * @param {string} period - The selected period
@@ -142,6 +159,11 @@ function updatePeriodValues(data, period, periodData) {
       }
     }
   }
+
+  // Announce the change to screen readers
+  const announcement = `Chart updated to ${period} view. Value: ${periodData.value}, `
+    + `Change: ${periodData.badge}`;
+  announceToScreenReader(block, announcement);
 }
 
 /**
@@ -875,6 +897,11 @@ export default function decorate(block) {
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
   const html = `
     <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
+      <!-- Screen reader announcement region for dynamic updates -->
+      <div class="cpp-hero-chart-sr-announcement" 
+           role="status" 
+           aria-live="polite" 
+           aria-atomic="true"></div>
       <!-- Main Content Area: Chart Panel (Left) and Overall Data Panel (Right) -->
       <div class="cpp-hero-chart-content-wrapper">
         <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
