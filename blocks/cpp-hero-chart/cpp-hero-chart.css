@@ -72,7 +72,7 @@
 .cpp-hero-chart-controls {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 0;
     padding: 20px 0 0;
 }
@@ -104,8 +104,8 @@
     height: auto;
     border: 1px solid #E3E4E5;
     border-radius: 8px;
-    padding: 4px;
-        background: #F5F7FA;
+    padding: 3px;
+    background: #F5F7FA;
 }
 
 .period-tab {
@@ -171,15 +171,24 @@
 /* Value Section */
 .cpp-hero-chart-value-section {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 5px 16px;
     margin-bottom: 40px;
+}
+
+.cpp-hero-chart-fund-date {
+    width: 100%;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6F7176;
 }
 
 .cpp-hero-chart-value {
     font-size: 42px;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1;
     color: #0273CF;
 }
 
@@ -225,14 +234,13 @@
     background: #FFFF;
     box-shadow: 4px 4px 20px 0 rgb(0 0 0 / 5%);
     color: #0273CF;
-    padding: 20px;
+    padding: 18px 40px;
     box-sizing: border-box;
     display: flex;
     width: 100%;
     max-width: 840px;
     flex-direction: column;
     align-self: stretch;
-    max-height: 417px;
 }
 
 /* Overall Data Panel (Right Side) */

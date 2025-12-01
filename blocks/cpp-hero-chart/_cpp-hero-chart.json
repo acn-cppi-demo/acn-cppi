@@ -52,6 +52,12 @@
         },
         {
           "component": "text",
+          "name": "fundDate",
+          "label": "Fund Date (e.g., Fund at September 30, 2025)",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
           "name": "selectedPeriod",
           "label": "Default Selected Period (3M, 6M, 1Y, 2Y, 5Y)",
           "valueType": "string"

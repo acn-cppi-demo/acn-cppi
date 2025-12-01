@@ -11,6 +11,7 @@ function getPeriodMockData() {
       ],
       value: '$777.5B',
       badge: '+$45.8B',
+      fundDate: 'Fund at July 1, 2025 - September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Growth (3M)',
         netIncreaseValue: '+$45.8B',
@@ -26,6 +27,7 @@ function getPeriodMockData() {
       ],
       value: '$777.5B',
       badge: '+$63.1B',
+      fundDate: 'Fund at April 1, 2025 - September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Growth (6M)',
         netIncreaseValue: '+$63.1B',
@@ -38,6 +40,7 @@ function getPeriodMockData() {
       chartData: [515, 540, 560, 550, 590, 570, 600, 630, 620, 650, 680, 720],
       value: '$64.92B',
       badge: '+28.3%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Net Increase',
         netIncreaseValue: '$15.3B',
@@ -53,6 +56,7 @@ function getPeriodMockData() {
       ],
       value: '$777.5B',
       badge: '+$207.5B',
+      fundDate: 'Fund at October 1, 2023 - September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Growth (2Y)',
         netIncreaseValue: '+$207.5B',
@@ -68,6 +72,7 @@ function getPeriodMockData() {
       ],
       value: '$777.5B',
       badge: '+$367.9B',
+      fundDate: 'Fund at October 1, 2020 - September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Growth (5Y)',
         netIncreaseValue: '+$367.9B',
@@ -102,6 +107,12 @@ function updatePeriodValues(data, period, periodData) {
     if (badgeText) {
       badgeText.textContent = periodData.badge;
     }
+  }
+
+  // Update the fund date
+  const fundDateElement = block.querySelector('.cpp-hero-chart-fund-date');
+  if (fundDateElement && periodData.fundDate) {
+    fundDateElement.textContent = periodData.fundDate;
   }
 
   // Update the overall data panel if it exists
@@ -426,6 +437,7 @@ export default function decorate(block) {
     periodsData: null, // Will store the periods object from JSON
     value: null,
     badge: null,
+    fundDate: null,
     overallData: null,
     periods: [], // Default, will be synced from JSON or mock data
     selectedPeriod: '1Y',
@@ -605,40 +617,54 @@ export default function decorate(block) {
   }
 
   // Extract data from block children
-  // Support both old model (with title, description, etc.) and new simplified model
-  // Detection: Check if we have many children (old model) or few (new model)
+  // Support multiple model versions:
+  // - Very old: title, desc, btnLabel, btnLink, bgImage?, bgAlt?, graph_title, ...
+  // - Old (8 children): btnLabel, btnLink, graph_title, value, badge, ...
+  // - New (9 children): includes fundDate field
   const childrenCount = block.children.length;
-
-  // Calculate base index - old model had title, description at start (before buttonLabel)
-  // Old model: [0]title, [1]desc, [2]btnLabel, [3]btnLink, [4+]bgImage?, [5+]bgAlt?, ...
-  // New model: [0]btnLabel, [1]btnLink, [2]graph_title, [3]value, [4]badge, ...
   let baseIndex = 0;
+  let hasFundDate = false;
 
-  // If more than 8 children, likely old model with unused title/description at start
-  if (childrenCount > 8) {
-    // Skip the old unused fields (title, description = 2 fields)
+  // Detect model version based on children count and content patterns
+  if (childrenCount >= 10) {
+    // Very old model with title/description at start
     baseIndex = 2;
-
-    // Check for background image after buttonLink (was optional in old model)
-    const bgPicChild = block.children[baseIndex + 2]; // After buttonLabel and buttonLink
+    // Check for background image after buttonLink
+    const bgPicChild = block.children[baseIndex + 2];
     if (bgPicChild) {
       const bgPic = bgPicChild.querySelector('picture');
       if (bgPic) {
         baseIndex += 2; // Skip backgroundImage and backgroundImageAlt
       }
     }
+    // Check if fundDate exists by checking total count
+    hasFundDate = childrenCount >= 13;
+  } else if (childrenCount === 9) {
+    // New model with fundDate
+    hasFundDate = true;
   }
+  // else: childrenCount <= 8, old model without fundDate
 
-  // Extract buttonLabel, buttonLink, graph_title, value, badge, selectedPeriod
+  // Extract buttonLabel, buttonLink, graph_title, value, badge
   cppHeroChartData.buttonLabel = getTextFromChild(baseIndex) || null;
   cppHeroChartData.buttonLink = getLinkFromChild(baseIndex + 1) || null;
   cppHeroChartData.graphText = getTextFromChild(baseIndex + 2) || null;
   cppHeroChartData.value = getTextFromChild(baseIndex + 3) || null;
   cppHeroChartData.badge = getTextFromChild(baseIndex + 4) || null;
-  const selectedPeriodFromChild = getTextFromChild(baseIndex + 5);
-  cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
-  // chartData is a richtext field that may contain JSON for Highcharts
-  cppHeroChartData.chartData = getRichtextFromChild(baseIndex + 6) || null;
+
+  // Extract fundDate, selectedPeriod, chartData based on model version
+  if (hasFundDate) {
+    cppHeroChartData.fundDate = getTextFromChild(baseIndex + 5) || null;
+    const selectedPeriodFromChild = getTextFromChild(baseIndex + 6);
+    cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
+    cppHeroChartData.chartData = getRichtextFromChild(baseIndex + 7) || null;
+  } else {
+    // Old model without fundDate
+    cppHeroChartData.fundDate = null;
+    const selectedPeriodFromChild = getTextFromChild(baseIndex + 5);
+    cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
+    cppHeroChartData.chartData = getRichtextFromChild(baseIndex + 6) || null;
+  }
 
   // Parse JSON data if chartData contains a JSON string with periods object
   // The JSON structure might be: { "periods": { "3M": {...}, "6M": {...}, ... } }
@@ -663,11 +689,18 @@ export default function decorate(block) {
             const [firstPeriod] = cppHeroChartData.periods;
             cppHeroChartData.selectedPeriod = firstPeriod;
           }
-          // Update initial value, badge, and overallData from selected period's data
+          // Update initial value, badge, fundDate, and overallData from selected period's data
           const selectedPeriodData = cppHeroChartData.periodsData[cppHeroChartData.selectedPeriod];
           if (selectedPeriodData) {
-            if (selectedPeriodData.value) cppHeroChartData.value = selectedPeriodData.value;
-            if (selectedPeriodData.badge) cppHeroChartData.badge = selectedPeriodData.badge;
+            if (selectedPeriodData.value) {
+              cppHeroChartData.value = selectedPeriodData.value;
+            }
+            if (selectedPeriodData.badge) {
+              cppHeroChartData.badge = selectedPeriodData.badge;
+            }
+            if (selectedPeriodData.fundDate) {
+              cppHeroChartData.fundDate = selectedPeriodData.fundDate;
+            }
             if (selectedPeriodData.overallData) {
               cppHeroChartData.overallData = selectedPeriodData.overallData;
             }
@@ -775,6 +808,14 @@ export default function decorate(block) {
   }
 
   // Build value and badge section HTML
+  // Get initial fundDate from mock data if not set
+  if (!cppHeroChartData.fundDate && cppHeroChartData.periodsData) {
+    const initialPeriodData = cppHeroChartData.periodsData[cppHeroChartData.selectedPeriod];
+    if (initialPeriodData && initialPeriodData.fundDate) {
+      cppHeroChartData.fundDate = initialPeriodData.fundDate;
+    }
+  }
+
   let valueHtml = '';
   if (cppHeroChartData.value) {
     valueHtml = `
@@ -784,6 +825,7 @@ export default function decorate(block) {
           <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M1.054 11.4038L0 10.35L5.127 5.223C5.6655 4.691 6.3145 4.42342 7.074 4.42025C7.83367 4.41708 8.48275 4.68467 9.02125 5.223L10.1712 6.373C10.4226 6.62433 10.7193 6.74842 11.0615 6.74525C11.4038 6.74208 11.7007 6.618 11.952 6.373L16.8348 1.5H13.904V0H19.404V5.5H17.904V2.56925L13.0058 7.44225C12.4674 7.97425 11.8168 8.24192 11.054 8.24525C10.2912 8.24842 9.64375 7.984 9.11175 7.452L7.93675 6.277C7.69558 6.03583 7.40292 5.91692 7.05875 5.92025C6.71442 5.92342 6.42175 6.04233 6.18075 6.277L1.054 11.4038Z" fill="#7BF1A8"/>
 </svg> ${cppHeroChartData.badge}</div>` : ''}
+        <p class="cpp-hero-chart-fund-date">${cppHeroChartData.fundDate || ''}</p>
       </div>
     `;
   }
