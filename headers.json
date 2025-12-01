@@ -1,0 +1,56 @@
+{
+  "/**/*.html": {
+    "Cache-Control": "max-age=300, stale-while-revalidate=86400"
+  },
+  "/**/*.json": {
+    "Cache-Control": "max-age=3600, stale-while-revalidate=86400"
+  },
+  "/**/*.js": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.css": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.woff2": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.woff": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.ttf": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.eot": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.otf": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.svg": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.png": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.jpg": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.jpeg": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.gif": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.webp": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.avif": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/**/*.ico": {
+    "Cache-Control": "max-age=31536000, immutable"
+  },
+  "/": {
+    "Cache-Control": "max-age=300, stale-while-revalidate=86400"
+  }
+}
