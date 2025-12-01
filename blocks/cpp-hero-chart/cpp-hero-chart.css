@@ -404,6 +404,9 @@
     .cpp-hero-chart-panel {
         flex: 0 0 100%;
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
     }
 
     .cpp-hero-chart-overall-data {
@@ -411,20 +414,36 @@
         width: 100%;
     }
 
+    /* Use display:contents to flatten controls for reordering */
     .cpp-hero-chart-controls {
-        flex-direction: column;
-        gap: 24px;
-        align-items: stretch;
-        padding: 16px 0;
+        display: contents;
     }
 
+    /* Reorder elements for mobile layout */
     .cpp-hero-chart-graph-info {
+        order: 1;
         justify-content: flex-start;
+        padding-top: 20px;
+    }
+
+    .cpp-hero-chart-value-section {
+        order: 2;
     }
 
     .cpp-hero-chart-periods {
+        order: 3;
         justify-content: space-between;
         flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+
+    /* Chart container - use attribute selector to target the one with id */
+    .cpp-hero-chart-panel > .cpp-hero-chart[id] {
+        order: 4;
+    }
+
+    .cpp-hero-chart-learnmore-wrapper {
+        order: 5;
     }
 
     .cpp-hero-chart-value {
@@ -433,6 +452,10 @@
 
     .cpp-hero-chart-overall-value {
         font-size: 36px;
+    }
+
+    .cpp-hero-chart-fund-date {
+        display: none;
     }
 }
 
@@ -465,7 +488,7 @@
     }
 
     .graph-text {
-        font-size: 12px;
+        font-size: 16px;
     }
 }
 
