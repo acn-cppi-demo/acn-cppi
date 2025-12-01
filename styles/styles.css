@@ -357,7 +357,7 @@ main .section.highlight {
     }
 
     /* Hide background images on mobile */
-    .section.has-background-image {
+    .section.has-background-image.cpp-hero-container {
         background-image: linear-gradient(123.25deg, #0052A5 0%, #0273CF 100%) !important;
     }
 }
