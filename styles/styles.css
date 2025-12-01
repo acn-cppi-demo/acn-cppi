@@ -92,16 +92,12 @@ body.appear {
 
 /* Skip Link for Accessibility */
 .skip-link {
-  position: absolute;
-  top: -40px;
+  position: absolute !important;
+  top: -100px;
   left: 0;
-  background: var(--cppi-blue);
-  color: white;
-  padding: 8px 16px;
   z-index: 10000;
   text-decoration: none;
   font-weight: 700;
-  border-radius: 0 0 4px;
 }
 
 .skip-link:focus {
@@ -182,6 +178,15 @@ a:any-link {
   font-weight: 700;
 }
 
+a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+a:not(.megamenu-heading-button):any-link:focus {
+  text-decoration: underline;
+}
+
 a.link-primary {
     display: inline-flex;
     align-items: center;
@@ -189,10 +194,14 @@ a.link-primary {
     transition: opacity 0.2s ease;
 }
 
-a.link-primary:hover {
+a.link-primary:hover, .cpp-hero-chart-learnmore:hover {
     color: var(--link-hover-color);
-    text-decoration: none;
+    text-decoration: underline;
     opacity: 0.8;
+}
+
+a.link-primary:focus {
+    text-decoration: underline;
 }
 
 .insights-card-icon svg, .card-icon svg {
@@ -206,17 +215,13 @@ a.link-primary svg {
     transition: transform 0.2s ease;
 }
 
-a:hover {
-  color: var(--link-hover-color);
-  text-decoration: none;
-}
-
 /* buttons */
 a.button:any-link,
 button, 
 .button,
 .button-primary,
-.button-secondary {
+.button-secondary, 
+a.skip-link {
   box-sizing: border-box;
   display: inline-block;
   max-width: 100%;
@@ -244,7 +249,8 @@ button,
 a.button:hover,
 a.button:focus,
 button:hover,
-button:focus {
+button:focus,
+a.skip-link:hover {
   background-color: #0052A4 !important;
   border: 1px solid #0273CF !important;
   color: #fff !important;
@@ -384,4 +390,17 @@ main .section.highlight {
 
 .button-container {
     margin-top: 24px;
+}
+
+/* Visually hidden but accessible to screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

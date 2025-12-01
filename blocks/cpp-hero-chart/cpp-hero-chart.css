@@ -315,6 +315,7 @@
 
 .cpp-hero-chart-overall-button-container a:hover {
     opacity: 0.8;
+    color: #fff !important;
 }
 
 /* ADA-compliant focus indicator for overall data button */
@@ -345,7 +346,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #0273CF !important;
+    color: #0273CF;
     font-weight: 700;
     text-decoration: none;
     transition: opacity 0.2s ease;
@@ -356,10 +357,6 @@
 }
 
 /* ADA-compliant focus indicator for Learn More link */
-.cpp-hero-chart-learnmore:hover {
-    text-decoration: none;
-    opacity: 0.8;
-}
 
 .cpp-hero-chart-learnmore:focus-visible {
     outline: 3px solid #FFD54A;
