@@ -21,18 +21,6 @@
       "id": "cpp-hero-chart",
       "fields": [
         {
-          "component": "richtext",
-          "name": "title",
-          "label": "Title",
-          "valueType": "string"
-        },
-        {
-          "component": "richtext",
-          "name": "description",
-          "label": "Description",
-          "valueType": "string"
-        },
-        {
           "component": "text",
           "name": "buttonLabel",
           "label": "Button Label",
@@ -42,19 +30,6 @@
           "component": "aem-content",
           "name": "buttonLink",
           "label": "Button Link",
-          "valueType": "string"
-        },
-        {
-          "component": "reference",
-          "name": "backgroundImage",
-          "label": "Background Image",
-          "valueType": "string",
-          "multi": false
-        },
-        {
-          "component": "text",
-          "name": "backgroundImageAlt",
-          "label": "Background Image Alt Text",
           "valueType": "string"
         },
         {

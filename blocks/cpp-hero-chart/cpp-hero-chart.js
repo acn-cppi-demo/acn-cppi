@@ -415,18 +415,12 @@ async function initializeChart(chartId, data) {
 
 export default function decorate(block) {
   // Extract all data from the block into a JSON object.
-  // Prefer authoring attributes (data-aue-prop) when available, but fall
-  // back to parsing the sequential child <div> structure that AEM publishes
-  // on the live site (no data attributes).
+  // The block structure follows the JSON model field order:
+  // [0] graph_title, [1] value, [2] badge, [3] selectedPeriod,
+  // [4] learnMoreLink, [5] chartData, [6] overall_data
   const cppHeroChartData = {
-    title: null,
-    description: null,
     buttonLabel: null,
     buttonLink: null,
-    backgroundImage: null,
-    backgroundImageAlt: null,
-    graphImage: null,
-    graphImageAlt: null,
     graphText: null,
     chartData: null,
     periodsData: null, // Will store the periods object from JSON
@@ -440,14 +434,6 @@ export default function decorate(block) {
     chartInstance: null,
   };
 
-  // Helper: plain text from HTML string
-  // const getPlainText = (htmlString) => {
-  //   if (!htmlString) return '';
-  //   const tempDiv = document.createElement('div');
-  //   tempDiv.innerHTML = htmlString;
-  //   return tempDiv.textContent.trim();
-  // };
-
   // Helper: get text content from the block's child by index
   function getTextFromChild(idx) {
     const child = block.children[idx];
@@ -457,19 +443,27 @@ export default function decorate(block) {
     return child.textContent.trim();
   }
 
-  // Helper: extract picture/img info from the block's child by index
-  function getPictureFromChild(idx) {
+  // Helper: get link href from the block's child by index
+  function getLinkFromChild(idx) {
     const child = block.children[idx];
     if (!child) return null;
-    const pic = child.querySelector('picture');
-    if (!pic) return null;
-    const img = pic.querySelector('img');
-    if (!img) return null;
-    return {
-      src: img.getAttribute('src') || '',
-      alt: img.getAttribute('alt') || '',
-      srcset: img.getAttribute('srcset') || '',
-    };
+    const a = child.querySelector('a[href]');
+    if (a) return a.getAttribute('href');
+    // Fallback: if the child contains just text that looks like a URL
+    const text = child.textContent.trim();
+    if (text.startsWith('/') || text.startsWith('http')) return text;
+    return null;
+  }
+
+  // Helper: get richtext (HTML) content from the block's child by index
+  function getRichtextFromChild(idx) {
+    const child = block.children[idx];
+    if (!child) return null;
+    // For richtext fields, get the inner HTML of the nested div
+    const innerDiv = child.querySelector('div');
+    if (innerDiv) return innerDiv.innerHTML.trim();
+    // Fallback to the child's innerHTML
+    return child.innerHTML.trim() || null;
   }
 
   // Helper: extract overall data from HTML element or string
@@ -480,7 +474,8 @@ export default function decorate(block) {
     if (typeof elementOrHtml === 'number') {
       const child = block.children[elementOrHtml];
       if (!child) return null;
-      innerDiv = child.querySelector('div');
+      // Try to find a nested div, but fall back to the child itself
+      innerDiv = child.querySelector('div') || child;
     } else if (typeof elementOrHtml === 'string') {
       // If it's a string, parse it as HTML
       const tempDiv = document.createElement('div');
@@ -609,53 +604,41 @@ export default function decorate(block) {
     return overallData;
   }
 
-  cppHeroChartData.title = getTextFromChild(0) || null;
-  cppHeroChartData.description = getTextFromChild(1) || null;
-  cppHeroChartData.buttonLabel = getTextFromChild(2) || null;
-  // Try to find an <a> inside the CTA child for href; otherwise, use child text
-  const ctaChild = block.children[2];
-  if (ctaChild) {
-    const a = ctaChild.querySelector('a[href]');
-    if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
-    else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
-  }
-  // Check for background image at index 3
-  const bgPic = getPictureFromChild(3);
-  let graphImageIndex = 4;
-  let graphTextIndex = 5;
-  let valueIndex = 6;
-  let badgeIndex = 7;
-  let periodIndex = 8;
+  // Extract data from block children
+  // Support both old model (with title, description, etc.) and new simplified model
+  // Detection: Check if we have many children (old model) or few (new model)
+  const childrenCount = block.children.length;
 
-  if (bgPic) {
-    cppHeroChartData.backgroundImage = bgPic.src;
-    cppHeroChartData.backgroundImageAlt = bgPic.alt;
-    // If background image exists, shift indices by 1
-    graphImageIndex = 5;
-    graphTextIndex = 6;
-    valueIndex = 7;
-    badgeIndex = 8;
-    periodIndex = 9;
+  // Calculate base index - old model had title, description at start (before buttonLabel)
+  // Old model: [0]title, [1]desc, [2]btnLabel, [3]btnLink, [4+]bgImage?, [5+]bgAlt?, ...
+  // New model: [0]btnLabel, [1]btnLink, [2]graph_title, [3]value, [4]badge, ...
+  let baseIndex = 0;
+
+  // If more than 8 children, likely old model with unused title/description at start
+  if (childrenCount > 8) {
+    // Skip the old unused fields (title, description = 2 fields)
+    baseIndex = 2;
+
+    // Check for background image after buttonLink (was optional in old model)
+    const bgPicChild = block.children[baseIndex + 2]; // After buttonLabel and buttonLink
+    if (bgPicChild) {
+      const bgPic = bgPicChild.querySelector('picture');
+      if (bgPic) {
+        baseIndex += 2; // Skip backgroundImage and backgroundImageAlt
+      }
+    }
   }
 
-  // Check for picture at the adjusted index, if present use it and adjust subsequent indices
-  const pic = getPictureFromChild(graphImageIndex);
-
-  if (pic) {
-    cppHeroChartData.graphImage = pic.src;
-    cppHeroChartData.graphImageAlt = pic.alt;
-    // If picture exists, shift indices by 1
-    graphTextIndex += 1;
-    valueIndex += 1;
-    badgeIndex += 1;
-    periodIndex += 1;
-  }
-
-  cppHeroChartData.graphText = getTextFromChild(graphTextIndex) || null;
-  cppHeroChartData.value = getTextFromChild(valueIndex) || null;
-  cppHeroChartData.badge = getTextFromChild(badgeIndex) || null;
-  const selectedPeriodFromChild = getTextFromChild(periodIndex);
+  // Extract buttonLabel, buttonLink, graph_title, value, badge, selectedPeriod
+  cppHeroChartData.buttonLabel = getTextFromChild(baseIndex) || null;
+  cppHeroChartData.buttonLink = getLinkFromChild(baseIndex + 1) || null;
+  cppHeroChartData.graphText = getTextFromChild(baseIndex + 2) || null;
+  cppHeroChartData.value = getTextFromChild(baseIndex + 3) || null;
+  cppHeroChartData.badge = getTextFromChild(baseIndex + 4) || null;
+  const selectedPeriodFromChild = getTextFromChild(baseIndex + 5);
   cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
+  // chartData is a richtext field that may contain JSON for Highcharts
+  cppHeroChartData.chartData = getRichtextFromChild(baseIndex + 6) || null;
 
   // Parse JSON data if chartData contains a JSON string with periods object
   // The JSON structure might be: { "periods": { "3M": {...}, "6M": {...}, ... } }
@@ -713,8 +696,8 @@ export default function decorate(block) {
     }
   }
 
-  // Extract overall data from the last child div (right side content)
-  // First check for data-aue-prop
+  // Extract overall data (right side content)
+  // First check for data-aue-prop (authoring mode)
   const overallDataProp = block.querySelector('[data-aue-prop="overall_data"], [data-aue-prop="overallData"]');
   if (overallDataProp) {
     const propType = overallDataProp.getAttribute('data-aue-type');
@@ -737,22 +720,21 @@ export default function decorate(block) {
       }
     }
   } else {
-    // Fallback: try to find the overall data div by checking multiple indices
-    // Start from the end and work backwards to find the div with overall data
+    // Fallback: search for the overall data div by looking for content indicators (h1, buttons)
+    // This approach works regardless of the exact index position
     let overallData = null;
     const childrenLength = block.children.length;
     for (let i = childrenLength - 1; i >= 0; i -= 1) {
       const child = block.children[i];
       const innerDiv = child.querySelector('div');
-      if (innerDiv) {
-        // Check if this div contains overall data indicators (h1, button, etc.)
-        const hasH1 = innerDiv.querySelector('h1');
-        const hasButton = innerDiv.querySelector('a.button, .button-container a, a[class*="button"]');
-        if (hasH1 || hasButton) {
-          overallData = parseOverallData(i);
-          if (overallData) {
-            break;
-          }
+      const container = innerDiv || child;
+      // Check if this div contains overall data indicators (h1, button, etc.)
+      const hasH1 = container.querySelector('h1');
+      const hasButton = container.querySelector('a.button, .button-container a, a[class*="button"]');
+      if (hasH1 || hasButton) {
+        overallData = parseOverallData(i);
+        if (overallData) {
+          break;
         }
       }
     }
@@ -806,12 +788,13 @@ export default function decorate(block) {
     `;
   }
 
-  // Build Learn More link (separate from the primary CTA button)
+  // Build Learn More link
   let learnMoreHtml = '';
   if (cppHeroChartData.buttonLink) {
+    const linkText = cppHeroChartData.buttonLabel || 'Learn More';
     learnMoreHtml = `
       <div class="cpp-hero-chart-learnmore-wrapper">
-        <a class="cpp-hero-chart-learnmore" href="${cppHeroChartData.buttonLink}">Learn More 
+        <a class="cpp-hero-chart-learnmore" href="${cppHeroChartData.buttonLink}">${linkText} 
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
           <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#FFF"></path>
         </svg>

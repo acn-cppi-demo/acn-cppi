@@ -1,6 +1,6 @@
 .cpp-hero-chart-wrapper {
     position: relative;
-    margin-top: -120px !important;
+    margin-top: -140px !important;
     z-index: 1;
     background-color: transparent;
 }
@@ -232,6 +232,7 @@
     max-width: 840px;
     flex-direction: column;
     align-self: stretch;
+    max-height: 417px;
 }
 
 /* Overall Data Panel (Right Side) */
