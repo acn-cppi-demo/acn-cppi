@@ -178,6 +178,15 @@ a:any-link {
   font-weight: 700;
 }
 
+a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+a:any-link:focus {
+  text-decoration: underline;
+}
+
 a.link-primary {
     display: inline-flex;
     align-items: center;
@@ -185,10 +194,14 @@ a.link-primary {
     transition: opacity 0.2s ease;
 }
 
-a.link-primary:hover {
+a.link-primary:hover, .cpp-hero-chart-learnmore:hover {
     color: var(--link-hover-color);
-    text-decoration: none;
+    text-decoration: underline;
     opacity: 0.8;
+}
+
+a.link-primary:focus {
+    text-decoration: underline;
 }
 
 .insights-card-icon svg, .card-icon svg {
@@ -200,11 +213,6 @@ a.link-primary:hover {
 a.link-primary svg {
     flex-shrink: 0;
     transition: transform 0.2s ease;
-}
-
-a:hover {
-  color: var(--link-hover-color);
-  text-decoration: none;
 }
 
 /* buttons */
