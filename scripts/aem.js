@@ -346,8 +346,7 @@ function getMetadata(name, doc = document) {
 }
 
 /**
- * Returns a picture element with AVIF, WebP, and Progressive JPEG fallbacks
- * Optimized for WebPageTest performance scores (Progressive JPEG, Image Compression)
+ * Returns a picture element with webp and fallbacks
  * @param {string} src The image URL
  * @param {string} [alt] The image alternative text
  * @param {boolean} [eager] Set loading attribute to eager
@@ -365,31 +364,23 @@ function createOptimizedPicture(
   const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
   const { pathname } = url;
+  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
 
-  // AVIF format - best compression, first choice
-  breakpoints.forEach((br) => {
-    const source = document.createElement('source');
-    if (br.media) source.setAttribute('media', br.media);
-    source.setAttribute('type', 'image/avif');
-    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=avif&optimize=high`);
-    picture.appendChild(source);
-  });
-
-  // WebP format - good compression, wide browser support
+  // webp
   breakpoints.forEach((br) => {
     const source = document.createElement('source');
     if (br.media) source.setAttribute('media', br.media);
     source.setAttribute('type', 'image/webp');
-    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=high`);
+    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
     picture.appendChild(source);
   });
 
-  // Progressive JPEG fallback - for browsers without AVIF/WebP support
+  // fallback
   breakpoints.forEach((br, i) => {
     if (i < breakpoints.length - 1) {
       const source = document.createElement('source');
       if (br.media) source.setAttribute('media', br.media);
-      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=pjpg&optimize=high`);
+      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
       picture.appendChild(source);
     } else {
       const img = document.createElement('img');
@@ -403,8 +394,7 @@ function createOptimizedPicture(
         img.setAttribute('fetchpriority', 'high');
       }
       picture.appendChild(img);
-      // Use Progressive JPEG with high optimization for fallback
-      img.setAttribute('src', `${pathname}?width=${br.width}&format=pjpg&optimize=high`);
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
     }
   });
 
