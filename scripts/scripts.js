@@ -10,6 +10,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  getMetadata,
 } from './aem.js';
 
 /**
@@ -92,6 +93,24 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+
+  // Set page title from metadata if available, otherwise use default
+  const defaultTitle = 'Canada Pension Plan Investment Board (CPP Investments)';
+  const pageTitle = getMetadata('title') || getMetadata('jcr:title') || getMetadata('og:title');
+
+  // Filter out "AEM Boilerplate" and ensure we always use the Canada title
+  if (pageTitle && pageTitle.trim()
+      && pageTitle !== defaultTitle
+      && !pageTitle.toLowerCase().includes('aem boilerplate')
+      && !pageTitle.toLowerCase().includes('boilerplate')) {
+    // If page has a specific title, append site name for context
+    document.title = pageTitle.includes('CPP Investments')
+      ? pageTitle
+      : `${pageTitle} - ${defaultTitle}`;
+  } else {
+    // Always use default title (filter out any AEM Boilerplate references)
+    document.title = defaultTitle;
+  }
 
   // Add skip link for accessibility (WCAG 2.1)
   const skipLink = document.createElement('a');
