@@ -41,24 +41,17 @@ function getIcon(name) {
     close: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`,
-    fund: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 3V21H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M18 9L13 14L9 10L3 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    fund: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="12" viewBox="0 0 20 12" fill="none">
+      <path d="M1.054 11.4038L0 10.35L5.127 5.223C5.6655 4.691 6.3145 4.42342 7.074 4.42025C7.83367 4.41708 8.48275 4.68467 9.02125 5.223L10.1712 6.373C10.4226 6.62433 10.7193 6.74842 11.0615 6.74525C11.4038 6.74208 11.7007 6.618 11.952 6.373L16.8348 1.5H13.904V0H19.404V5.5H17.904V2.56925L13.0058 7.44225C12.4674 7.97425 11.8168 8.24192 11.054 8.24525C10.2912 8.24842 9.64375 7.984 9.11175 7.452L7.93675 6.277C7.69558 6.03583 7.40292 5.91692 7.05875 5.92025C6.71442 5.92342 6.42175 6.04233 6.18075 6.277L1.054 11.4038Z" fill="#0273CF"/>
     </svg>`,
-    chart: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M18 20V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12 20V4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M6 20V14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    chart: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M5.05775 20.5C4.55258 20.5 4.125 20.325 3.775 19.975C3.425 19.625 3.25 19.1974 3.25 18.6923V3H4.75V18.6923C4.75 18.7692 4.78208 18.8398 4.84625 18.9038C4.91025 18.9679 4.98075 19 5.05775 19H20.75V20.5H5.05775ZM6.69225 17.25V9.09625H9.69225V17.25H6.69225ZM11.4423 17.25V4.09625H14.4423V17.25H11.4423ZM16.1923 17.25V13.0963H19.1923V17.25H16.1923Z" fill="#0273CF"/>
     </svg>`,
-    strategy: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    strategy: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M16.2557 20.5L15.2115 19.4557L16.7865 17.8558L15.2115 16.2807L16.2557 15.2115L17.8558 16.8115L19.4307 15.2115L20.5 16.2807L18.9 17.8558L20.5 19.4557L19.4307 20.5L17.8558 18.925L16.2557 20.5ZM6.25 19C6.5975 19 6.89267 18.8785 7.1355 18.6355C7.3785 18.3927 7.5 18.0975 7.5 17.75C7.5 17.4025 7.3785 17.1073 7.1355 16.8645C6.89267 16.6215 6.5975 16.5 6.25 16.5C5.9025 16.5 5.60733 16.6215 5.3645 16.8645C5.1215 17.1073 5 17.4025 5 17.75C5 18.0975 5.1215 18.3927 5.3645 18.6355C5.60733 18.8785 5.9025 19 6.25 19ZM6.25 20.5C5.48717 20.5 4.83817 20.2323 4.303 19.697C3.76767 19.1618 3.5 18.5128 3.5 17.75C3.5 16.9872 3.76767 16.3382 4.303 15.803C4.83817 15.2677 5.48717 15 6.25 15C6.85383 15 7.39708 15.1773 7.87975 15.5318C8.36242 15.8863 8.69158 16.3552 8.86725 16.9385C9.58142 16.8128 10.1731 16.4737 10.6423 15.9212C11.1116 15.3686 11.3463 14.7282 11.3463 14V10.1443C11.3463 8.83142 11.8097 7.71158 12.7365 6.78475C13.6635 5.85775 14.7834 5.39425 16.0962 5.39425H17.6115L15.7865 3.56925L16.8558 2.5L20.5 6.14425L16.8558 9.7885L15.7865 8.74425L17.602 6.89425H16.0962C15.1924 6.89425 14.4247 7.20992 13.7933 7.84125C13.1619 8.47275 12.8462 9.24042 12.8462 10.1443V14C12.8462 15.1333 12.469 16.1208 11.7145 16.9625C10.96 17.8042 10.0212 18.3013 8.898 18.4538C8.743 19.0576 8.419 19.5496 7.926 19.9298C7.433 20.3099 6.87433 20.5 6.25 20.5ZM4.54425 8.7885L3.5 7.74425L5.075 6.14425L3.5 4.56925L4.54425 3.5L6.14425 5.1L7.71925 3.5L8.7885 4.56925L7.1885 6.14425L8.7885 7.74425L7.71925 8.7885L6.14425 7.2135L4.54425 8.7885Z" fill="#0273CF"/>
     </svg>`,
-    contact: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M16 17C16 14.7909 14.2091 13 12 13C9.79086 13 8 14.7909 8 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    contact: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M12 13.7692C12.4858 13.7692 12.899 13.5991 13.2395 13.2587C13.5798 12.9183 13.75 12.5051 13.75 12.0192C13.75 11.5334 13.5798 11.1202 13.2395 10.7797C12.899 10.4394 12.4858 10.2693 12 10.2693C11.5142 10.2693 11.101 10.4394 10.7605 10.7797C10.4202 11.1202 10.25 11.5334 10.25 12.0192C10.25 12.5051 10.4202 12.9183 10.7605 13.2587C11.101 13.5991 11.5142 13.7692 12 13.7692ZM8.25 17.4615H15.75V17.098C15.75 16.7428 15.6545 16.4275 15.4635 16.152C15.2725 15.8763 15.0109 15.6648 14.6788 15.5173C14.2648 15.3404 13.835 15.2036 13.3895 15.1067C12.944 15.0099 12.4808 14.9615 12 14.9615C11.5192 14.9615 11.056 15.0099 10.6105 15.1067C10.165 15.2036 9.73525 15.3404 9.32125 15.5173C8.98908 15.6648 8.7275 15.8763 8.5365 16.152C8.3455 16.4275 8.25 16.7428 8.25 17.098V17.4615ZM17.6923 21.5H6.30775C5.80258 21.5 5.375 21.325 5.025 20.975C4.675 20.625 4.5 20.1974 4.5 19.6923V4.30775C4.5 3.80258 4.675 3.375 5.025 3.025C5.375 2.675 5.80258 2.5 6.30775 2.5H13.7885L19.5 8.2115V19.6923C19.5 20.1974 19.325 20.625 18.975 20.975C18.625 21.325 18.1974 21.5 17.6923 21.5ZM17.6923 20C17.7692 20 17.8398 19.9679 17.9038 19.9038C17.9679 19.8398 18 19.7693 18 19.6923V8.85L13.15 4H6.30775C6.23075 4 6.16025 4.03208 6.09625 4.09625C6.03208 4.16025 6 4.23075 6 4.30775V19.6923C6 19.7693 6.03208 19.8398 6.09625 19.9038C6.16025 19.9679 6.23075 20 6.30775 20H17.6923Z" fill="#0273CF"/>
     </svg>`,
     hub: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="3" fill="currentColor"/>
@@ -101,8 +94,6 @@ function formatMarkdownToHTML(text) {
     // Remove ```markdown and ``` code blocks
     .replace(/```markdown\s*/gi, '')
     .replace(/```\s*/g, '')
-    // Remove citation markers [1], [2], etc.
-    .replace(/\[(\d+)\]/g, '')
     // Convert ### headings to styled bold text with spacing
     .replace(/^###\s+(.+)$/gm, '<strong class="response-heading">$1</strong>')
     // Convert ## headings to larger styled bold text
@@ -127,7 +118,22 @@ function formatMarkdownToHTML(text) {
   // Clean up double <br> after headings
   html = html.replace(/(<\/strong>)<br><br>/g, '$1<br>');
 
+  // Remove <br> tags between list items to prevent extra spacing
+  html = html.replace(/(<\/span>)<br>(?=<span class="response-list-item")/g, '$1');
+
   return html;
+}
+
+function insertCitationLinks(text, sources) {
+  if (!sources || !sources.length) return text;
+
+  return text.replace(/\[(\d+)\]/g, (match, digit) => {
+    const index = parseInt(digit, 10);
+    if (sources[index]) {
+      return `[<a href="${sources[index].url || '#'}" target="_blank" rel="noopener noreferrer">${digit}</a>]`;
+    }
+    return match;
+  });
 }
 
 function createMessageHTML(content, isUser, timestamp, sources = null) {
@@ -173,7 +179,7 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
   return `
     <div class="chat-message bot-message">
       <div class="message-bubble bot-bubble">
-        <div class="message-text">${formattedContent}</div>
+        <div class="message-text">${insertCitationLinks(formattedContent, sources)}</div>
         <span class="message-time">${timeStr}</span>
         ${sourcesHTML}
       </div>
@@ -259,7 +265,7 @@ export default async function decorate(block) {
           </div>
           
           <h1 class="chatbot-heading" id="chatbot-dialog-title">How can we help you today?</h1>
-          <p class="chatbot-subheading">Chat with Fundy, our virtual assistant to learn more about CPP Investments, ask questions, and discover more about our fund</p>
+          <p class="chatbot-subheading">Chat with Fundy, our virtual assistant to learn more about CPP Investments, ask questions, and discover more about our fun.</p>
           
           <div class="chatbot-search-wrapper">
             <label for="chatInput" class="visually-hidden">Ask a question about CPP Investments</label>
@@ -396,23 +402,22 @@ export default async function decorate(block) {
   }
 
   // Toggle sources dropdown with accessibility
-  function setupSourcesToggle() {
-    document.querySelectorAll('.sources-toggle').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const container = btn.closest('.sources-container');
-        const sourcesList = container.querySelector('.sources-list');
-        const chevron = btn.querySelector('.chevron-icon');
-        const isExpanded = !sourcesList.classList.contains('collapsed');
+  chatBody.addEventListener('click', (e) => {
+    const btn = e.target.closest('.sources-toggle');
+    if (btn) {
+      e.stopPropagation();
+      const container = btn.closest('.sources-container');
+      const sourcesList = container.querySelector('.sources-list');
+      const chevron = btn.querySelector('.chevron-icon');
+      const isExpanded = !sourcesList.classList.contains('collapsed');
 
-        sourcesList.classList.toggle('collapsed');
-        btn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
-        chevron.innerHTML = sourcesList.classList.contains('collapsed')
-          ? getIcon('chevronDown')
-          : getIcon('chevronUp');
-      });
-    });
-  }
+      sourcesList.classList.toggle('collapsed');
+      btn.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+      chevron.innerHTML = sourcesList.classList.contains('collapsed')
+        ? getIcon('chevronDown')
+        : getIcon('chevronUp');
+    }
+  });
 
   // Send message function
   async function sendMessage(msg) {
@@ -479,9 +484,6 @@ export default async function decorate(block) {
       const botTimestamp = new Date();
       chatBody.insertAdjacentHTML('beforeend', createMessageHTML(reply, false, botTimestamp, sources));
       chatBody.scrollTop = chatBody.scrollHeight;
-
-      // Setup sources toggle after adding to DOM
-      setupSourcesToggle();
 
       // Extract citation for dataLayer
       const citation = sources?.[0]?.title || sources?.[0]?.url || null;
