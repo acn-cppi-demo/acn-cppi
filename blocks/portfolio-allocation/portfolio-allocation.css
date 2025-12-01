@@ -169,6 +169,7 @@
 @media (width <= 768px) {
     .portfolio-allocation-wrapper {
         padding: 32px 16px;
+        margin-bottom: -125px !important;
     }
 
     .portfolio-allocation-title-section {
