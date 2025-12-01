@@ -83,6 +83,12 @@ async function initializeCompositionChart(chartId, data) {
   const isMobile = window.innerWidth <= 480;
   const chartHeight = isMobile ? 350 : 432;
 
+  // Calculate groupPadding for 40px spacing between columns
+  // Highcharts groupPadding is percentage-based (0-1) of category width
+  // For approximately 40px spacing, we use a higher padding value
+  // This creates visible gaps between the year columns
+  const groupPaddingValue = 0.3;
+
   // Highcharts configuration for stacked column chart
   const config = {
     chart: {
@@ -181,7 +187,7 @@ async function initializeCompositionChart(chartId, data) {
         stacking: 'normal',
         borderRadius: 0,
         borderWidth: 0,
-        groupPadding: 0.2,
+        groupPadding: groupPaddingValue,
         pointPadding: 0.1,
         dataLabels: {
           enabled: false,
@@ -193,7 +199,7 @@ async function initializeCompositionChart(chartId, data) {
         },
       },
     },
-    series: chartData.series.map((series) => ({
+    series: chartData.series.reverse().map((series) => ({
       name: series.name,
       data: series.data,
       color: series.color || '#0273CF',
@@ -394,8 +400,8 @@ export default function decorate(block) {
   const chartId = `fund-composition-chart-${Date.now()}`;
 
   // Build legend HTML from chart data (single source of truth)
-  // Reverse the series order to match Figma design (top to bottom in legend)
-  const legendItems = [...chartData.series].reverse().map((series) => `
+  // Series order matches chart stacking (first in array = bottom of stack)
+  const legendItems = chartData.series.map((series) => `
     <div class="fund-composition-chart-legend-item">
       <span class="fund-composition-chart-legend-symbol" style="background-color: ${series.color || '#0273CF'};"></span>
       <span class="fund-composition-chart-legend-label">${series.name}</span>

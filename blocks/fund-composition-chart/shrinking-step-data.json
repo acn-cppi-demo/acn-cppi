@@ -1,0 +1,38 @@
+{
+  "categories": ["2021", "2022", "2023", "2024", "2025"],
+  "series": [
+    {
+      "name": "Public Equity",
+      "data": [140.0, 160.0, 180.0, 200.0, 220.0],
+      "color": "#0052A4"
+    },
+    {
+      "name": "Private Equity",
+      "data": [80.0, 90.0, 100.0, 110.0, 120.0],
+      "color": "#0273CF"
+    },
+    {
+      "name": "Government Bonds",
+      "data": [70.0, 80.0, 90.0, 100.0, 110.0],
+      "color": "#3E97FF"
+    },
+    {
+      "name": "Credit",
+      "data": [55.0, 60.0, 65.0, 70.0, 80.0],
+      "color": "#99BCFF"
+    },
+    {
+      "name": "Real Estate",
+      "data": [90.0, 100.0, 110.0, 120.0, 130.0],
+      "color": "#E3E4E5"
+    },
+    {
+      "name": "Infrastructure",
+      "data": [65.0, 70.0, 75.0, 80.0, 90.0],
+      "color": "#2C3D50"
+    }
+  ],
+  "min": 300,
+  "max": 800,
+  "tickInterval": 100
+}

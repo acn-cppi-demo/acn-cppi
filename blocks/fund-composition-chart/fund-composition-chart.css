@@ -77,7 +77,7 @@
   gap: 24px;
   flex-wrap: wrap;
   margin-top: 24px;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .fund-composition-chart-legend-item {
