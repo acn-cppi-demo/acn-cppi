@@ -286,26 +286,22 @@ export async function loadHighcharts() {
     return Promise.resolve();
   }
 
-  // Use local Highcharts files from node_modules (copied to scripts/lib)
-  // Files are already minified for optimal performance
-  // Note: Exporting modules are loaded even though disabled - required for module structure
+  // Use local Highcharts files - only load essential modules
+  // Removed exporting.js and export-data.js (~40KB savings) - not used
   const baseUrl = `${window.hlx.codeBasePath}/scripts/lib/highcharts`;
   const scripts = [
     `${baseUrl}/highcharts.js`,
     `${baseUrl}/modules/accessibility.js`,
-    `${baseUrl}/modules/exporting.js`,
-    `${baseUrl}/modules/export-data.js`,
   ];
 
   try {
     // Load scripts sequentially (modules depend on main library)
-    // All scripts loaded with async=true to prevent blocking
     const [mainScript, ...moduleScripts] = scripts;
 
-    // Load main library first - async loading ensures non-blocking
+    // Load main library first
     await loadScript(mainScript, { async: true });
 
-    // Check for Highcharts readiness instead of fixed delay (more efficient)
+    // Check for Highcharts readiness
     let retries = 10;
     while (typeof window.Highcharts === 'undefined' && retries > 0) {
       // eslint-disable-next-line no-await-in-loop
@@ -315,8 +311,7 @@ export async function loadHighcharts() {
       retries -= 1;
     }
 
-    // Then load modules in parallel for faster loading (all async)
-    // Note: exporting modules are disabled in chart configs, but keeping for consistency
+    // Load accessibility module
     await Promise.all(moduleScripts.map((src) => loadScript(src, { async: true })));
 
     // Verify Highcharts is available
