@@ -237,6 +237,14 @@
           {
             "name": "Analytics",
             "value": "analytics"
+          },
+          {
+            "name": "Chart data",
+            "value": "chart-data"
+          },
+          {
+            "name": "View timeline",
+            "value": "view-timeline"
           }
         ]
       },
@@ -557,6 +565,14 @@
           {
             "name": "Analytics",
             "value": "analytics"
+          },
+          {
+            "name": "Chart data",
+            "value": "chart-data"
+          },
+          {
+            "name": "View timeline",
+            "value": "view-timeline"
           }
         ]
       },
