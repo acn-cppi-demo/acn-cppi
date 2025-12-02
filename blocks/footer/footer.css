@@ -158,15 +158,12 @@ footer .footer.block {
   transition: opacity 0.2s ease;
 }
 
-.footer-nav a:hover {
+.footer-nav a:hover , .footer-legal a:hover {
   opacity: 0.8;
+  text-decoration: underline;
 }
 
 .footer-social a:hover {
-  opacity: 0.8;
-}
-
-.footer-legal a:hover {
   opacity: 0.8;
 }
 

@@ -13,7 +13,7 @@
 
 .cpp-hero-investment-description,
 .cpp-hero-investment-buttons {
-    margin-top: 24px;
+    margin-top: 12px;
 }
 
 .cpp-hero-investment-wrapper {
@@ -23,7 +23,7 @@
 }
 
 .cpp-hero-investment-main {
-    max-width: 760px;
+    max-width: 596px;
 }
 
 /* Button styling for cpp-hero-investment block */

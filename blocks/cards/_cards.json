@@ -64,56 +64,60 @@
           "label": "Icon SVG",
           "options": [
             {
-              "name": "moving-arrow",
+              "name": "Moving arrow",
               "value": "moving-arrow"
             },
             {
-              "name": "energy-proragm-icon",
+              "name": "Energy proragm icon",
               "value": "energy-proragm-icon"
             },
             {
-              "name": "thunderstorm",
+              "name": "Thunderstorm",
               "value": "thunderstorm"
             },
             {
-              "name": "dollar-sign",
+              "name": "Dollar sign",
               "value": "dollar-sign"
             },
             {
-              "name": "chart",
+              "name": "Chart",
               "value": "chart"
             },
             {
-              "name": "user",
+              "name": "User",
               "value": "user"
             },
             {
-              "name": "bag",
+              "name": "Bag",
               "value": "bag"
             },
             {
-              "name": "handshake",
+              "name": "Handshake",
               "value": "handshake"
             },
             {
-              "name": "earth",
+              "name": "Earth",
               "value": "earth"
             },
             {
-              "name": "timewatch",
+              "name": "Timewatch",
               "value": "timewatch"
             },
             {
-              "name": "global_book",
+              "name": "Global book",
               "value": "global_book"
             },
             {
-              "name": "finance",
+              "name": "Finance",
               "value": "finance"
             },
             {
-              "name": "query_stats",
+              "name": "Query Stats",
               "value": "query_stats"
+            },
+            {
+              "name": "Bar chart",
+              "value": "bar_chart"
             }
           ]
         },

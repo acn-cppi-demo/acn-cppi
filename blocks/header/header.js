@@ -353,7 +353,7 @@ function buildMegamenuHTML(megamenuData) {
     megamenuData.quickLinks.forEach((link) => {
       quickLinksHTML += `
           <li>
-            <a href="${link.href}" title="${link.title || link.text}">
+            <a href="${link.href}" class="link-primary" title="${link.title || link.text}">
               ${link.text}
               <span class="icon icon-arrow_forward">
                 <img data-icon-name="arrow_forward" src="/icons/arrow_forward.svg" alt="" loading="lazy" width="16" height="16">
@@ -413,7 +413,8 @@ function buildMegamenuHTML(megamenuData) {
 
   // Complete megamenu HTML template - easy to modify!
   const megamenuHTML = `
-<div class="megamenu" aria-hidden="true">
+<div class="megamenu" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="megamenu-title">
+  <h2 id="megamenu-title" class="visually-hidden">Navigation Menu</h2>
   <!-- Desktop Megamenu -->
   <div class="megamenu-desktop">
     <div class="megamenu-desktop-content">
@@ -631,6 +632,9 @@ function updateMenuIcon(menuIcon, isOpen) {
   }
 }
 
+// Store the element that had focus before opening megamenu
+let previouslyFocusedMegamenuElement = null;
+
 /**
  * Toggles megamenu visibility
  * @param {Element} megamenu The megamenu element
@@ -644,11 +648,43 @@ function toggleMegamenu(megamenu, show, menuIcon = null) {
   const shouldShow = show !== undefined ? show : isCurrentlyHidden;
 
   megamenu.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+  megamenu.setAttribute('aria-modal', shouldShow ? 'true' : 'false');
   document.body.style.overflowY = shouldShow && !isDesktop.matches ? 'hidden' : '';
 
   // Update menu icon if provided
   if (menuIcon) {
     updateMenuIcon(menuIcon, shouldShow);
+  }
+
+  if (shouldShow) {
+    // Store the element that opened the menu
+    previouslyFocusedMegamenuElement = menuIcon || document.activeElement;
+
+    // Move focus into the megamenu
+    // Try to focus the first focusable element in the megamenu
+    // Use setTimeout to ensure the menu is visible before focusing
+    setTimeout(() => {
+      const focusableElements = Array.from(megamenu.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
+
+      const firstFocusable = focusableElements[0];
+      if (firstFocusable) {
+        firstFocusable.focus();
+      } else {
+        // If no focusable element, focus the megamenu container itself
+        megamenu.setAttribute('tabindex', '-1');
+        megamenu.focus();
+      }
+    }, 0);
+  } else {
+    // Restore focus to the trigger element
+    if (previouslyFocusedMegamenuElement && previouslyFocusedMegamenuElement.focus) {
+      setTimeout(() => {
+        previouslyFocusedMegamenuElement.focus();
+      }, 0);
+    }
+    previouslyFocusedMegamenuElement = null;
   }
 }
 
@@ -895,11 +931,88 @@ export default async function decorate(block) {
     }
 
     // Close megamenu on escape
-    window.addEventListener('keydown', (e) => {
+    const escapeHandler = (e) => {
       if (e.code === 'Escape' && megamenu.getAttribute('aria-hidden') === 'false') {
         toggleMegamenu(megamenu, false, menuIcon);
       }
-    });
+    };
+    window.addEventListener('keydown', escapeHandler);
+
+    // Focus trap for megamenu accessibility
+    const focusTrapHandler = (e) => {
+      if (e.key !== 'Tab' || megamenu.getAttribute('aria-hidden') === 'true') return;
+
+      // Get all focusable elements within the megamenu
+      const megamenuFocusableElements = Array.from(megamenu.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
+
+      // Include the close button (menuIcon) in the focus trap
+      // Close button should be last in tab order, after all megamenu elements
+      const focusableElements = [...megamenuFocusableElements];
+      if (menuIcon && menuIcon.offsetParent !== null && !menuIcon.closest('.hidden')) {
+        focusableElements.push(menuIcon);
+      }
+
+      if (focusableElements.length === 0) return;
+
+      const { activeElement } = document;
+      const isActiveInTrap = focusableElements.includes(activeElement);
+
+      if (!isActiveInTrap) return;
+
+      const firstFocusable = focusableElements[0];
+      const lastFocusable = focusableElements[focusableElements.length - 1];
+
+      // Close button is the last element, last menu item is second to last
+      const lastMenuElement = focusableElements[focusableElements.length - 2];
+
+      if (e.shiftKey) {
+        // Shift + Tab: if on first megamenu element, wrap to close button (last element)
+        if (activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else if (activeElement === lastFocusable) {
+        // Tab: if on close button, wrap to first megamenu element
+        e.preventDefault();
+        firstFocusable.focus();
+      } else if (lastMenuElement && activeElement === lastMenuElement) {
+        // Tab: if on last menu item, move to close button
+        e.preventDefault();
+        lastFocusable.focus();
+      }
+    };
+
+    // Handle focus leaving megamenu to redirect to close button
+    const focusOutHandler = (e) => {
+      if (megamenu.getAttribute('aria-hidden') === 'true') return;
+
+      const { relatedTarget } = e;
+      const megamenuFocusableElements = Array.from(megamenu.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      )).filter((el) => el.offsetParent !== null && !el.closest('.hidden'));
+
+      // Check if focus is leaving the megamenu (and not going to close button)
+      const isLeavingMegamenu = megamenu.contains(e.target)
+        && !megamenu.contains(relatedTarget)
+        && relatedTarget !== menuIcon;
+
+      if (isLeavingMegamenu && menuIcon && menuIcon.offsetParent !== null) {
+        // Check if we were on the last menu item (forward tab)
+        const lastMegamenuItem = megamenuFocusableElements[megamenuFocusableElements.length - 1];
+        if (e.target === lastMegamenuItem) {
+          // Redirect to close button
+          setTimeout(() => {
+            menuIcon.focus();
+          }, 0);
+        }
+      }
+    };
+
+    // Attach focus trap and focusout handlers
+    document.addEventListener('keydown', focusTrapHandler);
+    megamenu.addEventListener('focusout', focusOutHandler);
   }
 
   // Add click handler to search icon to open chatbot

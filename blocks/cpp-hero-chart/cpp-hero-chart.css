@@ -1,6 +1,19 @@
+/* Screen reader only - visually hidden but accessible */
+.cpp-hero-chart-sr-announcement {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .cpp-hero-chart-wrapper {
     position: relative;
-    margin-top: -120px !important;
+    margin-top: -140px !important;
     z-index: 1;
     background-color: transparent;
 }
@@ -72,7 +85,7 @@
 .cpp-hero-chart-controls {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 0;
     padding: 20px 0 0;
 }
@@ -104,8 +117,8 @@
     height: auto;
     border: 1px solid #E3E4E5;
     border-radius: 8px;
-    padding: 4px;
-        background: #F5F7FA;
+    padding: 3px;
+    background: #F5F7FA;
 }
 
 .period-tab {
@@ -132,9 +145,8 @@
 /* Subtle hover affordance; when hover ends the element will transition back
    to its normal state or to the .active state (white) in 120ms. */
 .period-tab:hover {
-    background: rgb(255 255 255 / 10%);
-    color: #fff;
-    border-color: #fff;
+    background: #E3E4E5;
+    color: #2C3D50;
 }
 
 .period-tab.active,
@@ -153,8 +165,8 @@
     outline: 3px solid #FFD54A;
     outline-offset: 2px;
     border-radius: 8px;
-    background: rgb(255 255 255 / 10%) !important;
-    color: #fff !important;
+    background: #E3E4E5 !important;
+    color: #2C3D50 !important;
 }
 
 .period-tab:focus:not(:focus-visible) {
@@ -171,20 +183,30 @@
 /* Value Section */
 .cpp-hero-chart-value-section {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 5px 16px;
     margin-bottom: 40px;
+}
+
+.cpp-hero-chart-fund-date {
+    width: 100%;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6F7176;
 }
 
 .cpp-hero-chart-value {
     font-size: 42px;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1;
     color: #0273CF;
 }
 
 .cpp-hero-chart-badge {
-    background: #00C95066;
+    background: #1EA7351A;
+    border: 1px solid #1EA735;
     color: #2C3D50;
     padding: 8px 16px;
     border-radius: 30px;
@@ -225,7 +247,7 @@
     background: #FFFF;
     box-shadow: 4px 4px 20px 0 rgb(0 0 0 / 5%);
     color: #0273CF;
-    padding: 20px;
+    padding: 18px 40px;
     box-sizing: border-box;
     display: flex;
     width: 100%;
@@ -236,7 +258,7 @@
 
 /* Overall Data Panel (Right Side) */
 .cpp-hero-chart-overall-data {
-    background: #333F48;
+    background: #2C3D50;
     border-radius: 8px;
     padding: 40px;
     box-sizing: border-box;
@@ -293,6 +315,7 @@
 
 .cpp-hero-chart-overall-button-container a:hover {
     opacity: 0.8;
+    color: #fff !important;
 }
 
 /* ADA-compliant focus indicator for overall data button */
@@ -323,7 +346,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: #0273CF !important;
+    color: #0273CF;
     font-weight: 700;
     text-decoration: none;
     transition: opacity 0.2s ease;
@@ -334,10 +357,6 @@
 }
 
 /* ADA-compliant focus indicator for Learn More link */
-.cpp-hero-chart-learnmore:hover {
-    text-decoration: none;
-    opacity: 0.8;
-}
 
 .cpp-hero-chart-learnmore:focus-visible {
     outline: 3px solid #FFD54A;

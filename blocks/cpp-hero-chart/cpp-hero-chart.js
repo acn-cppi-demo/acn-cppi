@@ -1,82 +1,113 @@
 /**
  * Mock data for different periods with different chart values
  * Each period has different data points and overall metrics
+ * All periods end at $777.5B (September 30, 2025)
  */
 function getPeriodMockData() {
   return {
     '3M': {
+      // July 2025 ($731.7B) → September 2025 ($777.5B)
       chartData: [
-        731.7, 740.5, 748.2, 753.1, 759.4, 765.8,
-        770.2, 774.1, 775.8, 776.5, 777.0, 777.5,
+        731.7, 738.5, 745.2, 751.8, 758.3, 764.5,
+        769.2, 772.8, 774.9, 776.1, 776.9, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$45.8B',
+      badge: '+6.26%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
-        netIncreaseLabel: 'Growth (3M)',
+        netIncreaseLabel: 'Net Increase',
         netIncreaseValue: '+$45.8B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'July - Sept 2025',
-        netReturnType: 'Start: $731.7B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+6.26%',
+        netReturnType: 'Nominal',
       },
     },
     '6M': {
+      // April 2025 ($714B) → September 2025 ($777.5B)
       chartData: [
-        714.0, 725.3, 735.8, 743.5, 752.1, 760.4,
-        766.8, 771.5, 774.2, 775.9, 776.7, 777.5,
+        714.0, 722.8, 731.5, 740.1, 748.6, 756.9,
+        764.2, 769.8, 773.5, 775.6, 776.8, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$63.1B',
+      badge: '+8.89%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
-        netIncreaseLabel: 'Growth (6M)',
-        netIncreaseValue: '+$63.1B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'April - Sept 2025',
-        netReturnType: 'Start: $714.0B',
+        netIncreaseLabel: 'Net Increase',
+        netIncreaseValue: '+$63.5B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+8.89%',
+        netReturnType: 'Nominal',
       },
     },
     '1Y': {
-      chartData: [515, 540, 560, 550, 590, 570, 600, 630, 620, 650, 680, 720],
-      value: '$64.92B',
-      badge: '+28.3%',
+      // September 2024 ($632.3B) → September 2025 ($777.5B)
+      chartData: [
+        632.3, 648.5, 665.2, 682.4, 699.8, 716.5,
+        732.1, 746.8, 759.4, 769.2, 775.1, 777.5,
+      ],
+      value: '$777.5B',
+      badge: '+22.97%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
         netIncreaseLabel: 'Net Increase',
-        netIncreaseValue: '$15.3B',
+        netIncreaseValue: '+$145.2B',
         netReturnLabel: 'Net Return',
-        netReturnValue: '+23.6%',
+        netReturnValue: '+22.97%',
         netReturnType: 'Nominal',
       },
     },
     '2Y': {
+      // September 2023 ($570B) → September 2025 ($777.5B)
       chartData: [
-        570.0, 590.5, 610.8, 630.2, 650.1, 668.5,
-        688.4, 708.2, 728.5, 750.1, 764.2, 777.5,
+        570.0, 592.5, 615.8, 639.2, 662.5, 685.1,
+        706.8, 727.2, 746.5, 763.2, 774.1, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$207.5B',
+      badge: '+36.40%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
-        netIncreaseLabel: 'Growth (2Y)',
+        netIncreaseLabel: 'Net Increase',
         netIncreaseValue: '+$207.5B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'March 2023 - Sept 2025',
-        netReturnType: 'Start: $570.0B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+36.40%',
+        netReturnType: 'Nominal',
       },
     },
     '5Y': {
+      // September 2020 ($409.6B) → September 2025 ($777.5B)
       chartData: [
-        409.6, 450.2, 490.8, 525.3, 560.1, 600.5,
-        640.2, 680.8, 715.3, 745.2, 761.8, 777.5,
+        409.6, 448.2, 489.5, 532.8, 577.1, 621.5,
+        664.2, 704.8, 741.2, 768.5, 777.0, 777.5,
       ],
       value: '$777.5B',
-      badge: '+$367.9B',
+      badge: '+89.82%',
+      fundDate: 'Fund at September 30, 2025',
       overallData: {
-        netIncreaseLabel: 'Growth (5Y)',
+        netIncreaseLabel: 'Net Increase',
         netIncreaseValue: '+$367.9B',
-        netReturnLabel: 'Period',
-        netReturnValue: 'March 2020 - Sept 2025',
-        netReturnType: 'Start: $409.6B',
+        netReturnLabel: 'Net Return',
+        netReturnValue: '+89.82%',
+        netReturnType: 'Nominal',
       },
     },
   };
+}
+
+/**
+ * Announce content changes to screen readers
+ * @param {Element} block - The block element
+ * @param {string} message - The message to announce
+ */
+function announceToScreenReader(block, message) {
+  const liveRegion = block.querySelector('.cpp-hero-chart-sr-announcement');
+  if (liveRegion) {
+    // Clear and set the message to trigger announcement
+    liveRegion.textContent = '';
+    // Use setTimeout to ensure the DOM update triggers the announcement
+    setTimeout(() => {
+      liveRegion.textContent = message;
+    }, 100);
+  }
 }
 
 /**
@@ -104,33 +135,19 @@ function updatePeriodValues(data, period, periodData) {
     }
   }
 
-  // Update the overall data panel if it exists
-  if (periodData.overallData) {
-    const overallDataSection = block.querySelector('.cpp-hero-chart-overall-data');
-    if (overallDataSection) {
-      const netIncreaseLabel = overallDataSection.querySelector('.cpp-hero-chart-overall-label');
-      const netIncreaseValue = overallDataSection.querySelector('.cpp-hero-chart-overall-value');
-      const netReturnLabel = overallDataSection.querySelectorAll('.cpp-hero-chart-overall-label')[1];
-      const netReturnValue = overallDataSection.querySelector('.cpp-hero-chart-overall-return-value');
-      const netReturnType = overallDataSection.querySelector('.cpp-hero-chart-overall-type');
-
-      if (netIncreaseLabel && periodData.overallData.netIncreaseLabel) {
-        netIncreaseLabel.textContent = periodData.overallData.netIncreaseLabel;
-      }
-      if (netIncreaseValue && periodData.overallData.netIncreaseValue) {
-        netIncreaseValue.textContent = periodData.overallData.netIncreaseValue;
-      }
-      if (netReturnLabel && periodData.overallData.netReturnLabel) {
-        netReturnLabel.textContent = periodData.overallData.netReturnLabel;
-      }
-      if (netReturnValue && periodData.overallData.netReturnValue) {
-        netReturnValue.textContent = periodData.overallData.netReturnValue;
-      }
-      if (netReturnType && periodData.overallData.netReturnType) {
-        netReturnType.textContent = periodData.overallData.netReturnType;
-      }
-    }
+  // Update the fund date
+  const fundDateElement = block.querySelector('.cpp-hero-chart-fund-date');
+  if (fundDateElement && periodData.fundDate) {
+    fundDateElement.textContent = periodData.fundDate;
   }
+
+  // Note: Overall data panel (.cpp-hero-chart-overall-data) is NOT updated dynamically
+  // It only displays the authored value from AEM
+
+  // Announce the change to screen readers
+  const announcement = `Chart updated to ${period} view. Value: ${periodData.value}, `
+    + `Change: ${periodData.badge}`;
+  announceToScreenReader(block, announcement);
 }
 
 /**
@@ -206,28 +223,12 @@ function getDummyLineChartConfig() {
       type: 'area',
       height: 170,
       backgroundColor: 'transparent',
-      accessibility: {
-        enabled: true,
-        description: 'Line chart showing portfolio value over time. Use arrow keys to navigate between data points.',
-        keyboardNavigation: {
-          enabled: true,
-        },
-      },
     },
     title: {
       text: null,
     },
     accessibility: {
-      enabled: true,
-      point: {
-        descriptionFormatter(point) {
-          return `Value: ${point.y}`;
-        },
-        valueDescriptionFormat: '{index}. {point.y}.',
-      },
-      screenReaderSection: {
-        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
-      },
+      enabled: false,
     },
     xAxis: {
       // show only the axis baseline (no labels or ticks)
@@ -247,6 +248,10 @@ function getDummyLineChartConfig() {
           fontSize: '12px',
         },
         formatter() {
+          // Hide the 400B label
+          if (this.value === 400) {
+            return '';
+          }
           return `${this.value}B`;
         },
       },
@@ -254,7 +259,7 @@ function getDummyLineChartConfig() {
       gridLineColor: '#E3E4E5',
       lineWidth: 0,
       tickLength: 0,
-      min: 500,
+      min: 400,
       max: 800,
       tickInterval: 100,
     },
@@ -277,8 +282,19 @@ function getDummyLineChartConfig() {
       },
       series: {
         dataLabels: { enabled: false },
-        enableMouseTracking: false,
-        marker: { enabled: false },
+        enableMouseTracking: true,
+        marker: {
+          enabled: false,
+          states: {
+            hover: {
+              enabled: true,
+              radius: 6,
+              fillColor: '#0273CF',
+              lineColor: '#fff',
+              lineWidth: 2,
+            },
+          },
+        },
         color: '#0273CF',
         lineWidth: 2,
       },
@@ -295,7 +311,30 @@ function getDummyLineChartConfig() {
       enabled: false,
     },
     legend: { enabled: false },
-    tooltip: { enabled: false },
+    tooltip: {
+      enabled: true,
+      backgroundColor: '#fff',
+      borderColor: '#E3E4E5',
+      borderRadius: 8,
+      shadow: true,
+      style: {
+        color: '#2C3D50',
+        fontSize: '14px',
+      },
+      useHTML: true,
+      formatter() {
+        const months = [
+          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+        ];
+        const monthIndex = this.point.index;
+        const monthName = months[monthIndex % 12];
+        return `<div style="text-align: center; padding: 4px 8px;">
+          <div style="font-size: 16px; font-weight: 600; color: #0273CF;">$${this.y.toFixed(1)}B</div>
+          <div style="font-size: 12px; color: #6F7176;">${monthName} 2025 Fund Value</div>
+        </div>`;
+      },
+    },
   };
 }
 
@@ -361,20 +400,7 @@ async function initializeChart(chartId, data) {
       align: 'bottom',
     },
     accessibility: {
-      enabled: true,
-      description: data.graphText ? `Chart showing ${data.graphText} over time. Use arrow keys to navigate between data points.` : 'Line chart showing portfolio value over time. Use arrow keys to navigate between data points.',
-      keyboardNavigation: {
-        enabled: true,
-      },
-      point: {
-        descriptionFormatter(point) {
-          return `Value: ${point.y}`;
-        },
-        valueDescriptionFormat: '{index}. {point.y}.',
-      },
-      screenReaderSection: {
-        beforeChartFormat: '<h5>{chartTitle}</h5><div>{chartSubtitle}</div><div>{chartLongdesc}</div>',
-      },
+      enabled: false,
     },
     ...defaultConfig,
     ...chartOptions,
@@ -415,23 +441,18 @@ async function initializeChart(chartId, data) {
 
 export default function decorate(block) {
   // Extract all data from the block into a JSON object.
-  // Prefer authoring attributes (data-aue-prop) when available, but fall
-  // back to parsing the sequential child <div> structure that AEM publishes
-  // on the live site (no data attributes).
+  // The block structure follows the JSON model field order:
+  // [0] graph_title, [1] value, [2] badge, [3] selectedPeriod,
+  // [4] learnMoreLink, [5] chartData, [6] overall_data
   const cppHeroChartData = {
-    title: null,
-    description: null,
     buttonLabel: null,
     buttonLink: null,
-    backgroundImage: null,
-    backgroundImageAlt: null,
-    graphImage: null,
-    graphImageAlt: null,
     graphText: null,
     chartData: null,
     periodsData: null, // Will store the periods object from JSON
     value: null,
     badge: null,
+    fundDate: null,
     overallData: null,
     periods: [], // Default, will be synced from JSON or mock data
     selectedPeriod: '1Y',
@@ -439,14 +460,6 @@ export default function decorate(block) {
     chartInstanceId: null,
     chartInstance: null,
   };
-
-  // Helper: plain text from HTML string
-  // const getPlainText = (htmlString) => {
-  //   if (!htmlString) return '';
-  //   const tempDiv = document.createElement('div');
-  //   tempDiv.innerHTML = htmlString;
-  //   return tempDiv.textContent.trim();
-  // };
 
   // Helper: get text content from the block's child by index
   function getTextFromChild(idx) {
@@ -457,19 +470,27 @@ export default function decorate(block) {
     return child.textContent.trim();
   }
 
-  // Helper: extract picture/img info from the block's child by index
-  function getPictureFromChild(idx) {
+  // Helper: get link href from the block's child by index
+  function getLinkFromChild(idx) {
     const child = block.children[idx];
     if (!child) return null;
-    const pic = child.querySelector('picture');
-    if (!pic) return null;
-    const img = pic.querySelector('img');
-    if (!img) return null;
-    return {
-      src: img.getAttribute('src') || '',
-      alt: img.getAttribute('alt') || '',
-      srcset: img.getAttribute('srcset') || '',
-    };
+    const a = child.querySelector('a[href]');
+    if (a) return a.getAttribute('href');
+    // Fallback: if the child contains just text that looks like a URL
+    const text = child.textContent.trim();
+    if (text.startsWith('/') || text.startsWith('http')) return text;
+    return null;
+  }
+
+  // Helper: get richtext (HTML) content from the block's child by index
+  function getRichtextFromChild(idx) {
+    const child = block.children[idx];
+    if (!child) return null;
+    // For richtext fields, get the inner HTML of the nested div
+    const innerDiv = child.querySelector('div');
+    if (innerDiv) return innerDiv.innerHTML.trim();
+    // Fallback to the child's innerHTML
+    return child.innerHTML.trim() || null;
   }
 
   // Helper: extract overall data from HTML element or string
@@ -480,7 +501,8 @@ export default function decorate(block) {
     if (typeof elementOrHtml === 'number') {
       const child = block.children[elementOrHtml];
       if (!child) return null;
-      innerDiv = child.querySelector('div');
+      // Try to find a nested div, but fall back to the child itself
+      innerDiv = child.querySelector('div') || child;
     } else if (typeof elementOrHtml === 'string') {
       // If it's a string, parse it as HTML
       const tempDiv = document.createElement('div');
@@ -609,53 +631,55 @@ export default function decorate(block) {
     return overallData;
   }
 
-  cppHeroChartData.title = getTextFromChild(0) || null;
-  cppHeroChartData.description = getTextFromChild(1) || null;
-  cppHeroChartData.buttonLabel = getTextFromChild(2) || null;
-  // Try to find an <a> inside the CTA child for href; otherwise, use child text
-  const ctaChild = block.children[2];
-  if (ctaChild) {
-    const a = ctaChild.querySelector('a[href]');
-    if (a) cppHeroChartData.buttonLink = a.getAttribute('href');
-    else cppHeroChartData.buttonLink = getTextFromChild(3) || null;
+  // Extract data from block children
+  // Support multiple model versions:
+  // - Very old: title, desc, btnLabel, btnLink, bgImage?, bgAlt?, graph_title, ...
+  // - Old (8 children): btnLabel, btnLink, graph_title, value, badge, ...
+  // - New (9 children): includes fundDate field
+  const childrenCount = block.children.length;
+  let baseIndex = 0;
+  let hasFundDate = false;
+
+  // Detect model version based on children count and content patterns
+  if (childrenCount >= 10) {
+    // Very old model with title/description at start
+    baseIndex = 2;
+    // Check for background image after buttonLink
+    const bgPicChild = block.children[baseIndex + 2];
+    if (bgPicChild) {
+      const bgPic = bgPicChild.querySelector('picture');
+      if (bgPic) {
+        baseIndex += 2; // Skip backgroundImage and backgroundImageAlt
+      }
+    }
+    // Check if fundDate exists by checking total count
+    hasFundDate = childrenCount >= 13;
+  } else if (childrenCount === 9) {
+    // New model with fundDate
+    hasFundDate = true;
   }
-  // Check for background image at index 3
-  const bgPic = getPictureFromChild(3);
-  let graphImageIndex = 4;
-  let graphTextIndex = 5;
-  let valueIndex = 6;
-  let badgeIndex = 7;
-  let periodIndex = 8;
+  // else: childrenCount <= 8, old model without fundDate
 
-  if (bgPic) {
-    cppHeroChartData.backgroundImage = bgPic.src;
-    cppHeroChartData.backgroundImageAlt = bgPic.alt;
-    // If background image exists, shift indices by 1
-    graphImageIndex = 5;
-    graphTextIndex = 6;
-    valueIndex = 7;
-    badgeIndex = 8;
-    periodIndex = 9;
+  // Extract buttonLabel, buttonLink, graph_title, value, badge
+  cppHeroChartData.buttonLabel = getTextFromChild(baseIndex) || null;
+  cppHeroChartData.buttonLink = getLinkFromChild(baseIndex + 1) || null;
+  cppHeroChartData.graphText = getTextFromChild(baseIndex + 2) || null;
+  cppHeroChartData.value = getTextFromChild(baseIndex + 3) || null;
+  cppHeroChartData.badge = getTextFromChild(baseIndex + 4) || null;
+
+  // Extract fundDate, selectedPeriod, chartData based on model version
+  if (hasFundDate) {
+    cppHeroChartData.fundDate = getTextFromChild(baseIndex + 5) || null;
+    const selectedPeriodFromChild = getTextFromChild(baseIndex + 6);
+    cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
+    cppHeroChartData.chartData = getRichtextFromChild(baseIndex + 7) || null;
+  } else {
+    // Old model without fundDate
+    cppHeroChartData.fundDate = null;
+    const selectedPeriodFromChild = getTextFromChild(baseIndex + 5);
+    cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
+    cppHeroChartData.chartData = getRichtextFromChild(baseIndex + 6) || null;
   }
-
-  // Check for picture at the adjusted index, if present use it and adjust subsequent indices
-  const pic = getPictureFromChild(graphImageIndex);
-
-  if (pic) {
-    cppHeroChartData.graphImage = pic.src;
-    cppHeroChartData.graphImageAlt = pic.alt;
-    // If picture exists, shift indices by 1
-    graphTextIndex += 1;
-    valueIndex += 1;
-    badgeIndex += 1;
-    periodIndex += 1;
-  }
-
-  cppHeroChartData.graphText = getTextFromChild(graphTextIndex) || null;
-  cppHeroChartData.value = getTextFromChild(valueIndex) || null;
-  cppHeroChartData.badge = getTextFromChild(badgeIndex) || null;
-  const selectedPeriodFromChild = getTextFromChild(periodIndex);
-  cppHeroChartData.selectedPeriod = selectedPeriodFromChild || cppHeroChartData.selectedPeriod;
 
   // Parse JSON data if chartData contains a JSON string with periods object
   // The JSON structure might be: { "periods": { "3M": {...}, "6M": {...}, ... } }
@@ -680,11 +704,18 @@ export default function decorate(block) {
             const [firstPeriod] = cppHeroChartData.periods;
             cppHeroChartData.selectedPeriod = firstPeriod;
           }
-          // Update initial value, badge, and overallData from selected period's data
+          // Update initial value, badge, fundDate, and overallData from selected period's data
           const selectedPeriodData = cppHeroChartData.periodsData[cppHeroChartData.selectedPeriod];
           if (selectedPeriodData) {
-            if (selectedPeriodData.value) cppHeroChartData.value = selectedPeriodData.value;
-            if (selectedPeriodData.badge) cppHeroChartData.badge = selectedPeriodData.badge;
+            if (selectedPeriodData.value) {
+              cppHeroChartData.value = selectedPeriodData.value;
+            }
+            if (selectedPeriodData.badge) {
+              cppHeroChartData.badge = selectedPeriodData.badge;
+            }
+            if (selectedPeriodData.fundDate) {
+              cppHeroChartData.fundDate = selectedPeriodData.fundDate;
+            }
             if (selectedPeriodData.overallData) {
               cppHeroChartData.overallData = selectedPeriodData.overallData;
             }
@@ -713,8 +744,8 @@ export default function decorate(block) {
     }
   }
 
-  // Extract overall data from the last child div (right side content)
-  // First check for data-aue-prop
+  // Extract overall data (right side content)
+  // First check for data-aue-prop (authoring mode)
   const overallDataProp = block.querySelector('[data-aue-prop="overall_data"], [data-aue-prop="overallData"]');
   if (overallDataProp) {
     const propType = overallDataProp.getAttribute('data-aue-type');
@@ -737,22 +768,21 @@ export default function decorate(block) {
       }
     }
   } else {
-    // Fallback: try to find the overall data div by checking multiple indices
-    // Start from the end and work backwards to find the div with overall data
+    // Fallback: search for the overall data div by looking for content indicators (h1, buttons)
+    // This approach works regardless of the exact index position
     let overallData = null;
     const childrenLength = block.children.length;
     for (let i = childrenLength - 1; i >= 0; i -= 1) {
       const child = block.children[i];
       const innerDiv = child.querySelector('div');
-      if (innerDiv) {
-        // Check if this div contains overall data indicators (h1, button, etc.)
-        const hasH1 = innerDiv.querySelector('h1');
-        const hasButton = innerDiv.querySelector('a.button, .button-container a, a[class*="button"]');
-        if (hasH1 || hasButton) {
-          overallData = parseOverallData(i);
-          if (overallData) {
-            break;
-          }
+      const container = innerDiv || child;
+      // Check if this div contains overall data indicators (h1, button, etc.)
+      const hasH1 = container.querySelector('h1');
+      const hasButton = container.querySelector('a.button, .button-container a, a[class*="button"]');
+      if (hasH1 || hasButton) {
+        overallData = parseOverallData(i);
+        if (overallData) {
+          break;
         }
       }
     }
@@ -774,7 +804,8 @@ export default function decorate(block) {
   const periodTabsHtml = cppHeroChartData.periods
     .map((period) => {
       const isActive = period === cppHeroChartData.selectedPeriod ? 'active' : '';
-      return `<button class="period-tab ${isActive}" role="tab" data-period="${period}" aria-pressed="${period === cppHeroChartData.selectedPeriod}">${period}</button>`;
+      const ariaPressed = period === cppHeroChartData.selectedPeriod;
+      return `<button class="period-tab ${isActive}" data-period="${period}" aria-pressed="${ariaPressed}">${period}</button>`;
     })
     .join('');
 
@@ -793,6 +824,14 @@ export default function decorate(block) {
   }
 
   // Build value and badge section HTML
+  // Get initial fundDate from mock data if not set
+  if (!cppHeroChartData.fundDate && cppHeroChartData.periodsData) {
+    const initialPeriodData = cppHeroChartData.periodsData[cppHeroChartData.selectedPeriod];
+    if (initialPeriodData && initialPeriodData.fundDate) {
+      cppHeroChartData.fundDate = initialPeriodData.fundDate;
+    }
+  }
+
   let valueHtml = '';
   if (cppHeroChartData.value) {
     valueHtml = `
@@ -802,16 +841,18 @@ export default function decorate(block) {
           <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M1.054 11.4038L0 10.35L5.127 5.223C5.6655 4.691 6.3145 4.42342 7.074 4.42025C7.83367 4.41708 8.48275 4.68467 9.02125 5.223L10.1712 6.373C10.4226 6.62433 10.7193 6.74842 11.0615 6.74525C11.4038 6.74208 11.7007 6.618 11.952 6.373L16.8348 1.5H13.904V0H19.404V5.5H17.904V2.56925L13.0058 7.44225C12.4674 7.97425 11.8168 8.24192 11.054 8.24525C10.2912 8.24842 9.64375 7.984 9.11175 7.452L7.93675 6.277C7.69558 6.03583 7.40292 5.91692 7.05875 5.92025C6.71442 5.92342 6.42175 6.04233 6.18075 6.277L1.054 11.4038Z" fill="#7BF1A8"/>
 </svg> ${cppHeroChartData.badge}</div>` : ''}
+        <p class="cpp-hero-chart-fund-date">${cppHeroChartData.fundDate || ''}</p>
       </div>
     `;
   }
 
-  // Build Learn More link (separate from the primary CTA button)
+  // Build Learn More link
   let learnMoreHtml = '';
   if (cppHeroChartData.buttonLink) {
+    const linkText = cppHeroChartData.buttonLabel || 'Learn More';
     learnMoreHtml = `
       <div class="cpp-hero-chart-learnmore-wrapper">
-        <a class="cpp-hero-chart-learnmore" href="${cppHeroChartData.buttonLink}">Learn More 
+        <a class="cpp-hero-chart-learnmore" href="${cppHeroChartData.buttonLink}">${linkText} 
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
           <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#FFF"></path>
         </svg>
@@ -850,6 +891,11 @@ export default function decorate(block) {
   const descAttr = cppHeroChartData.description ? ` aria-describedby="${descriptionId}"` : '';
   const html = `
     <div class="cpp-hero-chart-wrapper" role="region" aria-labelledby="${titleId}"${descAttr}>
+      <!-- Screen reader announcement region for dynamic updates -->
+      <div class="cpp-hero-chart-sr-announcement" 
+           role="status" 
+           aria-live="polite" 
+           aria-atomic="true"></div>
       <!-- Main Content Area: Chart Panel (Left) and Overall Data Panel (Right) -->
       <div class="cpp-hero-chart-content-wrapper">
         <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
@@ -857,7 +903,7 @@ export default function decorate(block) {
           <!-- Controls Section (Graph Info + Period Tabs) -->
           <div class="cpp-hero-chart-controls">
             ${graphInfoHtml}
-            <div class="cpp-hero-chart-periods" role="tablist" aria-label="Time period selector">
+            <div class="cpp-hero-chart-periods" role="group" aria-label="Time period selector">
               ${periodTabsHtml}
             </div>
           </div>
@@ -866,7 +912,7 @@ export default function decorate(block) {
           ${valueHtml}
 
           <!-- Chart Container -->
-          <div class="cpp-hero-chart" id="${chartId}"></div>
+          <div class="cpp-hero-chart" id="${chartId}" aria-hidden="true"></div>
           ${learnMoreHtml}
         </div>
 
