@@ -419,6 +419,10 @@
 
 /* Mobile Responsive */
 @media (width <= 768px) {
+    .cpp-hero-chart-wrapper {
+        margin-top: -86px !important;
+    }
+
     .cpp-hero-chart-container {
         padding-block: 32px;
     }
