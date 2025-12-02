@@ -17,6 +17,10 @@
     margin-bottom: 40px;
 }
 
+.portfolio-allocation-title-section svg path {
+    fill: #0273CF;
+}
+
 .portfolio-allocation-title-icon {
     width: 24px;
     height: 24px;
