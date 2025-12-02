@@ -468,7 +468,7 @@ export default async function decorate(block) {
         body: JSON.stringify(
           agentContext
             ? { request: msg, agent_context: agentContext }
-            : { request: msg }
+            : { request: msg },
         ),
       });
 
