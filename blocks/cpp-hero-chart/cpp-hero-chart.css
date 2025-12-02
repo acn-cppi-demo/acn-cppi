@@ -81,20 +81,20 @@
     outline: none;
 }
 
-/* Graph Info */
+/* Controls Section (Graph Info + Period Tabs) */
+.cpp-hero-chart-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0;
+    padding: 20px 0 0;
+}
+
+/* Graph Info (Left side) */
 .cpp-hero-chart-graph-info {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 20px 0 0;
-}
-
-/* Controls Section (Period Tabs only) */
-.cpp-hero-chart-controls {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 20px 0 0;
 }
 
 .cpp-hero-chart-graph-info svg path {
@@ -130,7 +130,6 @@
     font-size: 14px;
     font-weight: 600;
     border: none;
-    box-shadow: none;
 
     /* Short transition but no delay so active state animates to white immediately */
     transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
@@ -155,8 +154,7 @@
 .period-tab.active:focus-visible {
     background: #fff !important;
     color: #0273CF !important;
-    border: 1px solid #fff;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+    border-color: #fff !important;
     
     /* keep active transition short and immediate (no delay) */
     transition-duration: 120ms;
@@ -256,38 +254,6 @@
     max-width: 840px;
     flex-direction: column;
     align-self: stretch;
-}
-
-/* Desktop: Position graph-info and controls on same row using CSS Grid (only on desktop) */
-@media (width >= 769px) {
-    .cpp-hero-chart-panel {
-        display: grid;
-        grid-template:
-            "graph-info controls" auto
-            "value-section value-section" auto
-            "chart chart" auto
-            / 1fr auto;
-        gap: 0;
-        align-items: start;
-    }
-
-    .cpp-hero-chart-graph-info {
-        grid-area: graph-info;
-        padding: 20px 0 0;
-    }
-
-    .cpp-hero-chart-controls {
-        grid-area: controls;
-        padding: 20px 0 0;
-    }
-
-    .cpp-hero-chart-value-section {
-        grid-area: value-section;
-    }
-
-    .cpp-hero-chart {
-        grid-area: chart;
-    }
 }
 
 /* Overall Data Panel (Right Side) */
@@ -438,8 +404,6 @@
     .cpp-hero-chart-panel {
         flex: 0 0 100%;
         width: 100%;
-        flex-flow: column nowrap;
-        padding: 24px;
     }
 
     .cpp-hero-chart-overall-data {
@@ -456,48 +420,15 @@
 
     .cpp-hero-chart-graph-info {
         justify-content: flex-start;
-        padding: 0 0 14px;
     }
 
     .cpp-hero-chart-periods {
         justify-content: space-between;
-        flex-wrap: nowrap;
-        gap: 4px;
-    }
-
-    .period-tab {
-        width: auto;
-        min-width: 0;
-        flex: 1 1 0;
-        max-width: 57.5px;
+        flex-wrap: wrap;
     }
 
     .cpp-hero-chart-value {
-        font-size: 36px;
-        min-width: 137px;
-        min-height: 49px;
-        flex: 0 0 auto;
-    }
-
-    .cpp-hero-chart-value-section {
-        flex-wrap: wrap;
-        gap: 4px 12px;
-        justify-content: flex-start;
-        margin-bottom: 0;
-    }
-
-    .cpp-hero-chart-badge {
-        min-width: 121px;
-        min-height: 40px;
-        padding: 0;
-        gap: 4px;
-        justify-content: center;
-        font-size: 14px;
-        flex: 0 0 auto;
-    }
-
-    .cpp-hero-chart-fund-date {
-        display: none;
+        font-size: 32px;
     }
 
     .cpp-hero-chart-overall-value {
@@ -505,26 +436,14 @@
     }
 }
 
-
 @media (width <= 480px) {
     .cpp-hero-chart-title {
         font-size: 24px;
     }
 
-    .cpp-hero-chart-panel {
-        padding: 24px;
-    }
-
     .cpp-hero-chart-value-section {
-        flex-flow: row wrap;
+        flex-direction: column;
         align-items: flex-start;
-        gap: 4px 12px;
-        justify-content: flex-start;
-        margin-bottom: 0;
-    }
-
-    .cpp-hero-chart-fund-date {
-        display: none;
     }
 
     .cpp-hero-chart-overall-data {
@@ -540,17 +459,13 @@
     }
 
     .period-tab {
-        padding: 6px 8px;
+        padding: 6px 12px;
         font-size: 12px;
         border: none;
-        width: auto;
-        min-width: 0;
-        flex: 1 1 0;
-        max-width: 57.5px;
     }
 
     .graph-text {
-        font-size: 16px;
+        font-size: 12px;
     }
 }
 

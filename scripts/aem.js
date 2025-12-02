@@ -597,29 +597,6 @@ function decorateSections(main) {
             section.style.backgroundRepeat = 'no-repeat';
             // Add class to identify sections with background images
             section.classList.add('has-background-image');
-
-            // LCP Optimization: Preload background image for hero sections
-            // Check if this is a hero section (likely LCP candidate)
-            const isHeroSection = section.classList.contains('cpp-hero-investment-container')
-              || section.classList.contains('hero')
-              || section.classList.contains('cpp-hero')
-              || section.querySelector('.cpp-hero-investment-container')
-              || section.querySelector('.hero')
-              || section.querySelector('.cpp-hero');
-
-            if (isHeroSection) {
-              // Add preload link to head for LCP optimization
-              const preloadLink = document.createElement('link');
-              preloadLink.rel = 'preload';
-              preloadLink.as = 'image';
-              preloadLink.href = bgImage;
-              preloadLink.setAttribute('fetchpriority', 'high');
-              // Add to head if not already present
-              const existingPreload = document.querySelector(`link[rel="preload"][href="${bgImage}"]`);
-              if (!existingPreload) {
-                document.head.appendChild(preloadLink);
-              }
-            }
           }
         } else {
           section.dataset[toCamelCase(key)] = meta[key];

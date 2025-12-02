@@ -316,101 +316,6 @@ header nav .nav-tools .custom-search-icon svg {
   fill: var(--cppi-blue, #0273cf);
 }
 
-/* Chatbot trigger pill styling - using semantic button element */
-button.chatbot-trigger-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  border: 1px solid var(--cppi-blue, #0273cf);
-  border-radius: 30px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  font-family: inherit;
-  box-shadow: none;
-}
-
-button.chatbot-trigger-pill:hover {
-  background: #f5f7fa;
-  box-shadow: 0 2px 8px rgb(2 115 207 / 15%);
-}
-
-/* High contrast focus state for accessibility */
-button.chatbot-trigger-pill:focus {
-  outline: none;
-}
-
-button.chatbot-trigger-pill:focus-visible {
-  outline: 3px solid var(--cppi-blue, #0273cf);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 6px rgb(2 115 207 / 20%);
-}
-
-/* Active/pressed state */
-button.chatbot-trigger-pill:active {
-  transform: scale(0.98);
-  background: #e8f4fc;
-}
-
-.chatbot-trigger-pill .pill-text {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.chatbot-trigger-pill .pill-name {
-  color: var(--cppi-navy, #2c3d50);
-}
-
-.chatbot-trigger-pill .pill-separator {
-  color: #6b7280;
-  font-weight: 400;
-}
-
-.chatbot-trigger-pill .pill-role {
-  color: #6b7280;
-  font-weight: 400;
-}
-
-.chatbot-trigger-pill .pill-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* stylelint-disable-next-line no-descending-specificity */
-.chatbot-trigger-pill .pill-icon svg {
-  width: 18px;
-  height: 18px;
-}
-
-/* Hide the old search icon when pill is visible */
-header nav .nav-tools:has(.chatbot-trigger-pill) .icon-search {
-  display: none;
-}
-
-/* Responsive: hide pill text on smaller screens, show just icon */
-@media (width <= 1100px) {
-  .chatbot-trigger-pill .pill-text {
-    display: none;
-  }
-
-  button.chatbot-trigger-pill {
-    padding: 10px;
-    border-radius: 50%;
-
-    /* Minimum touch target size for accessibility (44x44px) */
-    min-width: 44px;
-    min-height: 44px;
-    justify-content: center;
-  }
-}
-
 /* Language links styling */
 header nav .nav-tools a {
   font-weight: 600;
@@ -459,8 +364,6 @@ header nav .nav-tools [class*="menu"] .menu-close-text {
   body:has(.megamenu[aria-hidden='false']) header nav .nav-tools .icon-search,
   /* stylelint-disable-next-line no-descending-specificity */
   body:has(.megamenu[aria-hidden='false']) header nav .nav-tools .custom-search-icon,
-  /* stylelint-disable-next-line no-descending-specificity */
-  body:has(.megamenu[aria-hidden='false']) header nav .nav-tools .chatbot-trigger-pill,
   /* stylelint-disable-next-line no-descending-specificity */
   body:has(.megamenu[aria-hidden='false']) header nav .nav-tools a:not([class*="menu"]) {
     display: none;

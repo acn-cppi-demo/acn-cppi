@@ -1,43 +1,3 @@
-// Shared default chart data for fallback when no chart data is provided
-const DEFAULT_CHART_DATA = {
-  categories: ['2021', '2022', '2023', '2024', '2025'],
-  series: [
-    {
-      name: 'Public Equity',
-      data: [149.2, 150.9, 148.2, 158.1, 164.3],
-      color: '#0052A4',
-    },
-    {
-      name: 'Private Equity',
-      data: [119.3, 140.1, 159.6, 189.7, 221.5],
-      color: '#0273CF',
-    },
-    {
-      name: 'Government Bonds',
-      data: [99.4, 97, 96.9, 101.2, 121.4],
-      color: '#3E97FF',
-    },
-    {
-      name: 'Credit',
-      data: [49.7, 64.7, 74.1, 82.2, 92.9],
-      color: '#99BCFF',
-    },
-    {
-      name: 'Real Estate',
-      data: [39.8, 43.1, 45.6, 50.6, 57.2],
-      color: '#E3E4E5',
-    },
-    {
-      name: 'Infrastructure',
-      data: [39.8, 43.1, 45.6, 50.6, 57.2],
-      color: '#2C3D50',
-    },
-  ],
-  min: 0,
-  max: 800,
-  tickInterval: 100,
-};
-
 /**
  * Initialize Fund Composition stacked column chart
  * @param {string} chartId - The chart container ID
@@ -71,12 +31,51 @@ async function initializeCompositionChart(chartId, data) {
     }
   }
 
+  // Mock data matching Figma design
+  const mockChartData = {
+    categories: ['2021', '2022', '2023', '2024', '2025'],
+    series: [
+      {
+        name: 'Infrastructure',
+        data: [83.2, 92.0, 95.0, 103.0, 117.0],
+        color: '#2C3D50', // Dark navy
+      },
+      {
+        name: 'Public Equity',
+        data: [176.0, 208.0, 220.0, 240.0, 274.0],
+        color: '#0052A4', // Blue highlight
+      },
+      {
+        name: 'Private Equity',
+        data: [95.0, 112.0, 118.0, 128.0, 140.0],
+        color: '#0273CF', // CPP blue
+      },
+      {
+        name: 'Government Bonds',
+        data: [80.0, 95.0, 100.0, 110.0, 125.0],
+        color: '#3E97FF', // Blue 5
+      },
+      {
+        name: 'Credit',
+        data: [60.0, 71.0, 75.0, 82.0, 94.0],
+        color: '#99BCFF', // Blue 6
+      },
+      {
+        name: 'Real Estate',
+        data: [105.8, 123.0, 130.0, 142.0, 162.0],
+        color: '#E3E4E5', // Grey 7
+      },
+    ],
+    min: 300,
+    max: 800,
+    tickInterval: 100,
+  };
+
   // Chart data is already parsed and passed from decorate function
-  const chartData = (data.chartData && data.chartData.categories)
-    ? data.chartData : DEFAULT_CHART_DATA;
+  const chartData = (data.chartData && data.chartData.categories) ? data.chartData : mockChartData;
 
   // Use provided min/max/interval or defaults
-  const yAxisMin = chartData.min || 0;
+  const yAxisMin = chartData.min || 300;
   const yAxisMax = chartData.max || 800;
   const yAxisTickInterval = chartData.tickInterval || 100;
 
@@ -295,8 +294,48 @@ export default function decorate(block) {
     }
   }
 
+  // Mock data structure
+  const mockChartData = {
+    categories: ['2021', '2022', '2023', '2024', '2025'],
+    series: [
+      {
+        name: 'Infrastructure',
+        data: [83.2, 92.0, 95.0, 103.0, 117.0],
+        color: '#2C3D50',
+      },
+      {
+        name: 'Public Equity',
+        data: [176.0, 208.0, 220.0, 240.0, 274.0],
+        color: '#0052A4',
+      },
+      {
+        name: 'Private Equity',
+        data: [95.0, 112.0, 118.0, 128.0, 140.0],
+        color: '#0273CF',
+      },
+      {
+        name: 'Government Bonds',
+        data: [80.0, 95.0, 100.0, 110.0, 125.0],
+        color: '#3E97FF',
+      },
+      {
+        name: 'Credit',
+        data: [60.0, 71.0, 75.0, 82.0, 94.0],
+        color: '#99BCFF',
+      },
+      {
+        name: 'Real Estate',
+        data: [105.8, 123.0, 130.0, 142.0, 162.0],
+        color: '#E3E4E5',
+      },
+    ],
+    min: 300,
+    max: 800,
+    tickInterval: 100,
+  };
+
   // Parse chart data - single source of truth for both chart and legend
-  let chartData = DEFAULT_CHART_DATA;
+  let chartData = mockChartData;
   try {
     if (compositionData.chartData && typeof compositionData.chartData === 'string' && compositionData.chartData.trim()) {
       let parsed;

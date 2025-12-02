@@ -133,8 +133,6 @@ export default function decorate(block) {
 
         // Remove the "Icon" paragraph from body
         firstP.remove();
-      } else if (firstP && firstP.textContent.trim().toLowerCase() === 'image') {
-        firstP.remove();
       }
     }
 

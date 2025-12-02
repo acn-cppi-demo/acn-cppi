@@ -520,6 +520,15 @@ export default function decorate(block) {
   const titleId = `asset-allocation-title-${Date.now()}`;
   const chartId = `asset-allocation-chart-${Date.now()}`;
 
+  // Build title HTML
+  const titleHtml = assetData.title
+    ? `
+      <div class="asset-allocation-title-section">
+        <h2 class="asset-allocation-title" id="${titleId}">${assetData.title}</h2>
+      </div>
+    `
+    : '';
+
   // Build asset class list HTML (matching design - vertical list with bullets)
   const assetListHtml = assetClasses
     .map((asset, index) => {
@@ -546,11 +555,12 @@ export default function decorate(block) {
 
   // Build inner content (without wrapper if it already exists)
   const innerContent = `
+    ${titleHtml}
     <div class="asset-allocation-content">
       <div class="asset-allocation-chart-content">
         <div class="asset-allocation-chart-container">
           <div class="asset-allocation-chart-wrapper">
-            <h3 class="asset-allocation-chart-title" id="${chartId}-title">${assetData?.title || 'Asset Allocation'}</h3>
+            <h3 class="asset-allocation-chart-title" id="${chartId}-title">Asset Allocation</h3>
             <div 
               class="asset-allocation-chart" 
               id="${chartId}" 
