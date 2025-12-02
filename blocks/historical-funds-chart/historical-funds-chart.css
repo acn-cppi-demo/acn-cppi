@@ -1,0 +1,186 @@
+.historical-funds-chart-container {
+    padding: 60px 0;
+    background-color: #F5F7FA;
+}
+
+.historical-funds-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.historical-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ECF1F9;
+    color: #2C3D50;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.historical-badge svg {
+    width: 16px;
+    height: 16px;
+}
+
+.historical-badge svg path {
+    fill: #2C3D50
+}
+
+.historical-title {
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    color: #2C3D50;
+}
+
+.historical-description {
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    color: #2C3D50;
+    margin-bottom: 40px;
+    max-width: 800px;
+}
+
+.historical-chart-wrapper {
+    background: #FFF;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
+    margin-bottom: 32px;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.historical-chart-element {
+    width: 100%;
+    flex: 1;
+    min-height: 400px;
+}
+
+.historical-funds-stats {
+    width: 100%;
+}
+
+.stat-card {
+    background: #FFF;
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgb(0 0 0 / 5%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    background: #F5F7FA;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #2C3D50;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #6F7176;
+    line-height: 1.4;
+}
+
+
+.historical-funds-stats h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3d50;
+    margin: 0 0 16px;
+    text-align: left;
+}
+
+.fund-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.historical-funds-card {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 40px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #2C3D50;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    background: #fff;
+    cursor: pointer;
+}
+
+.historical-funds-card:hover {
+    background: #f3f4f6;
+    border-color: #0273cf;
+    text-decoration: none;
+}
+
+.fund-stats-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F5F7FA;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    color: #0273cf;
+}
+
+.fund-stats-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.historical-funds-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #2c3d50;
+}
+
+.historical-funds-card p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
+@media (width <= 768px) {
+    .historical-title {
+        font-size: 24px;
+    }
+
+    .historical-chart-wrapper {
+        padding: 16px;
+    }
+
+    .fund-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+}
