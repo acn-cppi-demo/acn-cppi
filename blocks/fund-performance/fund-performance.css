@@ -129,26 +129,8 @@
     text-align: left;
 }
 
-/* Fund Overview Badge */
-.right-content-item:first-child {
-  display: flex;
-  justify-content: left;
-  padding: 0;
-  background: transparent;
-  border: none;
-}
-
-.right-content-item:first-child p {
-  background: #fff;
-  color: var(--cppi-blue, #0273cf);
-  border: 1px solid var(--grey-7, #e3e4e5);
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0;
-  white-space: nowrap;
+.right-content-item.badge-primary p {
+    font-weight: 600;
 }
 
 /* Performance Data Rows */
