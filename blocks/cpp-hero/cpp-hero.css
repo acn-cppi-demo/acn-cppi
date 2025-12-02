@@ -5,16 +5,6 @@
     width: 100%;
 }
 
-.cpp-hero-wrapper .cpp-hero-badge {
-    border: 1px solid #E3E4E5;
-    width: max-content;
-    padding: 8px 16px;
-    border-radius: 30px;
-    background: #fffF;
-    color: #0273CF;
-    font-weight: 600;
-}
-
 .cpp-hero-title {
     margin-top: 16px;
     margin-bottom: 0;

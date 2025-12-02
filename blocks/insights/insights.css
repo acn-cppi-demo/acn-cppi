@@ -6,14 +6,6 @@
     padding-top: 140px !important;
 }
 
-.insights-wrapper .insights-badge {
-    border: 1px solid #0273CF;
-    width: max-content;
-    padding: 8px 16px;
-    border-radius: 30px;
-    background: #0273CF33;
-}
-
 .insights-title, .insights-list li {
     margin-top: 16px;
     margin-bottom: 0;
