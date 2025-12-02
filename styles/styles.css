@@ -76,7 +76,6 @@
 }
 
 body {
-  display: none;
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -84,10 +83,6 @@ body {
   font-size: var(--body-font-size);
   font-weight: var(--body-font-weight);
   line-height: 1.6;
-}
-
-body.appear {
-  display: block;
 }
 
 /* Skip Link for Accessibility */

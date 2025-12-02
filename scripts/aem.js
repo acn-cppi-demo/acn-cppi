@@ -543,7 +543,8 @@ function decorateIcons(element, prefix = '') {
  * @param {Element} main The container element
  */
 function decorateSections(main) {
-  main.querySelectorAll(':scope > div:not([data-section-status])').forEach((section) => {
+  const sections = main.querySelectorAll(':scope > div:not([data-section-status])');
+  sections.forEach((section, index) => {
     const wrappers = [];
     let defaultContent = false;
     [...section.children].forEach((e) => {
@@ -558,7 +559,10 @@ function decorateSections(main) {
     wrappers.forEach((wrapper) => section.append(wrapper));
     section.classList.add('section');
     section.dataset.sectionStatus = 'initialized';
-    section.style.display = 'none';
+    // Don't hide first section - allow LCP content to render immediately
+    if (index > 0) {
+      section.style.display = 'none';
+    }
 
     // Process section metadata
     const sectionMeta = section.querySelector('div.section-metadata');

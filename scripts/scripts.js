@@ -126,7 +126,8 @@ async function loadEager(doc) {
     main.setAttribute('tabindex', '-1');
 
     decorateMain(main);
-    document.body.classList.add('appear');
+    // Body is now visible immediately for faster LCP
+    // Sections become visible via data-section-status="loaded" in CSS
     await loadSection(main.querySelector('.section'), waitForFirstImage);
   }
 
