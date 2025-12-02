@@ -125,6 +125,10 @@
   line-height: normal;
 }
 
+.right-content-item .performance-row + p {
+    text-align: left;
+}
+
 /* Fund Overview Badge */
 .right-content-item:first-child {
   display: flex;
