@@ -714,9 +714,8 @@
     "fields": [
       {
         "component": "text",
-        "name": "badge",
-        "label": "Badge Text (e.g., Long Term Growth)",
-        "valueType": "string"
+        "name": "badgeLabel",
+        "label": "Badge Label"
       },
       {
         "component": "text",
