@@ -601,6 +601,10 @@
   height: 24px;
 }
 
+.thinking-indicator .thinking-icon svg path {
+    fill: #0273cf
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
