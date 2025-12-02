@@ -242,6 +242,25 @@
     flex-wrap: wrap;
 }
 
+/* Desktop: 2:1 grid layout using flexbox */
+@media (width >= 769px) {
+    .cpp-hero-chart-content-wrapper {
+        flex-wrap: nowrap;
+    }
+
+    .cpp-hero-chart-panel {
+        flex: 2 1 0;
+        min-width: 400px;
+        max-width: none;
+        overflow: hidden;
+    }
+
+    .cpp-hero-chart-overall-data {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+}
+
 /* Panel wrapper that groups controls, value and chart */
 .cpp-hero-chart-panel {
     border: 1px solid #FFF;
@@ -266,19 +285,31 @@
             "graph-info controls" auto
             "value-section value-section" auto
             "chart chart" auto
-            / 1fr auto;
+            / minmax(0, 1fr) auto;
         gap: 0;
         align-items: start;
+        overflow: hidden;
     }
 
     .cpp-hero-chart-graph-info {
         grid-area: graph-info;
         padding: 20px 0 0;
+        min-width: 0;
+        overflow: hidden;
     }
 
     .cpp-hero-chart-controls {
         grid-area: controls;
         padding: 20px 0 0;
+        min-width: 0;
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .cpp-hero-chart-periods {
+        flex-wrap: nowrap;
+        max-width: 100%;
     }
 
     .cpp-hero-chart-value-section {
