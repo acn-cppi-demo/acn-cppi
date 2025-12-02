@@ -210,6 +210,10 @@ a.link-primary:focus {
     height: 100%;
 }
 
+.badge-icon svg {
+    display: block;
+}
+
 a.link-primary svg {
     flex-shrink: 0;
     transition: transform 0.2s ease;
@@ -401,10 +405,6 @@ main .section.highlight {
     display: inline-flex;
     align-items: center;
     flex-shrink: 0;
-}
-
-.badge-icon svg {
-    display: block;
 }
 
 .button-container {
