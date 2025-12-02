@@ -11,82 +11,53 @@ export default function decorate(block) {
     analytics: '<svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.8655 13.25H5.36525V8.5H3.8655V13.25ZM11.6348 13.25H13.1345V3.5H11.6348V13.25ZM7.75 13.25H9.25V10.5H7.75V13.25ZM7.75 8.5H9.25V6.5H7.75V8.5ZM1.80775 17C1.30258 17 0.875 16.825 0.525 16.475C0.175 16.125 0 15.6974 0 15.1923V1.80775C0 1.30258 0.175 0.875 0.525 0.525C0.875 0.175 1.30258 0 1.80775 0H15.1923C15.6974 0 16.125 0.175 16.475 0.525C16.825 0.875 17 1.30258 17 1.80775V15.1923C17 15.6974 16.825 16.125 16.475 16.475C16.125 16.825 15.6974 17 15.1923 17H1.80775ZM1.80775 15.5H15.1923C15.2692 15.5 15.3398 15.4679 15.4038 15.4038C15.4679 15.3398 15.5 15.2692 15.5 15.1923V1.80775C15.5 1.73075 15.4679 1.66025 15.4038 1.59625C15.3398 1.53208 15.2692 1.5 15.1923 1.5H1.80775C1.73075 1.5 1.66025 1.53208 1.59625 1.59625C1.53208 1.66025 1.5 1.73075 1.5 1.80775V15.1923C1.5 15.2692 1.53208 15.3398 1.59625 15.4038C1.66025 15.4679 1.73075 15.5 1.80775 15.5Z" fill="#2C3D50"/></svg>',
   };
 
-  // Extract data from AEM editor attributes or block children
-  const badgeData = {
-    badge: '',
-    iconSVG: 'none',
-    class: '',
-  };
-
-  // First, try to get data from data-aue-prop attributes (AEM editor)
-  const propElements = block.querySelectorAll('[data-aue-prop]');
-  propElements.forEach((element) => {
-    const propName = element.getAttribute('data-aue-prop');
-    const propType = element.getAttribute('data-aue-type');
-    let value = null;
-
-    if (propType === 'richtext') {
-      value = element.innerHTML.trim() || element.textContent.trim();
-    } else {
-      value = element.textContent.trim();
-    }
-
-    if (propName === 'badge') {
-      badgeData.badge = value;
-    } else if (propName === 'iconSVG') {
-      badgeData.iconSVG = value || 'none';
-    } else if (propName === 'class') {
-      badgeData.class = value;
-    }
-  });
-
-  // Fallback: extract from block children
+  // Extract data from three divs
   const children = Array.from(block.children);
-  if (children.length > 0 && !badgeData.badge) {
-    const badgeDiv = children[0];
-    const badgeParagraph = badgeDiv.querySelector('p');
-    if (badgeParagraph) {
-      badgeData.badge = badgeParagraph.textContent.trim();
+  let badgeText = '';
+  let iconName = '';
+  let badgeClass = '';
+
+  // First div: badge title
+  if (children.length > 0) {
+    const firstDiv = children[0];
+    const paragraph = firstDiv.querySelector('p');
+    if (paragraph) {
+      badgeText = paragraph.textContent.trim();
     }
   }
 
-  if (children.length >= 2) {
-    const classDiv = children[1];
-    const classParagraph = classDiv.querySelector('p');
-    if (classParagraph && !badgeData.class) {
-      badgeData.class = classParagraph.textContent.trim();
+  // Second div: icon name
+  if (children.length > 1) {
+    const secondDiv = children[1];
+    const paragraph = secondDiv.querySelector('p');
+    if (paragraph) {
+      iconName = paragraph.textContent.trim();
     }
   }
 
-  if (children.length >= 3) {
-    const iconDiv = children[2];
-    const iconParagraph = iconDiv.querySelector('p');
-    if (iconParagraph && !badgeData.iconSVG) {
-      badgeData.iconSVG = iconParagraph.textContent.trim() || 'none';
+  // Third div: badge class
+  if (children.length > 2) {
+    const thirdDiv = children[2];
+    const paragraph = thirdDiv.querySelector('p');
+    if (paragraph) {
+      badgeClass = paragraph.textContent.trim();
     }
   }
 
   // Apply class to badge block
-  if (badgeData.class) {
-    block.classList.add(badgeData.class);
+  if (badgeClass) {
+    block.classList.add(badgeClass);
   }
 
-  // Create badge content structure
-  block.innerHTML = '';
+  // Get icon SVG if icon name exists and is valid
+  const iconSVG = (iconName && iconMap[iconName]) ? iconMap[iconName] : '';
 
-  // Add icon if selected and not 'none'
-  if (badgeData.iconSVG && badgeData.iconSVG !== 'none' && iconMap[badgeData.iconSVG]) {
-    const iconWrapper = document.createElement('span');
-    iconWrapper.className = 'badge-icon';
-    iconWrapper.innerHTML = iconMap[badgeData.iconSVG];
-    iconWrapper.setAttribute('aria-hidden', 'true');
-    block.appendChild(iconWrapper);
-  }
+  // Build badge HTML using template literals
+  const badgeHTML = `
+    ${iconSVG ? `<span class="badge-icon" aria-hidden="true">${iconSVG}</span>` : ''}
+    ${badgeText ? `<span>${badgeText}</span>` : ''}
+  `;
 
-  // Add badge text
-  if (badgeData.badge) {
-    const badgeText = document.createElement('p');
-    badgeText.textContent = badgeData.badge;
-    block.appendChild(badgeText);
-  }
+  // Replace block content with new HTML structure
+  block.innerHTML = badgeHTML.trim();
 }
