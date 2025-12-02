@@ -1,4 +1,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<script>
+  // LCP optimization: Discover hero background image early
+  // This runs before module scripts to make the LCP image discoverable by the browser
+  (function() {
+    const defined = (obj) => (obj !== undefined && obj !== null);
+    const lcpImgSrc = (el, defined) => {
+      const imgEl = el?.querySelector('img');
+      if (defined(imgEl)) return imgEl.src;
+      const bgStyle = el?.computedStyleMap?.()?.get?.('background-image');
+      if (defined(bgStyle) && bgStyle.length > 0 && bgStyle[0].url) return bgStyle[0].url;
+      return null;
+    };
+    const sectL = document.querySelectorAll('body > main > div');
+    const firstTwoSections = Array.from(sectL).slice(0, 2);
+    firstTwoSections.forEach((section) => {
+      const meta = section.querySelector('.section-metadata');
+      if (meta) {
+        const bgRow = Array.from(meta.querySelectorAll(':scope > div')).find((row) => {
+          const key = row.children[0]?.textContent?.trim().toLowerCase();
+          return key === 'backgroundimage' || key === 'background image';
+        });
+        if (bgRow && bgRow.children[1]) {
+          let bgUrl = bgRow.children[1].querySelector('img')?.src 
+                   || bgRow.children[1].querySelector('a')?.href
+                   || bgRow.children[1].textContent?.trim();
+          if (bgUrl) {
+            // Create a hidden img to trigger early fetch with high priority
+            const img = document.createElement('img');
+            img.src = bgUrl;
+            img.fetchPriority = 'high';
+            img.loading = 'eager';
+            img.decoding = 'async';
+            img.alt = '';
+            img.setAttribute('aria-hidden', 'true');
+            img.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+            document.body.insertBefore(img, document.body.firstChild);
+          }
+        }
+      }
+    });
+  })();
+</script>
 <script src="/scripts/aem.js" type="module"></script>
 <script src="/scripts/scripts.js" type="module"></script>
 <link rel="stylesheet" href="/styles/styles.css"/>
