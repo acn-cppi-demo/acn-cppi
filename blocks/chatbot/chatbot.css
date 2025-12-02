@@ -584,7 +584,6 @@
 .thinking-indicator {
   display: flex;
   align-items: center;
-  gap: 8px;
   padding: 12px 0;
 }
 
@@ -594,6 +593,7 @@
   justify-content: center;
   color: var(--cppi-blue, #0273cf);
   animation: spin 2s linear infinite;
+  margin-right: 8px;
 }
 
 .thinking-indicator .thinking-icon svg {
