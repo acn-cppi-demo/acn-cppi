@@ -224,9 +224,10 @@
   transition: all 0.2s ease;
 }
 
-.chatbot-search-suggestion:hover {
-  background: #f3f4f6;
-  border-color: var(--cppi-blue, #0273cf);
+.chatbot-search-suggestion:hover, .chatbot-search-suggestion:focus {
+  background: #f3f4f6 !important;
+  border-color: var(--cppi-blue, #0273cf) !important;
+  color: #0273CF !important;
 }
 
 .chatbot-search-suggestion:focus-visible {
