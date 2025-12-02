@@ -67,5 +67,14 @@
     .cpp-hero-investment-main {
         max-width: 100%;
     }
+
+    .cpp-hero-investment-title {
+        font-size: 24px;
+        font-weight: 600;
+    }
+
+    .cpp-hero-investment-description {
+        margin-top: 18px;
+    }
 }
 
