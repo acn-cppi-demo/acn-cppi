@@ -212,10 +212,10 @@ export default async function decorate(block) {
 
   // Generate popular searches HTML - use buttons for keyboard accessibility
   const popularSearchesHTML = popularSearches.map((search) => `
-    <div type="button" class="chatbot-search-suggestion" data-query="${search}">
+    <button type="button" class="chatbot-search-suggestion" data-query="${search}">
       <span class="search-icon" aria-hidden="true">${getIcon('search')}</span>
       <span>${search}</span>
-    </div>
+    </button>
   `).join('');
 
   // Generate top pages HTML
