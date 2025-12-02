@@ -3,4 +3,15 @@ mountpoints:
     url: "https://author-p153224-e1601594.adobeaemcloud.com/bin/franklin.delivery/acn-cppi-demo/acn-cppi/main"
     type: "markup"
     suffix: ".html"
-    
+
+# Cache configuration for static assets
+# These settings help improve WebPageTest "Cache Static Content" score
+headers:
+  /**/*.js:
+    Cache-Control: public, max-age=31536000, immutable
+  /**/*.css:
+    Cache-Control: public, max-age=31536000, immutable
+  /**/*.woff2:
+    Cache-Control: public, max-age=31536000, immutable
+  /**/*.{jpg,jpeg,png,gif,webp,avif,svg}:
+    Cache-Control: public, max-age=31536000, immutable
