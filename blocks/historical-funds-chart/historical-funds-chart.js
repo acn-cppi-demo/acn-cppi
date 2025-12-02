@@ -302,61 +302,6 @@ export default function decorate(block) {
     }
   }
 
-  // Extract stats cards (assumed to be in the 5th row or subsequent rows)
-  // We'll check if there are specific rows for cards or if we use mock cards
-  let statsHtml = '';
-  // if (children.length > 4) {
-  //   // ... existing logic for authored cards ...
-  //   // Assuming authored content follows the new structure or needs adaptation
-  //   // For now, let's focus on the mock data structure as requested
-  //   // If authored content is present, we might need to adapt it to the new card style
-  //   // But the prompt implies modifying the mock/default appearance primarily
-  //
-  //   const cards = [];
-  //   for (let i = 4; i < children.length; i += 1) {
-  //     const cardContent = children[i];
-  //     const value = cardContent.children[0]?.textContent.trim();
-  //     const label = cardContent.children[1]?.textContent.trim();
-  //     if (value && label) {
-  //       cards.push({ title: value, description: label, icon: 'fund' });
-  //     }
-  //   }
-  //
-  //   if (cards.length > 0) {
-  //     const cardsHtml = cards.map((card) => `
-  //               <div class="historical-funds-card">
-  //                 <div class="fund-stats-icon" aria-hidden="true">${getIcon(card.icon)}</div>
-  //                 <h4>${card.title}</h4>
-  //                 <p>${card.description}</p>
-  //               </div>
-  //             `).join('');
-  //
-  //     statsHtml = `
-  //             <div class="historical-funds-stats">
-  //               <div class="fund-stats-grid">
-  //                 ${cardsHtml}
-  //               </div>
-  //             </div>
-  //           `;
-  //   }
-  // } else {
-  const cardsHtml = fundStats.map((page) => `
-            <div class="historical-funds-card">
-              <div class="fund-stats-icon" aria-hidden="true">${getIcon(page.icon)}</div>
-              <h4>${page.title}</h4>
-              <p>${page.description}</p>
-            </div>
-          `).join('');
-
-  statsHtml = `
-          <div class="historical-funds-stats">
-            <div class="fund-stats-grid">
-              ${cardsHtml}
-            </div>
-          </div>
-        `;
-  // }
-
   const chartId = `historical-chart-${Date.now()}`;
 
   // Remove the duplicate fundFactsHtml generation at the end of function
@@ -379,8 +324,6 @@ export default function decorate(block) {
           <div class="historical-chart-wrapper">
             <div id="${chartId}" class="historical-chart-element"></div>
           </div>
-      
-          ${statsHtml}
         </div>
       `;
 
