@@ -1,6 +1,8 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
+let agentContext = null;
+
 const popularSearches = [
   'CPP facts and history',
   'Investment holdings breakdown',
@@ -463,13 +465,17 @@ export default async function decorate(block) {
           'Content-Type': 'application/json',
           accept: 'application/json',
         },
-        body: JSON.stringify({
-          request: msg,
-        }),
+        body: JSON.stringify(
+          agentContext
+            ? { request: msg, agent_context: agentContext }
+            : { request: msg }
+        ),
       });
 
       const data = await res.json();
-
+      if (data?.agent_context) {
+        agentContext = data.agent_context;
+      }
       // Remove loading indicator
       const loadingEl = document.getElementById(loadingId);
       if (loadingEl) loadingEl.remove();
