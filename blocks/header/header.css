@@ -383,6 +383,7 @@ button.chatbot-trigger-pill:active {
   justify-content: center;
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .chatbot-trigger-pill .pill-icon svg {
   width: 18px;
   height: 18px;
@@ -402,6 +403,7 @@ header nav .nav-tools:has(.chatbot-trigger-pill) .icon-search {
   button.chatbot-trigger-pill {
     padding: 10px;
     border-radius: 50%;
+
     /* Minimum touch target size for accessibility (44x44px) */
     min-width: 44px;
     min-height: 44px;

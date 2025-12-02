@@ -1017,7 +1017,7 @@ export default async function decorate(block) {
 
   // Add click handler to search icon to open chatbot
   const searchIcon = navTools?.querySelector('.icon-search');
-  
+
   // Create chatbot trigger pill with full accessibility
   const chatbotTriggerPill = document.createElement('button');
   chatbotTriggerPill.type = 'button';
@@ -1037,7 +1037,7 @@ export default async function decorate(block) {
       </svg>
     </span>
   `;
-  
+
   // Insert pill before search icon or at the start of nav-tools
   if (searchIcon) {
     searchIcon.parentNode.insertBefore(chatbotTriggerPill, searchIcon);
@@ -1049,79 +1049,79 @@ export default async function decorate(block) {
   }
 
   const triggerChatbot = async () => {
-      // Update aria-expanded state
-      chatbotTriggerPill.setAttribute('aria-expanded', 'true');
-      
-      if (typeof window.openChatbotOverlay === 'function') {
-        window.openChatbotOverlay();
-      } else {
-        // Dynamically load chatbot if not present
-        try {
-          // Load chatbot CSS
-          const cssPromise = new Promise((resolve, reject) => {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = '/blocks/chatbot/chatbot.css';
-            link.onload = resolve;
-            link.onerror = reject;
-            document.head.appendChild(link);
-          });
+    // Update aria-expanded state
+    chatbotTriggerPill.setAttribute('aria-expanded', 'true');
 
-          // Load chatbot JS
-          const module = await import('../chatbot/chatbot.js');
-          await cssPromise;
+    if (typeof window.openChatbotOverlay === 'function') {
+      window.openChatbotOverlay();
+    } else {
+      // Dynamically load chatbot if not present
+      try {
+        // Load chatbot CSS
+        const cssPromise = new Promise((resolve, reject) => {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = '/blocks/chatbot/chatbot.css';
+          link.onload = resolve;
+          link.onerror = reject;
+          document.head.appendChild(link);
+        });
 
-          // Check if the function is now available on window
+        // Load chatbot JS
+        const module = await import('../chatbot/chatbot.js');
+        await cssPromise;
+
+        // Check if the function is now available on window
+        if (typeof window.openChatbotOverlay === 'function') {
+          window.openChatbotOverlay();
+        } else if (module.default) {
+          // If the module exports a decorate function but didn't attach to window,
+          // we might need to create a synthetic block and decorate it.
+          const chatbotBlock = document.createElement('div');
+          chatbotBlock.classList.add('chatbot', 'block');
+          document.body.append(chatbotBlock); // Append to body so it's in DOM
+
+          // Call the decorate function
+          await module.default(chatbotBlock);
+
+          // Now check again
           if (typeof window.openChatbotOverlay === 'function') {
             window.openChatbotOverlay();
-          } else if (module.default) {
-            // If the module exports a decorate function but didn't attach to window,
-            // we might need to create a synthetic block and decorate it.
-            const chatbotBlock = document.createElement('div');
-            chatbotBlock.classList.add('chatbot', 'block');
-            document.body.append(chatbotBlock); // Append to body so it's in DOM
-
-            // Call the decorate function
-            await module.default(chatbotBlock);
-
-            // Now check again
-            if (typeof window.openChatbotOverlay === 'function') {
-              window.openChatbotOverlay();
-            }
-          } else {
-            // eslint-disable-next-line no-console
-            console.error('Chatbot module loaded but openChatbotOverlay not found and no default export to decorate');
           }
-        } catch (e) {
+        } else {
           // eslint-disable-next-line no-console
-          console.error('Failed to load chatbot module', e);
+          console.error('Chatbot module loaded but openChatbotOverlay not found and no default export to decorate');
         }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to load chatbot module', e);
       }
-    };
+    }
+  };
 
-    // Add click listener to chatbot trigger pill (button element handles keyboard natively)
-    chatbotTriggerPill.addEventListener('click', () => {
+  // Add click listener to chatbot trigger pill (button element handles keyboard natively)
+  chatbotTriggerPill.addEventListener('click', () => {
+    triggerChatbot();
+  });
+
+  // Also add listeners to old search icon as fallback (it's hidden by CSS when pill exists)
+  if (searchIcon) {
+    searchIcon.style.cursor = 'pointer';
+    searchIcon.setAttribute('role', 'button');
+    searchIcon.setAttribute('tabindex', '0');
+    searchIcon.setAttribute('aria-label', 'Open Fundy Virtual Assistant chat');
+    searchIcon.setAttribute('aria-haspopup', 'dialog');
+
+    searchIcon.addEventListener('click', () => {
       triggerChatbot();
     });
-
-    // Also add listeners to old search icon as fallback (it's hidden by CSS when pill exists)
-    if (searchIcon) {
-      searchIcon.style.cursor = 'pointer';
-      searchIcon.setAttribute('role', 'button');
-      searchIcon.setAttribute('tabindex', '0');
-      searchIcon.setAttribute('aria-label', 'Open Fundy Virtual Assistant chat');
-      searchIcon.setAttribute('aria-haspopup', 'dialog');
-      
-      searchIcon.addEventListener('click', () => {
+    searchIcon.addEventListener('keydown', (e) => {
+      if (e.code === 'Enter' || e.code === 'Space') {
+        e.preventDefault();
         triggerChatbot();
-      });
-      searchIcon.addEventListener('keydown', (e) => {
-        if (e.code === 'Enter' || e.code === 'Space') {
-          e.preventDefault();
-          triggerChatbot();
-        }
-      });
-    }
+      }
+    });
+  }
 
   block.append(navWrapper);
 }
