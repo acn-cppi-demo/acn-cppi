@@ -81,13 +81,20 @@
     outline: none;
 }
 
+/* Controls Section (Graph Info + Period Tabs) */
+.cpp-hero-chart-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0;
+    padding: 20px 0 0;
+}
+
 /* Graph Info (Left side) */
 .cpp-hero-chart-graph-info {
     display: flex;
     align-items: center;
     gap: 8px;
-    grid-area: graph-info;
-    padding: 20px 0 0;
 }
 
 .cpp-hero-chart-graph-info svg path {
@@ -180,7 +187,6 @@
     flex-wrap: wrap;
     gap: 5px 16px;
     margin-bottom: 40px;
-    grid-area: value-section;
 }
 
 .cpp-hero-chart-fund-date {
@@ -224,7 +230,6 @@
     box-sizing: border-box;
     padding-bottom: 20px;
     flex: 1 1 auto;
-    grid-area: chart;
 }
 
 /* Content wrapper for two-column layout */
@@ -244,25 +249,11 @@
     color: #0273CF;
     padding: 18px 40px;
     box-sizing: border-box;
-    display: grid;
+    display: flex;
     width: 100%;
     max-width: 840px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-        "graph-info controls"
-        "value-section value-section"
-        "chart chart";
+    flex-direction: column;
     align-self: stretch;
-    gap: 0;
-}
-
-/* Controls Section (Period Tabs only) */
-.cpp-hero-chart-controls {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-end;
-    grid-area: controls;
-    padding: 20px 0 0;
 }
 
 /* Overall Data Panel (Right Side) */
@@ -413,14 +404,6 @@
     .cpp-hero-chart-panel {
         flex: 0 0 100%;
         width: 100%;
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "graph-info"
-            "value-section"
-            "controls"
-            "chart";
-        gap: 0;
-        padding: 18px 24px;
     }
 
     .cpp-hero-chart-overall-data {
@@ -428,15 +411,15 @@
         width: 100%;
     }
 
-    .cpp-hero-chart-graph-info {
-        justify-content: flex-start;
-        padding: 16px 0 0;
+    .cpp-hero-chart-controls {
+        flex-direction: column;
+        gap: 24px;
+        align-items: stretch;
+        padding: 16px 0;
     }
 
-    .cpp-hero-chart-controls {
+    .cpp-hero-chart-graph-info {
         justify-content: flex-start;
-        width: 100%;
-        padding: 16px 0 0;
     }
 
     .cpp-hero-chart-periods {
