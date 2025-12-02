@@ -27,6 +27,49 @@
           "valueType": "string"
         },
         {
+          "component": "select",
+          "name": "iconSVG",
+          "label": "Icon SVG",
+          "options": [
+            {
+              "name": "None",
+              "value": "none"
+            },
+            {
+              "name": "Bulb",
+              "value": "bulb"
+            },
+            {
+              "name": "Tactic",
+              "value": "tactic"
+            },
+            {
+              "name": "Conversion path",
+              "value": "conversion-path"
+            },
+            {
+              "name": "News",
+              "value": "news"
+            },
+            {
+              "name": "Moving arrow",
+              "value": "moving-arrow"
+            },
+            {
+              "name": "Pie chart",
+              "value": "pie-chart"
+            },
+            {
+              "name": "Bar chart",
+              "value": "bar-chart"
+            },
+            {
+              "name": "Analytics",
+              "value": "analytics"
+            }
+          ]
+        },
+        {
           "component": "richtext",
           "name": "title",
           "label": "Title",
