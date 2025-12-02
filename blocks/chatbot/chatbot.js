@@ -422,18 +422,18 @@ export default async function decorate(block) {
   // Send message function
   async function sendMessage(msg) {
     if (!msg || !msg.trim()) return;
-  
+
     // Switch to chat view
     showChatView();
-  
+
     const userTimestamp = new Date();
-  
+
     // Add user message
     chatBody.insertAdjacentHTML('beforeend', createMessageHTML(msg, true, userTimestamp));
     chatInput.value = '';
     chatInputConversation.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
-  
+
     // Add loading indicator with "Fundy is thinking..."
     const loadingId = `loading-${Date.now()}`;
     chatBody.insertAdjacentHTML('beforeend', `
@@ -448,16 +448,15 @@ export default async function decorate(block) {
       </div>
     `);
     chatBody.scrollTop = chatBody.scrollHeight;
-  
+
     // Fire dataLayer event: user message
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'message_sent',
       message_detail: msg,
     });
-  
+
     try {
-     
       // STEP 1 — First API call (NO agent_context)
       const res1 = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
         method: 'POST',
@@ -467,17 +466,16 @@ export default async function decorate(block) {
         },
         body: JSON.stringify({ request: msg }),
       });
-  
+
       const data1 = await res1.json();
-  
+
       // Extract agent_context from first call
       const agentContext = data1?.agent_context || null;
-  
+
       let finalReply = '';
       let finalSources = [];
-  
 
-      //STEP 2 — Second API call WITH agent_context (if present)
+      // STEP 2 — Second API call WITH agent_context (if present)
 
       if (agentContext) {
         const res2 = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
@@ -491,62 +489,57 @@ export default async function decorate(block) {
             agent_context: agentContext,
           }),
         });
-  
+
         const data2 = await res2.json();
-  
-        finalReply =
-          data2?.response_data?.text_responses?.[0] ||
-          'I couldn\'t generate a response.';
-  
+
+        finalReply = data2?.response_data?.text_responses?.[0]
+          || 'I couldn\'t generate a response.';
+
         finalSources = data2?.response_data?.references || [];
       } else {
         // Fallback → use response from first call
-        finalReply =
-          data1?.response_data?.text_responses?.[0] ||
-          'I couldn\'t generate a response.';
-  
+        finalReply = data1?.response_data?.text_responses?.[0]
+          || 'I couldn\'t generate a response.';
+
         finalSources = data1?.response_data?.references || [];
       }
-  
+
       // Remove loading indicator
       const loadingEl = document.getElementById(loadingId);
       if (loadingEl) loadingEl.remove();
-  
+
       // Add bot message with final reply
       const botTimestamp = new Date();
       chatBody.insertAdjacentHTML(
         'beforeend',
-        createMessageHTML(finalReply, false, botTimestamp, finalSources)
+        createMessageHTML(finalReply, false, botTimestamp, finalSources),
       );
       chatBody.scrollTop = chatBody.scrollHeight;
-  
+
       // Fire dataLayer citation event
-      const citation =
-        finalSources?.[0]?.title ||
-        finalSources?.[0]?.url ||
-        null;
-  
+      const citation = finalSources?.[0]?.title
+        || finalSources?.[0]?.url
+        || null;
+
       if (citation) {
         window.dataLayer.push({
           event: 'message_response',
           citation,
         });
       }
-  
     } catch (e) {
       // Remove loading indicator
       const loadingEl = document.getElementById(loadingId);
       if (loadingEl) loadingEl.remove();
-  
+
       const botTimestamp = new Date();
       chatBody.insertAdjacentHTML(
         'beforeend',
-        createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp)
+        createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp),
       );
       chatBody.scrollTop = chatBody.scrollHeight;
     }
   }
-  
 
   // Event listeners for search suggestions
   searchSuggestions.forEach((btn) => {
