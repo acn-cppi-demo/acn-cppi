@@ -29,27 +29,50 @@ export default function decorate(block) {
   // Extract badge (first div with text)
   if (children[currentIndex]) {
     const badgeText = children[currentIndex].textContent.trim();
-    if (badgeText) {
+    if (badgeText && badgeText.toLowerCase() !== 'none') {
       cppHeroData.badge = badgeText;
+      currentIndex += 1;
+    } else if (badgeText && badgeText.toLowerCase() === 'none') {
+      // Skip "none" badge and move to next
       currentIndex += 1;
     }
   }
 
-  // Extract iconSVG (second div with text) - if it matches an icon name
+  // Extract iconSVG (second div with text) - if it matches an icon name (not "none")
   if (children[currentIndex]) {
     const iconText = children[currentIndex].textContent.trim();
-    if (iconText && iconMap[iconText]) {
+    if (iconText && iconText.toLowerCase() !== 'none' && iconMap[iconText]) {
       cppHeroData.iconSVG = iconText;
+      currentIndex += 1;
+    } else if (iconText && iconText.toLowerCase() === 'none') {
+      // Skip "none" icon and move to next
       currentIndex += 1;
     }
   }
 
   // Extract title (next div with paragraph containing strong or text)
+  // Skip any divs that only contain "none" text
   if (children[currentIndex]) {
     const titleDiv = children[currentIndex];
+    const titleText = titleDiv.textContent.trim();
     const titleParagraph = titleDiv.querySelector('p');
-    if (titleParagraph) {
-      cppHeroData.title = titleParagraph.innerHTML.trim();
+
+    // Get text from paragraph if exists, otherwise from div
+    const extractedText = titleParagraph
+      ? (titleParagraph.textContent.trim() || titleParagraph.innerHTML.trim())
+      : titleText;
+
+    // Skip if text is "none"
+    if (extractedText && extractedText.toLowerCase() === 'none') {
+      currentIndex += 1;
+    } else if (extractedText && extractedText.toLowerCase() !== 'none') {
+      if (titleParagraph) {
+        cppHeroData.title = titleParagraph.innerHTML.trim();
+      } else {
+        cppHeroData.title = titleText;
+      }
+      currentIndex += 1;
+    } else {
       currentIndex += 1;
     }
   }
