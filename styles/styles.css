@@ -368,24 +368,43 @@ main .section.highlight {
     }
 }
 
-.insights-badge , .badge-secondary, .badge-primary {
-    border: 1px solid #0273CF;
+.insights-badge , .badge-secondary, .badge-primary, .cpp-hero-badge {
+    border: 1px solid transparent;
     width: max-content;
     padding: 8px 16px;
-    border-radius: 30px;
+    border-radius: 4px;
     background: #0273CF33;
+    font-weight: 600;
+    gap: 4px;
+    display: inline-flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.cpp-hero-badge {
+    background: #0161B8;
 }
 
 .badge-primary {
-    background: #fff;
-    color: #0273CF;
-    border: 1px solid #E3E4E5;
+    background: #ECF1F9;
+    color: #2C3D50;
+    border: 1px solid transparent;
 }
 
 .badge-secondary p, .badge-primary p {
     margin-bottom: 0;
     margin-top: 0;
     font-weight: 600;
+}
+
+.badge-icon {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.badge-icon svg {
+    display: block;
 }
 
 .button-container {
