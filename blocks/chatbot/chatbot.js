@@ -526,7 +526,8 @@ export default async function decorate(block) {
     } catch (e) {
       chatBody.innerHTML += '<div class="msg bot">Sorry, something went wrong.</div>';
     }
-    
+
+  }
 
   // Event listeners for search suggestions
   searchSuggestions.forEach((btn) => {
