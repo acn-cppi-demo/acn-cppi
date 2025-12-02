@@ -316,9 +316,9 @@ header nav .nav-tools .custom-search-icon svg {
   fill: var(--cppi-blue, #0273cf);
 }
 
-/* Chatbot trigger pill styling */
-.chatbot-trigger-pill {
-  display: flex;
+/* Chatbot trigger pill styling - using semantic button element */
+button.chatbot-trigger-pill {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   background: #fff;
@@ -328,16 +328,30 @@ header nav .nav-tools .custom-search-icon svg {
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  font-family: inherit;
+  box-shadow: none;
 }
 
-.chatbot-trigger-pill:hover {
+button.chatbot-trigger-pill:hover {
   background: #f5f7fa;
   box-shadow: 0 2px 8px rgb(2 115 207 / 15%);
 }
 
-.chatbot-trigger-pill:focus-visible {
+/* High contrast focus state for accessibility */
+button.chatbot-trigger-pill:focus {
+  outline: none;
+}
+
+button.chatbot-trigger-pill:focus-visible {
   outline: 3px solid var(--cppi-blue, #0273cf);
   outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgb(2 115 207 / 20%);
+}
+
+/* Active/pressed state */
+button.chatbot-trigger-pill:active {
+  transform: scale(0.98);
+  background: #e8f4fc;
 }
 
 .chatbot-trigger-pill .pill-text {
@@ -385,9 +399,13 @@ header nav .nav-tools:has(.chatbot-trigger-pill) .icon-search {
     display: none;
   }
 
-  .chatbot-trigger-pill {
+  button.chatbot-trigger-pill {
     padding: 10px;
     border-radius: 50%;
+    /* Minimum touch target size for accessibility (44x44px) */
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
   }
 }
 

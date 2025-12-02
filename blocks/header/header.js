@@ -1018,20 +1018,21 @@ export default async function decorate(block) {
   // Add click handler to search icon to open chatbot
   const searchIcon = navTools?.querySelector('.icon-search');
   
-  // Create chatbot trigger pill
-  const chatbotTriggerPill = document.createElement('div');
+  // Create chatbot trigger pill with full accessibility
+  const chatbotTriggerPill = document.createElement('button');
+  chatbotTriggerPill.type = 'button';
   chatbotTriggerPill.className = 'chatbot-trigger-pill';
-  chatbotTriggerPill.setAttribute('role', 'button');
-  chatbotTriggerPill.setAttribute('tabindex', '0');
-  chatbotTriggerPill.setAttribute('aria-label', 'Open Fundy Virtual Assistant');
+  chatbotTriggerPill.setAttribute('aria-label', 'Open Fundy Virtual Assistant chat');
+  chatbotTriggerPill.setAttribute('aria-haspopup', 'dialog');
+  chatbotTriggerPill.setAttribute('aria-expanded', 'false');
   chatbotTriggerPill.innerHTML = `
-    <span class="pill-text">
+    <span class="pill-text" aria-hidden="true">
       <span class="pill-name">Fundy</span>
       <span class="pill-separator">|</span>
       <span class="pill-role">Virtual Assistant</span>
     </span>
-    <span class="pill-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none">
+    <span class="pill-icon" aria-hidden="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" focusable="false">
         <path d="M19.5423 20.577L13.2616 14.296C12.7616 14.7088 12.1866 15.0319 11.5366 15.2653C10.8866 15.4986 10.2141 15.6153 9.5193 15.6153C7.81014 15.6153 6.36364 15.0235 5.1798 13.84C3.99597 12.6565 3.40405 11.2103 3.40405 9.50152C3.40405 7.79285 3.9958 6.34618 5.1793 5.16152C6.3628 3.97702 7.80897 3.38477 9.5178 3.38477C11.2265 3.38477 12.6731 3.97668 13.8578 5.16051C15.0423 6.34435 15.6346 7.79085 15.6346 9.50002C15.6346 10.2142 15.5147 10.8963 15.2751 11.5463C15.0352 12.1963 14.7153 12.7616 14.3153 13.2423L20.5961 19.523L19.5423 20.577ZM9.5193 14.1155C10.8078 14.1155 11.8991 13.6683 12.7933 12.774C13.6876 11.8798 14.1348 10.7885 14.1348 9.50002C14.1348 8.21152 13.6876 7.12018 12.7933 6.22601C11.8991 5.33168 10.8078 4.88452 9.5193 4.88452C8.2308 4.88452 7.13947 5.33168 6.2453 6.22601C5.35097 7.12018 4.9038 8.21152 4.9038 9.50002C4.9038 10.7885 5.35097 11.8798 6.2453 12.774C7.13947 13.6683 8.2308 14.1155 9.5193 14.1155Z" fill="#0273CF"/>
       </svg>
     </span>
@@ -1048,6 +1049,9 @@ export default async function decorate(block) {
   }
 
   const triggerChatbot = async () => {
+      // Update aria-expanded state
+      chatbotTriggerPill.setAttribute('aria-expanded', 'true');
+      
       if (typeof window.openChatbotOverlay === 'function') {
         window.openChatbotOverlay();
       } else {
@@ -1095,15 +1099,9 @@ export default async function decorate(block) {
       }
     };
 
-    // Add event listeners to chatbot trigger pill
+    // Add click listener to chatbot trigger pill (button element handles keyboard natively)
     chatbotTriggerPill.addEventListener('click', () => {
       triggerChatbot();
-    });
-    chatbotTriggerPill.addEventListener('keydown', (e) => {
-      if (e.code === 'Enter' || e.code === 'Space') {
-        e.preventDefault();
-        triggerChatbot();
-      }
     });
 
     // Also add listeners to old search icon as fallback (it's hidden by CSS when pill exists)
@@ -1111,7 +1109,8 @@ export default async function decorate(block) {
       searchIcon.style.cursor = 'pointer';
       searchIcon.setAttribute('role', 'button');
       searchIcon.setAttribute('tabindex', '0');
-      searchIcon.setAttribute('aria-label', 'Open search');
+      searchIcon.setAttribute('aria-label', 'Open Fundy Virtual Assistant chat');
+      searchIcon.setAttribute('aria-haspopup', 'dialog');
       
       searchIcon.addEventListener('click', () => {
         triggerChatbot();
