@@ -457,54 +457,76 @@ export default async function decorate(block) {
     });
 
     try {
-      const res = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          accept: 'application/json',
-        },
-        body: JSON.stringify({
-          request: msg,
-        }),
-      });
-
-      const data = await res.json();
-
-      // Remove loading indicator
-      const loadingEl = document.getElementById(loadingId);
-      if (loadingEl) loadingEl.remove();
-
-      // Extract bot text response
-      const reply = data?.response_data?.text_responses?.[0]
-        || 'I couldn\'t generate a response.';
-
-      // Extract sources/references
-      const sources = data?.response_data?.references || [];
-
-      const botTimestamp = new Date();
-      chatBody.insertAdjacentHTML('beforeend', createMessageHTML(reply, false, botTimestamp, sources));
+      // --- STEP 1: call API WITHOUT agent_context ---
+      const firstRes = await fetch(
+        'https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify({ request: msg }),
+        }
+      );
+    
+      const firstData = await firstRes.json();
+      const token = firstData?.agent_context;
+    
+      console.log("Agent context token:", token);
+    
+      // Default reply (if no second call needed)
+      let reply =
+        firstData?.response_data?.text_responses?.[0] ||
+        'I couldn’t generate a response.';
+    
+      let citation = null;
+    
+      // --- STEP 2: If token exists, call again WITH agent_context ---
+      if (token) {
+        const secondRes = await fetch(
+          'https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              accept: 'application/json',
+            },
+            body: JSON.stringify({
+              request: msg,
+              agent_context: token,
+            }),
+          }
+        );
+    
+        const secondData = await secondRes.json();
+    
+        reply =
+          secondData?.response_data?.text_responses?.[0] ||
+          reply;
+    
+        citation =
+          secondData?.response_data?.references?.[0]?.url ||
+          secondData?.response_data?.references?.[0]?.doc_id ||
+          null;
+      }
+    
+      // --- Update UI ---
+      chatBody.innerHTML += `<div class="msg bot">${reply}</div>`;
       chatBody.scrollTop = chatBody.scrollHeight;
-
-      // Extract citation for dataLayer
-      const citation = sources?.[0]?.title || sources?.[0]?.url || null;
-
-      // Fire dataLayer event: bot response citation
+    
+      // Fire citation once
       if (citation) {
         window.dataLayer.push({
           event: 'message_response',
           citation,
         });
       }
+    
     } catch (e) {
-      // Remove loading indicator
-      const loadingEl = document.getElementById(loadingId);
-      if (loadingEl) loadingEl.remove();
-
-      const botTimestamp = new Date();
-      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp));
-      chatBody.scrollTop = chatBody.scrollHeight;
+      chatBody.innerHTML += '<div class="msg bot">Sorry, something went wrong.</div>';
     }
-  }
+    
 
   // Event listeners for search suggestions
   searchSuggestions.forEach((btn) => {
