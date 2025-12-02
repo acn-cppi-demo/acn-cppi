@@ -422,89 +422,131 @@ export default async function decorate(block) {
   // Send message function
   async function sendMessage(msg) {
     if (!msg || !msg.trim()) return;
-
+  
     // Switch to chat view
     showChatView();
-
+  
     const userTimestamp = new Date();
-
+  
     // Add user message
     chatBody.insertAdjacentHTML('beforeend', createMessageHTML(msg, true, userTimestamp));
     chatInput.value = '';
     chatInputConversation.value = '';
     chatBody.scrollTop = chatBody.scrollHeight;
-
-    // Add loading indicator with "Fundy is thinking..." - accessible status
+  
+    // Add loading indicator with "Fundy is thinking..."
     const loadingId = `loading-${Date.now()}`;
     chatBody.insertAdjacentHTML('beforeend', `
-          <div class="chat-message bot-message" id="${loadingId}" role="status" aria-label="Fundy is thinking">
-            <div class="thinking-indicator">
-              <span class="thinking-icon" aria-hidden="true">${getIcon('hub')}</span>
-              <span class="thinking-text">Fundy is thinking</span>
-              <span class="thinking-dots" aria-hidden="true">
-                <span>.</span><span>.</span><span>.</span>
-              </span>
-            </div>
-          </div>
-        `);
+      <div class="chat-message bot-message" id="${loadingId}" role="status" aria-label="Fundy is thinking">
+        <div class="thinking-indicator">
+          <span class="thinking-icon" aria-hidden="true">${getIcon('hub')}</span>
+          <span class="thinking-text">Fundy is thinking</span>
+          <span class="thinking-dots" aria-hidden="true">
+            <span>.</span><span>.</span><span>.</span>
+          </span>
+        </div>
+      </div>
+    `);
     chatBody.scrollTop = chatBody.scrollHeight;
-
+  
     // Fire dataLayer event: user message
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'message_sent',
       message_detail: msg,
     });
-
+  
     try {
-      const res = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
+     
+      // STEP 1 — First API call (NO agent_context)
+      const res1 = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           accept: 'application/json',
         },
-        body: JSON.stringify({
-          request: msg,
-        }),
+        body: JSON.stringify({ request: msg }),
       });
+  
+      const data1 = await res1.json();
+  
+      // Extract agent_context from first call
+      const agentContext = data1?.agent_context || null;
+  
+      let finalReply = '';
+      let finalSources = [];
+  
 
-      const data = await res.json();
+      //STEP 2 — Second API call WITH agent_context (if present)
 
+      if (agentContext) {
+        const res2 = await fetch('https://cppi-demo.accenture.com/es/api/v2/agent/orchestrator', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            accept: 'application/json',
+          },
+          body: JSON.stringify({
+            request: msg,
+            agent_context: agentContext,
+          }),
+        });
+  
+        const data2 = await res2.json();
+  
+        finalReply =
+          data2?.response_data?.text_responses?.[0] ||
+          'I couldn\'t generate a response.';
+  
+        finalSources = data2?.response_data?.references || [];
+      } else {
+        // Fallback → use response from first call
+        finalReply =
+          data1?.response_data?.text_responses?.[0] ||
+          'I couldn\'t generate a response.';
+  
+        finalSources = data1?.response_data?.references || [];
+      }
+  
       // Remove loading indicator
       const loadingEl = document.getElementById(loadingId);
       if (loadingEl) loadingEl.remove();
-
-      // Extract bot text response
-      const reply = data?.response_data?.text_responses?.[0]
-        || 'I couldn\'t generate a response.';
-
-      // Extract sources/references
-      const sources = data?.response_data?.references || [];
-
+  
+      // Add bot message with final reply
       const botTimestamp = new Date();
-      chatBody.insertAdjacentHTML('beforeend', createMessageHTML(reply, false, botTimestamp, sources));
+      chatBody.insertAdjacentHTML(
+        'beforeend',
+        createMessageHTML(finalReply, false, botTimestamp, finalSources)
+      );
       chatBody.scrollTop = chatBody.scrollHeight;
-
-      // Extract citation for dataLayer
-      const citation = sources?.[0]?.title || sources?.[0]?.url || null;
-
-      // Fire dataLayer event: bot response citation
+  
+      // Fire dataLayer citation event
+      const citation =
+        finalSources?.[0]?.title ||
+        finalSources?.[0]?.url ||
+        null;
+  
       if (citation) {
         window.dataLayer.push({
           event: 'message_response',
           citation,
         });
       }
+  
     } catch (e) {
       // Remove loading indicator
       const loadingEl = document.getElementById(loadingId);
       if (loadingEl) loadingEl.remove();
-
+  
       const botTimestamp = new Date();
-      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp));
+      chatBody.insertAdjacentHTML(
+        'beforeend',
+        createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp)
+      );
       chatBody.scrollTop = chatBody.scrollHeight;
     }
   }
+  
 
   // Event listeners for search suggestions
   searchSuggestions.forEach((btn) => {
