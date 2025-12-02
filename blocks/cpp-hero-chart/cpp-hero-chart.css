@@ -81,20 +81,20 @@
     outline: none;
 }
 
-/* Controls Section (Graph Info + Period Tabs) */
-.cpp-hero-chart-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0;
-    padding: 20px 0 0;
-}
-
-/* Graph Info (Left side) */
+/* Graph Info */
 .cpp-hero-chart-graph-info {
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 20px 0 0;
+}
+
+/* Controls Section (Period Tabs only) */
+.cpp-hero-chart-controls {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 20px 0 0;
 }
 
 .cpp-hero-chart-graph-info svg path {
@@ -256,6 +256,38 @@
     align-self: stretch;
 }
 
+/* Desktop: Position graph-info and controls on same row using CSS Grid (only on desktop) */
+@media (width >= 769px) {
+    .cpp-hero-chart-panel {
+        display: grid;
+        grid-template:
+            "graph-info controls" auto
+            "value-section value-section" auto
+            "chart chart" auto
+            / 1fr auto;
+        gap: 0;
+        align-items: start;
+    }
+
+    .cpp-hero-chart-graph-info {
+        grid-area: graph-info;
+        padding: 20px 0 0;
+    }
+
+    .cpp-hero-chart-controls {
+        grid-area: controls;
+        padding: 20px 0 0;
+    }
+
+    .cpp-hero-chart-value-section {
+        grid-area: value-section;
+    }
+
+    .cpp-hero-chart {
+        grid-area: chart;
+    }
+}
+
 /* Overall Data Panel (Right Side) */
 .cpp-hero-chart-overall-data {
     background: #2C3D50;
@@ -404,6 +436,7 @@
     .cpp-hero-chart-panel {
         flex: 0 0 100%;
         width: 100%;
+        flex-flow: column nowrap;
     }
 
     .cpp-hero-chart-overall-data {

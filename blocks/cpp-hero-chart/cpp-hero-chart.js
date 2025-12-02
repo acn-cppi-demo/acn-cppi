@@ -900,18 +900,20 @@ export default function decorate(block) {
       <div class="cpp-hero-chart-content-wrapper">
         <!-- Panel grouping controls, value and chart (left aligned, max-width 840px) -->
         <div class="cpp-hero-chart-panel">
-          <!-- Controls Section (Graph Info + Period Tabs) -->
+          <!-- Graph Info (Mobile order: first) -->
+          ${graphInfoHtml}
+
+          <!-- Value with Badge Section (Mobile order: second) -->
+          ${valueHtml}
+
+          <!-- Controls Section - Period Tabs (Mobile order: third) -->
           <div class="cpp-hero-chart-controls">
-            ${graphInfoHtml}
             <div class="cpp-hero-chart-periods" role="group" aria-label="Time period selector">
               ${periodTabsHtml}
             </div>
           </div>
 
-          <!-- Value with Badge Section -->
-          ${valueHtml}
-
-          <!-- Chart Container -->
+          <!-- Chart Container (Mobile order: fourth) -->
           <div class="cpp-hero-chart" id="${chartId}" aria-hidden="true"></div>
           ${learnMoreHtml}
         </div>
