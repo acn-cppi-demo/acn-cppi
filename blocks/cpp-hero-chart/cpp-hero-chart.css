@@ -453,6 +453,7 @@
 
     .cpp-hero-chart-graph-info {
         justify-content: flex-start;
+        padding: 8px 0 14px;
     }
 
     .cpp-hero-chart-periods {
@@ -461,7 +462,31 @@
     }
 
     .cpp-hero-chart-value {
-        font-size: 32px;
+        font-size: 36px;
+        min-width: 137px;
+        min-height: 49px;
+        flex: 0 0 auto;
+    }
+
+    .cpp-hero-chart-value-section {
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        justify-content: flex-start;
+        margin-bottom: 0;
+    }
+
+    .cpp-hero-chart-badge {
+        min-width: 121px;
+        min-height: 40px;
+        padding: 0;
+        gap: 4px;
+        justify-content: center;
+        font-size: 14px;
+        flex: 0 0 auto;
+    }
+
+    .cpp-hero-chart-fund-date {
+        display: none;
     }
 
     .cpp-hero-chart-overall-value {
@@ -474,9 +499,20 @@
         font-size: 24px;
     }
 
+    .cpp-hero-chart-panel {
+        padding: 18px 16px;
+    }
+
     .cpp-hero-chart-value-section {
-        flex-direction: column;
+        flex-flow: row wrap;
         align-items: flex-start;
+        gap: 4px 12px;
+        justify-content: flex-start;
+        margin-bottom: 0;
+    }
+
+    .cpp-hero-chart-fund-date {
+        display: none;
     }
 
     .cpp-hero-chart-overall-data {
@@ -498,7 +534,7 @@
     }
 
     .graph-text {
-        font-size: 12px;
+        font-size: 16px;
     }
 }
 
