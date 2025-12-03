@@ -9,6 +9,7 @@ const popularSearches = [
   'What information do you have on Private Equity investments?',
   'What is the historical performance of the fund?',
   'Can you compare the portfolio between FY24 and FY25?',
+  'What is CPP investments\' strategy or approach to investing?',
 ];
 
 const topPages = [
