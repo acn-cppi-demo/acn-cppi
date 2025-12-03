@@ -255,7 +255,7 @@ function getDummyLineChartConfig() {
           if (this.value === 400) {
             return '';
           }
-          return `${this.value}B`;
+          return `$${this.value}B`;
         },
       },
       gridLineWidth: 1,
