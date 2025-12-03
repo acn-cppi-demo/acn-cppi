@@ -343,6 +343,16 @@ export default async function decorate(block) {
     chatView.classList.add('hidden');
     // Clear chat
     chatBody.innerHTML = '';
+    // Reset aria-expanded on search button (chatbot trigger pill)
+    const searchButton = document.querySelector('.chatbot-trigger-pill');
+    if (searchButton) {
+      searchButton.setAttribute('aria-expanded', 'false');
+    }
+    // Also reset aria-expanded on search icon if it exists
+    const searchIcon = document.querySelector('.icon-search[role="button"]');
+    if (searchIcon) {
+      searchIcon.setAttribute('aria-expanded', 'false');
+    }
     // Restore focus to previously focused element
     if (previouslyFocusedElement && previouslyFocusedElement.focus) {
       previouslyFocusedElement.focus();
