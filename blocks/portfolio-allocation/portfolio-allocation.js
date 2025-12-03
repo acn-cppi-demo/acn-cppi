@@ -40,54 +40,34 @@ async function initializePortfolioChart(chartId, data) {
     Credit: 'Corporate bonds, private debt, and structured credit opportunities',
   };
 
-  // Fixed mock data for portfolio allocation (matching Figma design colors)
-  const mockChartData = [
-    {
-      name: 'Equities',
-      y: 30,
-      color: '#1E2127',
-      description: assetDescriptions.Equities,
-    },
-    {
-      name: 'Fixed Income',
-      y: 25,
-      color: '#2C3D50',
-      description: assetDescriptions['Fixed Income'],
-    },
-    {
-      name: 'Real Estate',
-      y: 20,
-      color: '#0052A4',
-      description: assetDescriptions['Real Estate'],
-    },
-    {
-      name: 'Infrastructure',
-      y: 15,
-      color: '#0273CF',
-      description: assetDescriptions.Infrastructure,
-    },
-    {
-      name: 'Credit',
-      y: 10,
-      color: '#99BCFF',
-      description: assetDescriptions.Credit,
-    },
-  ];
-
-  // Parse chart data if provided, otherwise use mock data
-  let chartData = mockChartData;
+  // Use chart data from the data parameter (passed from decorate function)
+  // This ensures we use the single source of truth from the decorate function
+  let chartData = null;
   try {
-    if (data.chartData && typeof data.chartData === 'string' && data.chartData.trim()) {
-      const parsed = JSON.parse(data.chartData);
-      if (Array.isArray(parsed)) {
-        chartData = parsed;
+    if (data && data.chartData) {
+      if (typeof data.chartData === 'string' && data.chartData.trim()) {
+        const parsed = JSON.parse(data.chartData);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          chartData = parsed;
+        }
+      } else if (Array.isArray(data.chartData) && data.chartData.length > 0) {
+        chartData = data.chartData;
       }
-    } else if (data.chartData && Array.isArray(data.chartData)) {
-      chartData = data.chartData;
     }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to parse chart data:', error);
+  }
+
+  // If no valid chart data was provided, log an error and return early
+  if (!chartData || !Array.isArray(chartData) || chartData.length === 0) {
+    // eslint-disable-next-line no-console
+    console.error('Portfolio Allocation: No valid chart data provided');
+    const container = document.getElementById(chartId);
+    if (container) {
+      container.innerHTML = '<div class="portfolio-allocation-error">Chart data not available.</div>';
+    }
+    return;
   }
 
   // Highcharts configuration for donut chart
@@ -99,10 +79,7 @@ async function initializePortfolioChart(chartId, data) {
       margin: [0, 0, 0, 0], // Remove all margins: [top, right, bottom, left]
       accessibility: {
         enabled: true,
-        description: 'Portfolio allocation donut chart showing asset class distribution. Use arrow keys to navigate between segments.',
-        keyboardNavigation: {
-          enabled: true,
-        },
+        description: 'Portfolio allocation donut chart showing asset class distribution.',
       },
     },
     title: {
@@ -113,6 +90,9 @@ async function initializePortfolioChart(chartId, data) {
     },
     accessibility: {
       enabled: true,
+      keyboardNavigation: {
+        enabled: false, // Disable to prevent hidden tab stop on proxy button
+      },
       point: {
         descriptionFormatter(point) {
           const { name, y, description } = point;
@@ -447,31 +427,31 @@ export default function decorate(block) {
   const mockChartData = [
     {
       name: 'Equities',
-      y: 30,
+      y: 58,
       color: '#1E2127',
       description: 'Investments in publicly traded company stocks across global markets',
     },
     {
       name: 'Fixed Income',
-      y: 25,
+      y: 15,
       color: '#2C3D50',
       description: 'Bonds and other debt securities providing steady income streams',
     },
     {
       name: 'Real Estate',
-      y: 20,
+      y: 7,
       color: '#0052A4',
       description: 'Property investments including commercial and residential real estate',
     },
     {
       name: 'Infrastructure',
-      y: 15,
+      y: 9,
       color: '#0273CF',
       description: 'Investments in essential infrastructure assets like transportation and utilities',
     },
     {
       name: 'Credit',
-      y: 10,
+      y: 11,
       color: '#99BCFF',
       description: 'Corporate bonds, private debt, and structured credit opportunities',
     },
