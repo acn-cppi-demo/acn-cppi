@@ -1051,6 +1051,10 @@ export default async function decorate(block) {
   const triggerChatbot = async () => {
     // Update aria-expanded state
     chatbotTriggerPill.setAttribute('aria-expanded', 'true');
+    // Also update search icon aria-expanded if it exists
+    if (searchIcon) {
+      searchIcon.setAttribute('aria-expanded', 'true');
+    }
 
     if (typeof window.openChatbotOverlay === 'function') {
       window.openChatbotOverlay();
@@ -1111,6 +1115,7 @@ export default async function decorate(block) {
     searchIcon.setAttribute('tabindex', '0');
     searchIcon.setAttribute('aria-label', 'Open Fundy Virtual Assistant chat');
     searchIcon.setAttribute('aria-haspopup', 'dialog');
+    searchIcon.setAttribute('aria-expanded', 'false');
 
     searchIcon.addEventListener('click', () => {
       triggerChatbot();
