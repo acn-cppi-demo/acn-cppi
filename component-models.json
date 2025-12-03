@@ -114,6 +114,10 @@
           {
             "name": "secondary",
             "value": "secondary"
+          },
+          {
+            "name": "primary link",
+            "value": "primary-link"
           }
         ]
       }

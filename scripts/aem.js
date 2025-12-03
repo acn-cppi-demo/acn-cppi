@@ -478,6 +478,27 @@ function decorateButtons(element) {
     if (a.href !== a.textContent) {
       const up = a.parentElement;
       const twoup = a.parentElement.parentElement;
+
+      // Check for primary-link type via data attribute or parent class
+      const linkType = a.getAttribute('data-link-type')
+        || a.closest('[data-link-type]')?.getAttribute('data-link-type')
+        || (a.classList.contains('primary-link') ? 'primary-link' : null);
+
+      // Handle primary-link type - add link-primary class and arrow SVG
+      if (linkType === 'primary-link') {
+        a.classList.add('link-primary');
+        // Add arrow SVG if not already present
+        if (!a.querySelector('svg')) {
+          const arrowIcon = document.createRange().createContextualFragment(`
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+              <path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"></path>
+            </svg>
+          `).firstElementChild;
+          a.appendChild(arrowIcon);
+        }
+        return; // Skip other button decorations for primary-link
+      }
+
       if (!a.querySelector('img')) {
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
           a.className = 'button'; // default
