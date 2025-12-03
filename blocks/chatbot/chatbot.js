@@ -154,7 +154,7 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
   if (sources && sources.length > 0) {
     const sourceLinks = sources.map((src, idx) => `
       <a href="${src.url || '#'}" class="source-link" target="_blank" rel="noopener noreferrer">
-        <span>${idx}. ${src.title || src.url || 'Source'}</span>
+        <span>${idx + 1}. ${src.title || src.url || 'Source'}</span>
       </a>
     `).join('');
 
