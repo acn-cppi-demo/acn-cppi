@@ -61,8 +61,33 @@
 .image-with-content-title h3,
 .image-with-content-title h4,
 .image-with-content-title h5,
-.image-with-content-title h6 {
+.image-with-content-title h6,
+.image-with-content-title .image-with-content-title-text {
   margin-bottom: 8px;
+  margin-top: 16px;
+}
+
+/* Preserve original heading font sizes for title text */
+.image-with-content-title .image-with-content-title-h1 {
+  font-size: var(--heading-font-size-h1); /* 48px */
+  font-weight: var(--heading-font-weight);
+}
+
+.image-with-content-title .image-with-content-title-h2 {
+  font-size: var(--heading-font-size-h2); /* 36px */
+  font-weight: var(--heading-font-weight);
+}
+
+.image-with-content-title .image-with-content-title-h3 {
+  font-size: var(--heading-font-size-h3); /* 24px */
+  font-weight: var(--heading-font-weight);
+}
+
+.image-with-content-title .image-with-content-title-h4,
+.image-with-content-title .image-with-content-title-h5,
+.image-with-content-title .image-with-content-title-h6 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+  font-weight: var(--heading-font-weight);
 }
 
 .image-with-content-description {

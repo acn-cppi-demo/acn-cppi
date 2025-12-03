@@ -54,10 +54,23 @@ export default function decorate(block) {
 
   // Extract title and description (third div with h4 and p)
   if (children[currentIndex]) {
-    const titleElement = children[currentIndex].querySelector('h4');
+    // Look for any heading tag (h1-h6)
+    const titleElement = children[currentIndex].querySelector('h1, h2, h3, h4, h5, h6');
     const descElement = children[currentIndex].querySelector('p');
     if (titleElement) {
-      contentData.title = titleElement.outerHTML;
+      // Convert heading to p tag with class for styling
+      const p = document.createElement('p');
+      p.className = 'image-with-content-title-text';
+      // Preserve original heading level for font-size styling
+      const headingLevel = titleElement.tagName.toLowerCase();
+      p.classList.add(`image-with-content-title-${headingLevel}`);
+      // Copy all attributes from heading to p
+      Array.from(titleElement.attributes).forEach((attr) => {
+        p.setAttribute(attr.name, attr.value);
+      });
+      // Copy all content from heading to p
+      p.innerHTML = titleElement.innerHTML;
+      contentData.title = p.outerHTML;
     }
     if (descElement) {
       // Preserve HTML in description
