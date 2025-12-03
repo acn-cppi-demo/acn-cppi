@@ -10,7 +10,7 @@ function getMockChartData() {
       backgroundColor: '#ffffff',
       spacingTop: 0,
       spacingBottom: 0,
-      spacingLeft: 0,
+      spacingLeft: 1,
       spacingRight: 0,
     },
     exporting: {

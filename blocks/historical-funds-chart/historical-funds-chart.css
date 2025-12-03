@@ -3,11 +3,6 @@
     background-color: #F5F7FA;
 }
 
-.historical-funds-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
 .historical-badge {
     display: inline-flex;
     align-items: center;
