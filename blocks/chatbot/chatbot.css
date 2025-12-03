@@ -581,6 +581,10 @@
   color: var(--cppi-blue, #0273cf);
 }
 
+.chat-input-wrapper button svg path {
+    color: #0262b3
+}
+
 /* Thinking indicator - "Fundy is thinking..." */
 .thinking-indicator {
   display: flex;
@@ -705,9 +709,7 @@
   transition: all 0.2s ease;
 }
 
-.chat-input-wrapper button svg path {
-  color: #0262b3
-}
+
 
 .chat-input-wrapper button:hover, .chat-input-wrapper button:focus {
   background-color: #f3f4f6 !important;
