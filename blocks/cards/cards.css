@@ -37,8 +37,32 @@
 .cards-card-body h2,
 .cards-card-body h4,
 .cards-card-body h5,
-.cards-card-body h6 {
+.cards-card-body h6,
+.cards-card-body .cards-card-title {
   margin-bottom: 8px;
+}
+
+/* Preserve original heading font sizes for card titles */
+.cards-card-body .cards-card-title-h1 {
+  font-size: var(--heading-font-size-h1); /* 48px */
+  font-weight: var(--heading-font-weight);
+}
+
+.cards-card-body .cards-card-title-h2 {
+  font-size: var(--heading-font-size-h2); /* 36px */
+  font-weight: var(--heading-font-weight);
+}
+
+.cards-card-body .cards-card-title-h3 {
+  font-size: var(--heading-font-size-h3); /* 24px */
+  font-weight: var(--heading-font-weight);
+}
+
+.cards-card-body .cards-card-title-h4,
+.cards-card-body .cards-card-title-h5,
+.cards-card-body .cards-card-title-h6 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+  font-weight: var(--heading-font-weight);
 }
 
 .cards .cards-card-body .cards-link {

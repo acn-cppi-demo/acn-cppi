@@ -155,6 +155,39 @@ function updatePeriodValues(data, period, periodData) {
  * @param {Object} data - The chart data object
  * @param {string} period - The selected period
  */
+/**
+ * Remove accessibility attributes that cause issues
+ * Highcharts automatically adds role="img" and empty aria-label,
+ * which causes accessibility warnings
+ * @param {string} chartId - The chart container ID
+ * @param {Object} chart - The Highcharts chart instance
+ */
+function removeChartAccessibilityAttributes(chartId, chart) {
+  const chartContainer = document.getElementById(chartId);
+  if (chartContainer) {
+    // Remove role="img" if present
+    if (chartContainer.getAttribute('role') === 'img') {
+      chartContainer.removeAttribute('role');
+    }
+    // Remove empty aria-label if present
+    const ariaLabel = chartContainer.getAttribute('aria-label');
+    if (ariaLabel === '' || ariaLabel === null) {
+      chartContainer.removeAttribute('aria-label');
+    }
+  }
+
+  // Also check and clean up the renderTo element (Highcharts' internal container)
+  if (chart && chart.renderTo) {
+    if (chart.renderTo.getAttribute('role') === 'img') {
+      chart.renderTo.removeAttribute('role');
+    }
+    const renderToAriaLabel = chart.renderTo.getAttribute('aria-label');
+    if (renderToAriaLabel === '' || renderToAriaLabel === null) {
+      chart.renderTo.removeAttribute('aria-label');
+    }
+  }
+}
+
 function updateChart(data, period) {
   // Use periodsData from JSON if available, otherwise fall back to mock data
   let periodData = null;
@@ -181,6 +214,12 @@ function updateChart(data, period) {
     // Update the chart series data with animation
     try {
       chartInstance.series[0].setData(periodData.chartData, true);
+
+      // Remove accessibility attributes after chart update
+      // Highcharts may re-add them during updates
+      setTimeout(() => {
+        removeChartAccessibilityAttributes(data.chartId, chartInstance);
+      }, 100);
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Error updating chart:', error);
@@ -446,6 +485,14 @@ async function initializeChart(chartId, data) {
     // Store chart instance for later updates - BOTH in window and in data object
     window[`highchart_${chartId}`] = chart;
     data.chartInstance = chart;
+    data.chartId = chartId; // Store chartId for use in updateChart
+
+    // Remove role="img" and empty aria-label from chart container for accessibility
+    // Highcharts automatically adds these, but they cause accessibility issues
+    // Use a small delay to ensure Highcharts has finished setting up the DOM
+    setTimeout(() => {
+      removeChartAccessibilityAttributes(chartId, chart);
+    }, 50);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to create Highchart:', error);

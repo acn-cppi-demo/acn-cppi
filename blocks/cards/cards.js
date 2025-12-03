@@ -64,6 +64,23 @@ export default function decorate(block) {
     const cardBody = li.querySelector('.cards-card-body');
     let iconDiv = li.querySelector('.card-icon');
     if (cardBody) {
+      // Convert heading tags (h1-h6) to p tags with cards-card-title class for styling
+      const headings = cardBody.querySelectorAll('h1, h2, h3, h4, h5, h6');
+      headings.forEach((heading) => {
+        const p = document.createElement('p');
+        p.className = 'cards-card-title';
+        // Preserve original heading level for font-size styling
+        const headingLevel = heading.tagName.toLowerCase();
+        p.classList.add(`cards-card-title-${headingLevel}`);
+        // Copy all attributes from heading to p
+        Array.from(heading.attributes).forEach((attr) => {
+          p.setAttribute(attr.name, attr.value);
+        });
+        // Copy all content from heading to p
+        p.innerHTML = heading.innerHTML;
+        // Replace heading with p tag
+        heading.replaceWith(p);
+      });
       const firstP = cardBody.querySelector('p:first-of-type');
       if (firstP && firstP.textContent.trim().toLowerCase() === 'icon') {
         // Find picture element - check in cards-card-image first, then siblings
@@ -221,7 +238,7 @@ export default function decorate(block) {
 
         if (linkLabelText && linkHref) {
           // Get card title for better aria-label context
-          const cardTitle = cardBody.querySelector('h1, h2, h3, h4, h5, h6');
+          const cardTitle = cardBody.querySelector('.cards-card-title');
           const cardTitleText = cardTitle ? cardTitle.textContent.trim() : '';
           const ariaLabel = cardTitleText
             ? `${linkLabelText}, ${cardTitleText}`
@@ -275,19 +292,18 @@ export default function decorate(block) {
 
     // Add proper structure to card body
     if (bodyDiv) {
-      // Ensure heading hierarchy is maintained
-      const headings = bodyDiv.querySelectorAll('h1, h2, h3, h4, h5, h6');
-      if (headings.length > 0) {
-        const firstHeading = headings[0];
-        // Set aria-labelledby to link card to its heading
-        const headingId = firstHeading.id || `card-heading-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-        if (!firstHeading.id) {
-          firstHeading.id = headingId;
+      // Find card title (now a p tag with cards-card-title class)
+      const cardTitle = bodyDiv.querySelector('.cards-card-title');
+      if (cardTitle) {
+        // Set aria-labelledby to link card to its title
+        const titleId = cardTitle.id || `card-title-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        if (!cardTitle.id) {
+          cardTitle.id = titleId;
         }
-        li.setAttribute('aria-labelledby', headingId);
-        // Update aria-label to be more descriptive with heading text
-        const headingText = firstHeading.textContent.trim();
-        li.setAttribute('aria-label', headingText);
+        li.setAttribute('aria-labelledby', titleId);
+        // Update aria-label to be more descriptive with title text
+        const titleText = cardTitle.textContent.trim();
+        li.setAttribute('aria-label', titleText);
 
         // Find description paragraph and link it with aria-describedby
         const paragraphs = bodyDiv.querySelectorAll('p');

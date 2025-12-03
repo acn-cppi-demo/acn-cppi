@@ -80,6 +80,22 @@ async function initializeCompositionChart(chartId, data) {
   const yAxisMax = chartData.max || 800;
   const yAxisTickInterval = chartData.tickInterval || 100;
 
+  // Extract units and prefix (optional) - support both camelCase and lowercase variants
+  // Default to 'B' and '$' for backward compatibility if not provided
+  let yAxisUnit = 'B';
+  if (chartData.yAxisUnit !== undefined) {
+    yAxisUnit = chartData.yAxisUnit;
+  } else if (chartData.yaxisUnit !== undefined) {
+    yAxisUnit = chartData.yaxisUnit;
+  }
+
+  let yAxisPrefix = '$';
+  if (chartData.yAxisPrefix !== undefined) {
+    yAxisPrefix = chartData.yAxisPrefix;
+  } else if (chartData.yaxisPrefix !== undefined) {
+    yAxisPrefix = chartData.yaxisPrefix;
+  }
+
   // Determine chart height based on screen size
   const isMobile = window.innerWidth <= 480;
   const chartHeight = isMobile ? 350 : 432;
@@ -118,9 +134,9 @@ async function initializeCompositionChart(chartId, data) {
       point: {
         descriptionFormatter(point) {
           const { name, y, series } = point;
-          return `${series.name} for ${name}: $${y.toFixed(1)}B`;
+          return `${series.name} for ${name}: ${yAxisPrefix}${y.toFixed(1)}${yAxisUnit}`;
         },
-        valueDescriptionFormat: '{index}. {point.series.name} for {point.category}: {point.y}B.',
+        valueDescriptionFormat: `{index}. {point.series.name} for {point.category}: ${yAxisPrefix}{point.y}${yAxisUnit}.`,
       },
     },
     xAxis: {
@@ -149,7 +165,7 @@ async function initializeCompositionChart(chartId, data) {
       lineWidth: 0,
       lineColor: 'transparent',
       labels: {
-        format: '{value}B',
+        format: `${yAxisPrefix}{value}${yAxisUnit}`,
         style: {
           color: '#6F7176',
           fontSize: '14px',
@@ -173,13 +189,25 @@ async function initializeCompositionChart(chartId, data) {
       },
       shared: true,
       formatter() {
-        let tooltip = `<b>${this.x}</b><br/>`;
+        // Get the category name (X-axis value) from the first point
+        // In stacked charts, use point.category or get from categories array via point index
+        let category = this.x;
+        if (this.points && this.points.length > 0) {
+          const firstPoint = this.points[0];
+          // Try multiple ways to get the category
+          category = firstPoint.category
+            || firstPoint.point?.category
+            || (firstPoint.point?.x !== undefined && chartData.categories[firstPoint.point.x])
+            || (firstPoint.x !== undefined && chartData.categories[firstPoint.x])
+            || this.x;
+        }
+        let tooltip = `<b>${category}</b><br/>`;
         let total = 0;
         this.points.forEach((point) => {
           total += point.y;
-          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>$${point.y.toFixed(1)}B</b><br/>`;
+          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${yAxisPrefix}${point.y.toFixed(1)}${yAxisUnit}</b><br/>`;
         });
-        tooltip += `<br/><b>Total: $${total.toFixed(1)}B</b>`;
+        tooltip += `<br/><b>Total: ${yAxisPrefix}${total.toFixed(1)}${yAxisUnit}</b>`;
         return tooltip;
       },
     },
