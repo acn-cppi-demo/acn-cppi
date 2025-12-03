@@ -78,8 +78,11 @@ async function initializePortfolioChart(chartId, data) {
       spacing: [0, 0, 0, 0], // Remove all padding: [top, right, bottom, left]
       margin: [0, 0, 0, 0], // Remove all margins: [top, right, bottom, left]
       accessibility: {
-        enabled: true,
+        enabled: false,
         description: 'Portfolio allocation donut chart showing asset class distribution.',
+        keyboardNavigation: {
+          enabled: false,
+        },
       },
     },
     title: {
