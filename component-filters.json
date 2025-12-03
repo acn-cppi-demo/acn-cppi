@@ -10,6 +10,7 @@
     "components": [
       "badge",
       "text",
+      "button-link",
       "image",
       "button",
       "title",
