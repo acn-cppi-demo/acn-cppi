@@ -377,20 +377,25 @@ button.chatbot-trigger-pill:active {
   font-weight: 400;
 }
 
+.chatbot-trigger-pill .pill-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 button.chatbot-trigger-pill:hover .pill-name,
 button.chatbot-trigger-pill:hover .pill-separator,
-button.chatbot-trigger-pill:hover .pill-role {
+button.chatbot-trigger-pill:hover .pill-role,
+button.chatbot-trigger-pill:focus .pill-name,
+button.chatbot-trigger-pill:focus .pill-separator,
+button.chatbot-trigger-pill:focus .pill-role,
+button.chatbot-trigger-pill:focus .pill-icon{
   color: #fff;
 }
 
-button.chatbot-trigger-pill:hover .pill-icon svg path {
+button.chatbot-trigger-pill:hover .pill-icon svg path,
+button.chatbot-trigger-pill:focus .pill-icon svg path {
   fill: #fff;
-}
-
-.chatbot-trigger-pill .pill-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
@@ -523,7 +528,7 @@ header  .megamenu .megamenu-heading-button h5,
 header  .megamenu .megamenu-heading-button h6 {
     color: #2C3D50;
 }
-  
+
 header  .megamenu .megamenu-heading-button:hover h1,
 header  .megamenu .megamenu-heading-button:hover h2,
 header  .megamenu .megamenu-heading-button:hover h3,
