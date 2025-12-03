@@ -168,6 +168,10 @@ async function initializePerformanceChart(chartId, data) {
 
   const yAxisConfig = calculateYAxisConfig(chartData.series, chartData);
 
+  // Extract units (optional) - support both camelCase and lowercase variants
+  const xAxisUnit = chartData.xAxisUnit || chartData.xaxisUnit || '';
+  const yAxisUnit = chartData.yAxisUnit || chartData.yaxisUnit || '';
+
   // Determine chart height based on screen size
   const isMobile = window.innerWidth <= 480;
   const chartHeight = isMobile ? 230 : 300;
@@ -209,7 +213,7 @@ async function initializePerformanceChart(chartId, data) {
       },
     },
     xAxis: {
-      categories: chartData.categories,
+      categories: chartData.categories.map((cat) => (xAxisUnit ? `${cat}${xAxisUnit}` : cat)),
       lineWidth: 0,
       lineColor: 'transparent',
       tickWidth: 0,
@@ -234,7 +238,7 @@ async function initializePerformanceChart(chartId, data) {
       lineWidth: 0,
       lineColor: 'transparent',
       labels: {
-        format: '{value}',
+        format: yAxisUnit ? `{value}${yAxisUnit}` : '{value}',
         style: {
           color: '#2C3D50',
           fontSize: '14px',
@@ -258,10 +262,21 @@ async function initializePerformanceChart(chartId, data) {
       },
       shared: true,
       formatter() {
-        let tooltip = `<b>${this.x}</b><br/>`;
+        // Get the original category without unit for display
+        const categoryIndex = this.points[0]?.point?.index ?? 0;
+        const originalCategory = chartData.categories[categoryIndex] || this.x;
+        const displayCategory = xAxisUnit ? `${originalCategory}${xAxisUnit}` : originalCategory;
+
+        let tooltip = `<b>${displayCategory}</b><br/>`;
         this.points.forEach((point) => {
-          const value = point.y > 0 ? `+${point.y}` : point.y;
-          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${value}</b><br/>`;
+          let value = 'N/A';
+          if (point.y !== null && point.y !== undefined) {
+            value = point.y > 0 ? `+${point.y}` : point.y;
+          }
+          const valueWithUnit = yAxisUnit && point.y !== null && point.y !== undefined
+            ? `${value}${yAxisUnit}`
+            : value;
+          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${valueWithUnit}</b><br/>`;
         });
         return tooltip;
       },

@@ -333,7 +333,7 @@ button.chatbot-trigger-pill {
 }
 
 button.chatbot-trigger-pill:hover {
-  background: #f5f7fa;
+  background: var(--cppi-blue, #0273cf);
   box-shadow: 0 2px 8px rgb(2 115 207 / 15%);
 }
 
@@ -375,6 +375,16 @@ button.chatbot-trigger-pill:active {
 .chatbot-trigger-pill .pill-role {
   color: #6b7280;
   font-weight: 400;
+}
+
+button.chatbot-trigger-pill:hover .pill-name,
+button.chatbot-trigger-pill:hover .pill-separator,
+button.chatbot-trigger-pill:hover .pill-role {
+  color: #fff;
+}
+
+button.chatbot-trigger-pill:hover .pill-icon svg path {
+  fill: #fff;
 }
 
 .chatbot-trigger-pill .pill-icon {
