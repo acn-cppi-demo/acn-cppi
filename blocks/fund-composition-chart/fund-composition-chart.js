@@ -173,7 +173,19 @@ async function initializeCompositionChart(chartId, data) {
       },
       shared: true,
       formatter() {
-        let tooltip = `<b>${this.x}</b><br/>`;
+        // Get the category name (X-axis value) from the first point
+        // In stacked charts, use point.category or get from categories array via point index
+        let category = this.x;
+        if (this.points && this.points.length > 0) {
+          const firstPoint = this.points[0];
+          // Try multiple ways to get the category
+          category = firstPoint.category
+            || firstPoint.point?.category
+            || (firstPoint.point?.x !== undefined && chartData.categories[firstPoint.point.x])
+            || (firstPoint.x !== undefined && chartData.categories[firstPoint.x])
+            || this.x;
+        }
+        let tooltip = `<b>${category}</b><br/>`;
         let total = 0;
         this.points.forEach((point) => {
           total += point.y;
