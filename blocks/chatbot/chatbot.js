@@ -4,12 +4,11 @@ import { loadFragment } from '../fragment/fragment.js';
 let agentContext = null;
 
 const popularSearches = [
-  'CPP facts and history',
-  'Investment holdings breakdown',
-  'Private Equity investments',
-  'Fund performance',
-  'Careers at CPP Investments',
-  'Who owns the 407 ETR?',
+  'Could you provide some CPP facts and history?',
+  'Could you give me a breakdown of CPP’s investment holdings?',
+  'What information do you have on Private Equity investments?',
+  'What is the historical performance of the fund?',
+  'Can you compare the portfolio between FY24 and FY25?',
 ];
 
 const topPages = [
