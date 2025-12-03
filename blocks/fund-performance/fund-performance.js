@@ -36,7 +36,7 @@ function parsePerformanceContent(content) {
   let structuredHTML = '';
 
   if (h2) {
-    structuredHTML += `<h2>${h2.textContent}</h2>`;
+    structuredHTML += `<h3>${h2.textContent}</h3>`;
   }
 
   paragraphs.forEach((p) => {
