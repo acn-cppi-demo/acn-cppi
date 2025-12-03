@@ -377,7 +377,7 @@ export default function decorate(block) {
   const innerContent = `
     <div class="fund-composition-chart-content">
       <div class="fund-composition-chart-header">
-        <h2 class="fund-composition-chart-title" id="${titleId}">${compositionData.title}</h2>
+        <h3 class="fund-composition-chart-title" id="${titleId}">${compositionData.title}</h3>
       </div>
       <div class="fund-composition-chart-container">
         <div class="fund-composition-chart" id="${chartId}"></div>

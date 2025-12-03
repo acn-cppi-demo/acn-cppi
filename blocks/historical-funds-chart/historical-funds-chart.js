@@ -254,7 +254,7 @@ export default function decorate(block) {
             ${badge}
           </div>` : ''}
       
-          ${title ? `<h2 class="historical-title">${title}</h2>` : ''}
+          ${title ? `<h3 class="historical-title">${title}</h3>` : ''}
       
           ${description ? `<div class="historical-description">${description}</div>` : ''}
       
