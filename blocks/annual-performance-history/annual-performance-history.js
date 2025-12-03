@@ -171,6 +171,7 @@ async function initializePerformanceChart(chartId, data) {
   // Extract units (optional) - support both camelCase and lowercase variants
   const xAxisUnit = chartData.xAxisUnit || chartData.xaxisUnit || '';
   const yAxisUnit = chartData.yAxisUnit || chartData.yaxisUnit || '';
+  const yAxisPrefix = chartData.yAxisPrefix || chartData.yaxisPrefix || '';
 
   // Determine chart height based on screen size
   const isMobile = window.innerWidth <= 480;
@@ -238,7 +239,9 @@ async function initializePerformanceChart(chartId, data) {
       lineWidth: 0,
       lineColor: 'transparent',
       labels: {
-        format: yAxisUnit ? `{value}${yAxisUnit}` : '{value}',
+        format: yAxisPrefix || yAxisUnit
+          ? `${yAxisPrefix}{value}${yAxisUnit}`
+          : '{value}',
         style: {
           color: '#2C3D50',
           fontSize: '14px',
@@ -271,12 +274,16 @@ async function initializePerformanceChart(chartId, data) {
         this.points.forEach((point) => {
           let value = 'N/A';
           if (point.y !== null && point.y !== undefined) {
-            value = point.y > 0 ? `+${point.y}` : point.y;
+            const sign = point.y > 0 ? '+' : '';
+            const absValue = Math.abs(point.y);
+            // Format: sign + prefix + value + unit (e.g., +$778B or -$5B)
+            if (yAxisPrefix || yAxisUnit) {
+              value = `${sign}${yAxisPrefix}${absValue}${yAxisUnit}`;
+            } else {
+              value = point.y > 0 ? `+${point.y}` : point.y;
+            }
           }
-          const valueWithUnit = yAxisUnit && point.y !== null && point.y !== undefined
-            ? `${value}${yAxisUnit}`
-            : value;
-          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${valueWithUnit}</b><br/>`;
+          tooltip += `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${value}</b><br/>`;
         });
         return tooltip;
       },
