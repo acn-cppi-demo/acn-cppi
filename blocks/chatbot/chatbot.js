@@ -125,8 +125,10 @@ function insertCitationLinks(text, sources) {
 
   return text.replace(/\[(\d+)\]/g, (match, digit) => {
     const index = parseInt(digit, 10);
-    if (sources[index]) {
-      return `[<a href="${sources[index].url || '#'}" target="_blank" rel="noopener noreferrer">${digit}</a>]`;
+    // Citations in text are 1-indexed, but sources array is 0-indexed
+    const sourceIndex = index - 1;
+    if (sourceIndex >= 0 && sources[sourceIndex]) {
+      return `[<a href="${sources[sourceIndex].url || '#'}" target="_blank" rel="noopener noreferrer">${digit}</a>]`;
     }
     return match;
   });
@@ -154,7 +156,7 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
   if (sources && sources.length > 0) {
     const sourceLinks = sources.map((src, idx) => `
       <a href="${src.url || '#'}" class="source-link" target="_blank" rel="noopener noreferrer">
-        <span>${idx}. ${src.title || src.url || 'Source'}</span>
+        <span>${idx + 1}. ${src.title || src.url || 'Source'}</span>
       </a>
     `).join('');
 
