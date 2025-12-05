@@ -30,6 +30,7 @@ export default function decorate(block) {
     image: null,
     description: null,
     links: [],
+    buttons: [],
     ids: {
       heading: `content-block-heading-${Date.now()}`,
       description: `content-block-description-${Date.now()}`,
@@ -41,13 +42,17 @@ export default function decorate(block) {
     const headingElement = children[currentIndex].querySelector('h1, h2, h3, h4, h5, h6');
     if (headingElement) {
       const headingLevel = headingElement.tagName.toLowerCase();
-      const p = document.createElement('p');
-      p.className = `content-block-heading content-block-heading-${headingLevel}`;
+      // Always convert to h1 for SEO, but keep original heading level class for styling
+      const h1 = document.createElement('h1');
+      h1.className = `content-block-heading content-block-heading-${headingLevel}`;
       Array.from(headingElement.attributes).forEach((attr) => {
-        p.setAttribute(attr.name, attr.value);
+        // Skip id if it exists, we'll use our own
+        if (attr.name !== 'id') {
+          h1.setAttribute(attr.name, attr.value);
+        }
       });
-      p.innerHTML = headingElement.innerHTML;
-      data.heading = p.outerHTML;
+      h1.innerHTML = headingElement.innerHTML;
+      data.heading = h1.outerHTML;
       data.headingText = headingElement.textContent.trim();
       data.headingLevel = headingLevel;
       currentIndex += 1;
@@ -63,32 +68,86 @@ export default function decorate(block) {
     }
   }
 
-  // Extract description (div with paragraphs, no links)
+  // Extract description and links (div with paragraphs and links)
+  // All links in description should be link-primary (even if in button-container)
   if (children[currentIndex]) {
-    const paragraphs = children[currentIndex].querySelectorAll('p');
-    const hasLinks = children[currentIndex].querySelector('a[href]');
-    if (paragraphs.length > 0 && !hasLinks) {
+    const paragraphs = children[currentIndex].querySelectorAll('p:not(.button-container)');
+    const linksInDescription = children[currentIndex].querySelectorAll('a[href]');
+
+    if (paragraphs.length > 0) {
       let descHtml = '';
       paragraphs.forEach((p) => {
         descHtml += `<p>${p.innerHTML.trim()}</p>`;
       });
       data.description = descHtml;
-      currentIndex += 1;
     }
-  }
 
-  // Extract links (remaining divs with anchors)
-  while (currentIndex < children.length) {
-    const anchor = children[currentIndex].querySelector('a[href]');
-    if (anchor) {
+    // Extract all links from description as link-primary
+    linksInDescription.forEach((anchor) => {
       data.links.push({
         text: anchor.textContent.trim(),
         href: anchor.getAttribute('href'),
         title: anchor.getAttribute('title') || anchor.textContent.trim(),
-        type: anchor.getAttribute('data-link-type') || '',
       });
+    });
+    currentIndex += 1;
+  }
+
+  // Extract buttons (last two links in button-container)
+  // Look for remaining divs with button-container
+  // If previous div has text, use that as button label
+  const buttonDivs = [];
+  while (currentIndex < children.length) {
+    const currentDiv = children[currentIndex];
+    const buttonContainer = currentDiv.querySelector('.button-container');
+    if (buttonContainer) {
+      const anchor = buttonContainer.querySelector('a[href]');
+      if (anchor) {
+        // Check if previous div has text (button label)
+        let buttonText = anchor.textContent.trim();
+        if (currentIndex > 0) {
+          const prevDiv = children[currentIndex - 1];
+          const prevText = prevDiv.textContent.trim();
+          // If previous div has text and no links, use it as button label
+          if (prevText && !prevDiv.querySelector('a[href]') && !prevDiv.querySelector('.button-container')) {
+            buttonText = prevText;
+          }
+        }
+        buttonDivs.push({
+          text: buttonText,
+          href: anchor.getAttribute('href'),
+          title: anchor.getAttribute('title') || buttonText,
+        });
+      }
     }
     currentIndex += 1;
+  }
+
+  // Last two button-container links become buttons (primary and secondary)
+  if (buttonDivs.length >= 2) {
+    data.buttons = [
+      {
+        text: buttonDivs[buttonDivs.length - 2].text,
+        href: buttonDivs[buttonDivs.length - 2].href,
+        title: buttonDivs[buttonDivs.length - 2].title,
+        type: 'primary',
+      },
+      {
+        text: buttonDivs[buttonDivs.length - 1].text,
+        href: buttonDivs[buttonDivs.length - 1].href,
+        title: buttonDivs[buttonDivs.length - 1].title,
+        type: 'secondary',
+      },
+    ];
+  } else if (buttonDivs.length === 1) {
+    data.buttons = [
+      {
+        text: buttonDivs[0].text,
+        href: buttonDivs[0].href,
+        title: buttonDivs[0].title,
+        type: 'primary',
+      },
+    ];
   }
 
   // Step 3: Build HTML from JSON using single template literal
@@ -96,19 +155,28 @@ export default function decorate(block) {
 
   const linksHTML = data.links.length > 0
     ? `<div class="content-block-links">${data.links.map((link) => {
-      const isPrimaryLink = link.type === 'primary-link';
-      const linkClass = isPrimaryLink ? 'link-primary' : 'content-block-link';
       const ariaLabel = data.headingText ? `${link.text}, ${data.headingText}` : link.text;
-      return `<a href="${link.href}" title="${link.title}" class="${linkClass}" aria-label="${ariaLabel}">${link.text}${isPrimaryLink ? arrowIcon : ''}</a>`;
+      return `<a href="${link.href}" title="${link.title}" class="link-primary" aria-label="${ariaLabel}">${link.text}${arrowIcon}</a>`;
     }).join('')}</div>`
     : '';
 
-  const html = `<div class="content-block-wrapper" role="article"${data.headingText ? ` aria-labelledby="${data.ids.heading}"` : ''}${data.description ? ` aria-describedby="${data.ids.description}"` : ''}>
+  const buttonsHTML = data.buttons.length > 0
+    ? `<div class="content-block-buttons">${data.buttons.map((button) => {
+      const buttonClass = button.type === 'primary' ? 'button button-primary' : 'button button-secondary';
+      const href = button.href === '#go-back' ? '#' : button.href;
+      const onClick = button.href === '#go-back' ? ' onclick="if(document.referrer) { window.history.back(); return false; }"' : '';
+      const ariaLabel = data.headingText ? `${button.text}, ${data.headingText}` : button.text;
+      return `<a href="${href}" title="${button.title}" class="${buttonClass}" aria-label="${ariaLabel}"${onClick}>${button.text}</a>`;
+    }).join('')}</div>`
+    : '';
+
+  const html = `<div class="content-block-wrapper">
+  ${data.heading ? `<div class="content-block-heading-wrapper" id="${data.ids.heading}">${data.heading}</div>` : ''}
   ${data.image ? `<div class="content-block-image">${data.image}</div>` : ''}
   <div class="content-block-content">
-    ${data.heading ? `<div class="content-block-heading-wrapper" id="${data.ids.heading}">${data.heading}</div>` : ''}
     ${data.description ? `<div class="content-block-description" id="${data.ids.description}">${data.description}</div>` : ''}
     ${linksHTML}
+    ${buttonsHTML}
   </div>
 </div>`;
 
