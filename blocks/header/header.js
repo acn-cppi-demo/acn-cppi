@@ -1128,4 +1128,14 @@ export default async function decorate(block) {
   }
 
   block.append(navWrapper);
+
+  // Replace google.com and "#" links in header with demo-page link
+  // Run after nav and megamenu are fully set up
+  block.querySelectorAll('a[href*="google.com"], a[href="#"]').forEach((a) => {
+    // Skip if it's the go-back link handler
+    if (a.getAttribute('onclick') && a.getAttribute('onclick').includes('history.back')) {
+      return;
+    }
+    a.href = '/demo-page';
+  });
 }
