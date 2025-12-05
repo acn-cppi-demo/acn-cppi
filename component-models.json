@@ -474,10 +474,28 @@
         "valueType": "string"
       },
       {
+        "component": "text",
+        "name": "button1Label",
+        "label": "Button 1 Label",
+        "valueType": "string"
+      },
+      {
         "component": "aem-content",
-        "name": "links",
-        "label": "Links",
-        "multi": true
+        "name": "button1Link",
+        "label": "Button 1 Link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "button2Label",
+        "label": "Button 2 Label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "button2Link",
+        "label": "Button 2 Link",
+        "valueType": "string"
       }
     ]
   },
