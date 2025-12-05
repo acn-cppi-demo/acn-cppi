@@ -474,6 +474,10 @@ function wrapTextNodes(block) {
  */
 function decorateButtons(element) {
   element.querySelectorAll('a').forEach((a) => {
+    // Replace google.com links with demo-page link
+    if (a.href && a.href.includes('google.com')) {
+      a.href = '/demo-page';
+    }
     a.title = a.title || a.textContent;
     if (a.href !== a.textContent) {
       const up = a.parentElement;
