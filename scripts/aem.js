@@ -156,7 +156,18 @@ function setup() {
  * Auto initialization.
  */
 
+/**
+ * Replace all google.com links and "#" links with demo-page link
+ */
+function replaceGoogleLinks() {
+  document.querySelectorAll('a[href*="google.com"], a[href="#"]').forEach((a) => {
+    a.href = '/demo-page';
+  });
+}
+
 function init() {
+  // Replace all google.com links with demo-page link
+  replaceGoogleLinks();
   setup();
   sampleRUM.collectBaseURL = window.origin;
   sampleRUM();
@@ -474,10 +485,6 @@ function wrapTextNodes(block) {
  */
 function decorateButtons(element) {
   element.querySelectorAll('a').forEach((a) => {
-    // Replace google.com links with demo-page link
-    if (a.href && a.href.includes('google.com')) {
-      a.href = '/demo-page';
-    }
     a.title = a.title || a.textContent;
     if (a.href !== a.textContent) {
       const up = a.parentElement;
@@ -806,6 +813,8 @@ async function loadSections(element) {
       sampleRUM.enhance();
     }
   }
+  // Replace google.com links in newly loaded content
+  replaceGoogleLinks();
 }
 
 init();
