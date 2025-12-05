@@ -693,11 +693,10 @@ function toggleMegamenu(megamenu, show, menuIcon = null) {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // load nav as fragment with sessionStorage caching enabled
-  // Cache persists for browser tab session and clears when tab is closed
+  // load nav as fragment - always use fresh content (no caching)
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  const fragment = await loadFragment(navPath, true); // Enable caching for header
+  const fragment = await loadFragment(navPath, false); // Always load fresh content
 
   // decorate nav DOM
   block.textContent = '';
@@ -1129,4 +1128,14 @@ export default async function decorate(block) {
   }
 
   block.append(navWrapper);
+
+  // Replace google.com and "#" links in header with demo-page link
+  // Run after nav and megamenu are fully set up
+  block.querySelectorAll('a[href*="google.com"], a[href="#"]').forEach((a) => {
+    // Skip if it's the go-back link handler
+    if (a.getAttribute('onclick') && a.getAttribute('onclick').includes('history.back')) {
+      return;
+    }
+    a.href = '/demo-page';
+  });
 }

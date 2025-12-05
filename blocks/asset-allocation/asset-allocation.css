@@ -30,7 +30,7 @@
 
 .asset-allocation-chart-content {
     display: flex;
-    gap: 80px;
+    gap: 40px;
     align-items: stretch;
     flex-wrap: wrap;
     width: 100%;

@@ -208,6 +208,9 @@ function updateChart(data, period) {
   const { chartInstance } = data;
 
   if (chartInstance && typeof chartInstance.series !== 'undefined' && chartInstance.series.length > 0) {
+    // Store current period on chart instance for tooltip formatter
+    chartInstance.customPeriod = period;
+
     // Update the chart series data with animation
     try {
       chartInstance.series[0].setData(periodData.chartData, true);
@@ -291,7 +294,7 @@ function getDummyLineChartConfig() {
           if (this.value === 400) {
             return '';
           }
-          return `${this.value}B`;
+          return `$${this.value}B`;
         },
       },
       gridLineWidth: 1,
@@ -362,16 +365,31 @@ function getDummyLineChartConfig() {
       },
       useHTML: true,
       formatter() {
-        const months = [
-          'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-        ];
-        const monthIndex = this.point.index;
-        const monthName = months[monthIndex % 12];
+        const { chart } = this.series;
+        const period = chart.customPeriod || '1Y';
+        const endDate = new Date(2025, 8, 30); // Sept 30, 2025
+        const maxIndex = 11;
+
+        let daysRange = 365;
+        switch (period) {
+          case '3M': daysRange = 90; break;
+          case '6M': daysRange = 180; break;
+          case '1Y': daysRange = 365; break;
+          case '2Y': daysRange = 730; break;
+          case '5Y': daysRange = 1825; break;
+          default: daysRange = 365;
+        }
+
+        const diffDays = (maxIndex - this.point.index) * (daysRange / maxIndex);
+        const pointDate = new Date(endDate.getTime() - (diffDays * 24 * 60 * 60 * 1000));
+
+        const monthName = pointDate.toLocaleString('default', { month: 'short' });
+        const year = pointDate.getFullYear();
+
         return `<div style="text-align: center; padding: 4px 8px;">
-          <div style="font-size: 16px; font-weight: 600; color: #0273CF;">$${this.y.toFixed(1)}B</div>
-          <div style="font-size: 12px; color: #6F7176;">${monthName} 2025 Fund Value</div>
-        </div>`;
+              <div style="font-size: 16px; font-weight: 600; color: #0273CF;">$${this.y.toFixed(1)}B</div>
+              <div style="font-size: 12px; color: #6F7176;">${monthName} ${year} Fund Value</div>
+            </div>`;
       },
     },
   };

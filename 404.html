@@ -32,19 +32,126 @@
   </script>
   <link rel="stylesheet" href="/styles/styles.css">
   <style>
-    main.error {
-      min-height: calc(100vh - var(--nav-height));
-      display: flex;
-      align-items: center;
-    }
+    .content-block {
+  padding: 40px 0;
+}
 
-    main.error .error-number {
-      width: 100%;
-    }
+.content-block-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
 
-    main.error .error-number text {
-      font-family: monospace;
-    }
+.content-block-image {
+  width: 100%;
+  max-width: 396px;
+  line-height: 0;
+  margin-bottom: 40px;
+}
+
+.content-block-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.content-block-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content-block-heading-wrapper {
+  margin: 0;
+  text-align: center;
+}
+
+.content-block-heading {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  color: var(--cppi-navy);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.content-block-heading-h1 {
+  font-size: var(--heading-font-size-h1); /* 48px */
+}
+
+.content-block-heading-h2 {
+  font-size: var(--heading-font-size-h2); /* 36px */
+}
+
+.content-block-heading-h3 {
+  font-size: var(--heading-font-size-h3); /* 24px */
+}
+
+.content-block-heading-h4 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+}
+
+.content-block-heading-h5 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+}
+
+.content-block-heading-h6 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+}
+
+.content-block-description {
+  color: var(--text-color);
+  font-size: var(--body-font-size);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.content-block-description p {
+  margin: 0 0 16px;
+}
+
+.content-block-description p:last-child {
+  margin-bottom: 0;
+}
+
+.content-block-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.content-block-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.content-block-buttons .button {
+    min-width: 120px;
+}
+
+.content-block-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cppi-blue);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  width: fit-content;
+}
+
+.content-block-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+
   </style>
   <link rel="stylesheet" href="/styles/lazy-styles.css">
 </head>
@@ -52,15 +159,18 @@
 <body>
   <header></header>
   <main class="error">
-    <div class="section">
-      <svg viewBox="1 0 38 18" class="error-number">
-        <text x="0" y="17">404</text>
-      </svg>
-      <h2 class="error-message">Page Not Found</h2>
-      <p class="button-container">
-        <a href="/" class="button secondary error-button-home">Go home</a>
-      </p>
-    </div>
+    <div class="section content-block-container" data-section-status="loaded">
+        
+        
+      <div class="content-block-wrapper"><div class="content-block block" data-block-name="content-block" data-block-status="loaded"><div class="content-block-wrapper">
+  <div class="content-block-heading-wrapper" id="content-block-heading-1764960406321"><h1 class="content-block-heading content-block-heading-h2">There’s still more to come</h1></div>
+  <div class="content-block-image"><picture><source media="(min-width: 600px)" type="image/webp" srcset="/media_1d30a65972bf16c041ff045031088d625bd1f5e2e.jpg?width=2000&amp;format=webply&amp;optimize=medium"><source type="image/webp" srcset="/media_1d30a65972bf16c041ff045031088d625bd1f5e2e.jpg?width=750&amp;format=webply&amp;optimize=medium"><source media="(min-width: 600px)" srcset="/media_1d30a65972bf16c041ff045031088d625bd1f5e2e.jpg?width=2000&amp;format=jpg&amp;optimize=medium"><img loading="eager" alt="" src="/media_1d30a65972bf16c041ff045031088d625bd1f5e2e.jpg?width=750&amp;format=jpg&amp;optimize=medium" aria-hidden="true" fetchpriority="high"></picture></div>
+  <div class="content-block-content">
+    <div class="content-block-description" id="content-block-description-1764960406321"><p>This page is not a part of the demo experience. You can visit any of the following pages to view the demo:</p></div>
+    <div class="content-block-links"><a href="/" title="Home" class="link-primary" aria-label="Home, There’s still more to come">Home<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"></path></svg></a><a href="/fund-facts" title="Fund Facts" class="link-primary" aria-label="Fund Facts, There’s still more to come">Fund Facts<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"></path></svg></a><a href="/fund-facts" title="Reports &amp; Data" class="link-primary" aria-label="Reports &amp; Data, There’s still more to come">Reports &amp; Data<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path d="M12.175 9H0V7H12.175L6.575 1.4L8 0L16 8L8 16L6.575 14.6L12.175 9Z" fill="#0273CF"></path></svg></a></div>
+    <div class="content-block-buttons"><a href="#" title="Go Back" class="button button-primary" aria-label="Go Back, There’s still more to come" onclick="if(document.referrer) { window.history.back(); return false; }">Go Back</a><a href="/" title="Home" class="button button-secondary" aria-label="Home, There’s still more to come">Home</a></div>
+  </div>
+</div></div></div></div>
   </main>
   <footer></footer>
 </body>

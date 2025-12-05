@@ -78,10 +78,10 @@ async function initializePortfolioChart(chartId, data) {
       spacing: [0, 0, 0, 0], // Remove all padding: [top, right, bottom, left]
       margin: [0, 0, 0, 0], // Remove all margins: [top, right, bottom, left]
       accessibility: {
-        enabled: true,
-        description: 'Portfolio allocation donut chart showing asset class distribution. Use arrow keys to navigate between segments.',
+        enabled: false,
+        description: 'Portfolio allocation donut chart showing asset class distribution.',
         keyboardNavigation: {
-          enabled: true,
+          enabled: false,
         },
       },
     },
@@ -93,6 +93,9 @@ async function initializePortfolioChart(chartId, data) {
     },
     accessibility: {
       enabled: true,
+      keyboardNavigation: {
+        enabled: false, // Disable to prevent hidden tab stop on proxy button
+      },
       point: {
         descriptionFormatter(point) {
           const { name, y, description } = point;

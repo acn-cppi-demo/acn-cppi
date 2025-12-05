@@ -156,7 +156,18 @@ function setup() {
  * Auto initialization.
  */
 
+/**
+ * Replace all google.com links and "#" links with demo-page link
+ */
+function replaceGoogleLinks() {
+  document.querySelectorAll('a[href*="google.com"], a[href="#"]').forEach((a) => {
+    a.href = '/demo-page';
+  });
+}
+
 function init() {
+  // Replace all google.com links with demo-page link
+  replaceGoogleLinks();
   setup();
   sampleRUM.collectBaseURL = window.origin;
   sampleRUM();
@@ -802,6 +813,8 @@ async function loadSections(element) {
       sampleRUM.enhance();
     }
   }
+  // Replace google.com links in newly loaded content
+  replaceGoogleLinks();
 }
 
 init();

@@ -114,6 +114,10 @@
           {
             "name": "secondary",
             "value": "secondary"
+          },
+          {
+            "name": "primary link",
+            "value": "primary-link"
           }
         ]
       }
@@ -262,6 +266,26 @@
             "value": "badge-secondary"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "button-link",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link"
+      },
+      {
+        "component": "text",
+        "name": "linkText",
+        "label": "Text"
+      },
+      {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title"
       }
     ]
   },
@@ -425,6 +449,53 @@
         "name": "rows",
         "value": "",
         "label": "Rows"
+      }
+    ]
+  },
+  {
+    "id": "content-block",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "button1Label",
+        "label": "Button 1 Label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "button1Link",
+        "label": "Button 1 Link",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "button2Label",
+        "label": "Button 2 Label",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "button2Link",
+        "label": "Button 2 Link",
+        "valueType": "string"
       }
     ]
   },

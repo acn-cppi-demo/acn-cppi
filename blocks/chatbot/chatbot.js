@@ -9,6 +9,7 @@ const popularSearches = [
   'What information do you have on Private Equity investments?',
   'What is the historical performance of the fund?',
   'Can you compare the portfolio between FY24 and FY25?',
+  'What is CPP investments\' strategy or approach to investing?',
 ];
 
 const topPages = [
@@ -154,7 +155,7 @@ function createMessageHTML(content, isUser, timestamp, sources = null) {
   if (sources && sources.length > 0) {
     const sourceLinks = sources.map((src, idx) => `
       <a href="${src.url || '#'}" class="source-link" target="_blank" rel="noopener noreferrer">
-        <span>${idx}. ${src.title || src.url || 'Source'}</span>
+        <span>${idx + 1}. ${src.title || src.url || 'Source'}</span>
       </a>
     `).join('');
 
@@ -510,7 +511,7 @@ export default async function decorate(block) {
       if (loadingEl) loadingEl.remove();
 
       const botTimestamp = new Date();
-      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp));
+      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, you must be connected to the Accenture network to interact with Fundy.', false, botTimestamp));
       chatBody.scrollTop = chatBody.scrollHeight;
     }
   }
