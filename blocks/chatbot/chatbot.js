@@ -511,7 +511,7 @@ export default async function decorate(block) {
       if (loadingEl) loadingEl.remove();
 
       const botTimestamp = new Date();
-      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, something went wrong. Please try again.', false, botTimestamp));
+      chatBody.insertAdjacentHTML('beforeend', createMessageHTML('Sorry, you must be connected to the Accenture network to interact with Fundy.', false, botTimestamp));
       chatBody.scrollTop = chatBody.scrollHeight;
     }
   }
