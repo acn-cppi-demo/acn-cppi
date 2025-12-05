@@ -166,7 +166,7 @@ export default function decorate(block) {
       const href = button.href === '#go-back' ? '#' : button.href;
       const onClick = button.href === '#go-back' ? ' onclick="if(document.referrer) { window.history.back(); return false; }"' : '';
       const ariaLabel = data.headingText ? `${button.text}, ${data.headingText}` : button.text;
-      return `<a href="${href}" title="${button.title}" class="${buttonClass}" aria-label="${ariaLabel}"${onClick}>${button.text}</a>`;
+      return `<a href="${href}" title="${button.text}" class="${buttonClass}" aria-label="${ariaLabel}"${onClick}>${button.text}</a>`;
     }).join('')}</div>`
     : '';
 
