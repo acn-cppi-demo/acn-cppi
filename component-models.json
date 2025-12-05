@@ -453,6 +453,35 @@
     ]
   },
   {
+    "id": "content-block",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "links",
+        "label": "Links",
+        "multi": true
+      }
+    ]
+  },
+  {
     "id": "cpp-hero-chart",
     "fields": [
       {
