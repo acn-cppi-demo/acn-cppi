@@ -1,0 +1,119 @@
+.content-block {
+  padding: 40px 0;
+}
+
+.content-block-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.content-block-image {
+  width: 100%;
+  max-width: 396px;
+  line-height: 0;
+  margin-bottom: 40px;
+}
+
+.content-block-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.content-block-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content-block-heading-wrapper {
+  margin: 0;
+  text-align: center;
+}
+
+.content-block-heading {
+  margin: 0;
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  color: var(--cppi-navy);
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.content-block-heading-h1 {
+  font-size: var(--heading-font-size-h1); /* 48px */
+}
+
+.content-block-heading-h2 {
+  font-size: var(--heading-font-size-h2); /* 36px */
+}
+
+.content-block-heading-h3 {
+  font-size: var(--heading-font-size-h3); /* 24px */
+}
+
+.content-block-heading-h4 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+}
+
+.content-block-heading-h5 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+}
+
+.content-block-heading-h6 {
+  font-size: var(--heading-font-size-h4); /* 16px */
+}
+
+.content-block-description {
+  color: var(--text-color);
+  font-size: var(--body-font-size);
+  line-height: 1.6;
+  text-align: center;
+}
+
+.content-block-description p {
+  margin: 0 0 16px;
+}
+
+.content-block-description p:last-child {
+  margin-bottom: 0;
+}
+
+.content-block-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.content-block-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.content-block-buttons .button {
+    min-width: 120px;
+}
+
+.content-block-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cppi-blue);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+  width: fit-content;
+}
+
+.content-block-link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
